@@ -96,11 +96,7 @@ If no logger is provided, a default logger will be used.
 Any additional options provided will be applied to the client during initialization.
 Detect authentication method based on supplied credential type
 */
-func NewClient(instanceName string, config Config, authConfig *ClientAuthConfig, logger Logger, options ...ClientOption) (*Client, error) {
-	// Config Check
-	if instanceName == "" {
-		return nil, fmt.Errorf("instanceName cannot be empty")
-	}
+func NewClient(config Config, clientAuthConfig *ClientAuthConfig, logger Logger, options ...ClientOption) (*Client, error) {
 
 	// Validate MaxRetryAttempts
 	if config.MaxRetryAttempts < 0 {
@@ -151,8 +147,8 @@ func NewClient(instanceName string, config Config, authConfig *ClientAuthConfig,
 	logger.SetLevel(config.LogLevel)
 
 	client := &Client{
-		TenantName:     authConfig.TenantName,
-		TenantID:       authConfig.TenantID,
+		TenantName:     clientAuthConfig.TenantName,
+		TenantID:       clientAuthConfig.TenantID,
 		httpClient:     &http.Client{Timeout: DefaultTimeout},
 		config:         config,
 		logger:         logger,
@@ -162,11 +158,11 @@ func NewClient(instanceName string, config Config, authConfig *ClientAuthConfig,
 
 	// Set authentication credentials and determine AuthMethod
 	client.SetGraphAuthenticationMethod(map[string]string{
-		"clientID":           authConfig.ClientID,
-		"clientSecret":       authConfig.ClientSecret,
-		"certificatePath":    authConfig.CertificatePath,
-		"certificateKeyPath": authConfig.CertificateKeyPath,
-		"certThumbprint":     authConfig.CertThumbprint,
+		"clientID":           clientAuthConfig.ClientID,
+		"clientSecret":       clientAuthConfig.ClientSecret,
+		"certificatePath":    clientAuthConfig.CertificatePath,
+		"certificateKeyPath": clientAuthConfig.CertificateKeyPath,
+		"certThumbprint":     clientAuthConfig.CertThumbprint,
 	})
 
 	// Apply any additional client options provided during initialization

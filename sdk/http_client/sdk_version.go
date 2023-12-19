@@ -5,7 +5,7 @@ import "fmt"
 
 const (
 	SDKVersion    = "0.0.1"
-	UserAgentBase = "go-jamfpro-api-intune"
+	UserAgentBase = "go-api-sdk-m365"
 )
 
 func GetUserAgentHeader() string {

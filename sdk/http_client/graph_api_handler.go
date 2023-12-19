@@ -52,10 +52,8 @@ import (
 
 // Endpoint constants represent the URL suffixes used for Jamf API token interactions.
 const (
-	DefaultBaseDomain       = "/deploymenttheory"             // DefaultBaseDomain: represents the base domain for the jamf instance.
+	DefaultBaseDomain       = "graph.microsoft.com"           // DefaultBaseDomain: represents the base domain for graph.
 	OAuthTokenEndpoint      = "/oauth2/v2.0/token"            // OAuthTokenEndpoint: The endpoint to obtain an OAuth token.
-	BearerTokenEndpoint     = "/api/v1/auth/token"            // BearerTokenEndpoint: The endpoint to obtain a bearer token.
-	TokenRefreshEndpoint    = "/api/v1/auth/keep-alive"       // TokenRefreshEndpoint: The endpoint to refresh an existing token.
 	TokenInvalidateEndpoint = "/api/v1/auth/invalidate-token" // TokenInvalidateEndpoint: The endpoint to invalidate an active token.
 )
 
@@ -69,8 +67,8 @@ var configMap ConfigMap
 
 // Embedded Resources
 //
-//go:embed jamfpro_api_exceptions_configuration.json
-var jamfpro_api_exceptions_configuration []byte
+//go:embed graph_api_exceptions_configuration.json
+var graph_api_exceptions_configuration []byte
 
 // Package-level Functions
 
@@ -85,12 +83,12 @@ func init() {
 	}
 }
 
-// loadDefaultConfig reads and unmarshals the jamfpro_api_exceptions_configuration JSON data from an embedded file
+// loadDefaultConfig reads and unmarshals the graph_api_exceptions_configuration JSON data from an embedded file
 // into the configMap variable, which holds the exceptions configuration for endpoint-specific headers.
 // Returns an error if the unmarshalling process fails.
 func loadDefaultConfig() error {
 	// Unmarshal the embedded default configuration into the global configMap.
-	return json.Unmarshal(jamfpro_api_exceptions_configuration, &configMap)
+	return json.Unmarshal(graph_api_exceptions_configuration, &configMap)
 }
 
 // LoadUserConfig allows users to apply their own configuration by providing a JSON file.
@@ -143,15 +141,14 @@ func (c *Client) ConstructAPIResourceEndpoint(endpointPath string) string {
 	return url
 }
 
-/*
-// ConstructAPIAuthEndpoint returns the full URL for a Jamf API auth endpoint path.
-func (c *Client) ConstructAPIAuthEndpoint(endpointPath string) string {
-	baseDomain := c.GetBaseDomain()
-	url := fmt.Sprintf("https://%s%s%s", c.TenantName, baseDomain, endpointPath)
-	c.logger.Info("Request will be made to API authentication URL:", "URL", url)
+// ConstructMSGraphAPIEndpoint constructs the full URL for an MS Graph API endpoint.
+// The function takes version (e.g., "/v1.0" or "/beta") and the specific API path.
+func (c *Client) ConstructMSGraphAPIEndpoint(endpointPath string) string {
+	url := fmt.Sprintf("https://%s%s", DefaultBaseDomain, endpointPath)
+	c.logger.Info("Request will be made to MS Graph API URL:", "URL", url)
 	return url
 }
-*/
+
 // APIHandler is an interface for encoding, decoding, and determining content types for different API implementations.
 // It encapsulates behavior for encoding and decoding requests and responses.
 type APIHandler interface {

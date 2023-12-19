@@ -76,8 +76,8 @@ func (c *Client) DoRequest(method, endpoint string, body, out interface{}) (*htt
 		return nil, err
 	}
 
-	// Construct URL using the ConstructAPIResourceEndpoint function
-	url := c.ConstructAPIResourceEndpoint(endpoint)
+	// Construct URL using the ConstructMSGraphAPIEndpoint function
+	url := c.ConstructMSGraphAPIEndpoint(endpoint)
 
 	// Initialize total request counter
 	c.PerfMetrics.lock.Lock()
@@ -278,8 +278,8 @@ func (c *Client) DoMultipartRequest(method, endpoint string, fields map[string]s
 		return nil, err
 	}
 
-	// Construct URL using the ConstructAPIResourceEndpoint function
-	url := c.ConstructAPIResourceEndpoint(endpoint)
+	// Construct URL using the ConstructMSGraphAPIEndpoint function
+	url := c.ConstructMSGraphAPIEndpoint(endpoint)
 
 	// Create the request
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(requestData))

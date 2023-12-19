@@ -4,7 +4,23 @@ It provides structures and methods for handling OAuth-based authentication
 */
 package http_client
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
+
+// GetAuthCredentialsFromEnv takes environment variables and maps them to the http client initialization if present.
+func GetAuthCredentialsFromEnv() map[string]string {
+	creds := map[string]string{
+		"clientID":           os.Getenv("CLIENT_ID"),
+		"clientSecret":       os.Getenv("CLIENT_SECRET"),
+		"certificatePath":    os.Getenv("CERTIFICATE_PATH"),
+		"certificateKeyPath": os.Getenv("CERTIFICATE_KEY_PATH"),
+		"certThumbprint":     os.Getenv("CERT_THUMBPRINT"),
+		"tenantID":           os.Getenv("TENANT_ID"),
+	}
+	return creds
+}
 
 // SetGraphAuthenticationMethod interprets and sets the credentials for the HTTP Client.
 func (c *Client) SetGraphAuthenticationMethod(creds map[string]string) {
