@@ -22,11 +22,11 @@ func (c *Client) ValidAuthTokenCheck() (bool, error) {
 		switch c.AuthMethod {
 		case "oauthApp":
 			// Obtain token using OAuth App credentials
-			oauthResp, err = c.ObtainOauthTokenWithApp(c.TenantName, c.OAuthCredentials.ClientID, c.OAuthCredentials.ClientSecret)
+			oauthResp, err = c.ObtainOauthTokenWithApp(c.TenantID, c.OAuthCredentials.ClientID, c.OAuthCredentials.ClientSecret)
 
 		case "oauthCertificate":
 			// Obtain token using OAuth Certificate credentials
-			oauthResp, err = c.ObtainOauthTokenWithCertificate(c.TenantName, c.OAuthCredentials.ClientID, c.OAuthCredentials.CertThumbprint, c.OAuthCredentials.CertificatePath)
+			oauthResp, err = c.ObtainOauthTokenWithCertificate(c.TenantID, c.OAuthCredentials.ClientID, c.OAuthCredentials.CertThumbprint, c.OAuthCredentials.CertificatePath)
 
 		default:
 			return false, fmt.Errorf("unknown auth method: %s", c.AuthMethod)

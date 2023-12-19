@@ -25,13 +25,13 @@ func main() {
 	logLevel := http_client.LogLevelDebug // LogLevelNone // LogLevelWarning // LogLevelInfo  // LogLevelDebug
 
 	// Configuration for the jamfpro
-	config := http_client.Config{
+	loggingConfig := http_client.Config{
 		LogLevel: logLevel,
 		Logger:   logger,
 	}
 
-	// Create a new client instance using the loaded InstanceName
-	client, err := http_client.NewClient(authConfig.TenantName, config, authConfig, logger)
+	// Create a new client
+	client, err := http_client.NewClient(authConfig.TenantID, loggingConfig, authConfig, logger)
 	if err != nil {
 		log.Fatalf("Failed to create new client: %v", err)
 	}
