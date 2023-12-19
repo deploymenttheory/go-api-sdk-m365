@@ -17,6 +17,9 @@ import (
 	"time"
 )
 
+const Authority = "https://login.microsoftonline.com/"
+const Scope = "https://graph.microsoft.com/.default"
+
 // OAuthResponse represents the response structure when obtaining an OAuth access token.
 type OAuthResponse struct {
 	AccessToken  string `json:"access_token"`
@@ -25,9 +28,6 @@ type OAuthResponse struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 	Error        string `json:"error,omitempty"`
 }
-
-const Authority = "https://login.microsoftonline.com/"
-const Scope = "https://graph.microsoft.com/.default"
 
 // ObtainOauthTokenWithApp fetches an OAuth access token using client credentials.
 func (c *Client) ObtainOauthTokenWithApp(tenantID, clientID, clientSecret string) (*OAuthResponse, error) {

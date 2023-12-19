@@ -1,4 +1,4 @@
-module github.com/deploymenttheory/go-api-sdk-jamfpro
+module github.com/deploymenttheory/go-api-sdk-intune
 
 go 1.21
 
