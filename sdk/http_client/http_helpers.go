@@ -1,0 +1,67 @@
+// http_helpers.go
+package http_client
+
+import (
+	"fmt"
+	"net/http"
+	"strings"
+	"time"
+)
+
+// ParseISO8601Date attempts to parse a string date in ISO 8601 format.
+func ParseISO8601Date(dateStr string) (time.Time, error) {
+	return time.Parse(time.RFC3339, dateStr)
+}
+
+// EnsureHTTPScheme prefixes a URL with "http://" it defaults to "https://" doesn't already have an "https://".
+func EnsureHTTPScheme(url string) string {
+	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+		return fmt.Sprintf("https://%s", url)
+	}
+	return url
+}
+
+// CheckDeprecationHeader checks the response headers for the Deprecation header and logs a warning if present.
+func CheckDeprecationHeader(resp *http.Response, logger Logger) {
+	deprecationHeader := resp.Header.Get("Deprecation")
+	if deprecationHeader != "" {
+		logger.Warn("API endpoint is deprecated as of", "Date", deprecationHeader)
+	}
+}
+
+// SetAuthenticationCredentials interprets and sets the credentials for the Client.
+func (c *Client) SetAuthenticationCredentials(creds map[string]string) {
+	// Check for OAuth App credentials
+	if clientID, ok := creds["clientID"]; ok {
+		c.OAuthCredentials.ClientID = clientID
+
+		if clientSecret, ok := creds["clientSecret"]; ok {
+			// Client Secret is present, use OAuth App authentication
+			c.OAuthCredentials.ClientSecret = clientSecret
+			c.AuthMethod = "oauthApp"
+		} else if certPath, ok := creds["certificatePath"]; ok {
+			// Certificate path is present, use OAuth Certificate authentication
+			c.OAuthCredentials.CertificatePath = certPath
+			c.AuthMethod = "oauthCertificate"
+
+			// Optionally, load additional certificate details if provided
+			if certKeyPath, ok := creds["certificateKeyPath"]; ok {
+				c.OAuthCredentials.CertificateKeyPath = certKeyPath
+			}
+			if thumbprint, ok := creds["certThumbprint"]; ok {
+				c.OAuthCredentials.CertThumbprint = thumbprint
+			}
+		} else {
+			// Neither Client Secret nor Certificate Path is provided
+			fmt.Errorf("OAuth credentials are incomplete: either client secret or certificate path must be provided")
+		}
+	} else {
+		fmt.Errorf("client ID is required for OAuth authentication")
+	}
+}
+
+// GetOAuthCredentials retrieves the current OAuth credentials (Client ID and Client Secret)
+// set for the client instance. Used for test cases.
+func (c *Client) GetOAuthCredentials() OAuthCredentials {
+	return c.OAuthCredentials
+}
