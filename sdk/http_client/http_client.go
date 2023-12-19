@@ -8,10 +8,8 @@ like the baseURL, authentication details, and an embedded standard HTTP client. 
 package http_client
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"sync"
 	"time"
 )
@@ -90,25 +88,6 @@ type StructuredError struct {
 // ClientOption defines a function type for modifying client properties during initialization.
 type ClientOption func(*Client)
 
-// LoadClientAuthConfig reads a JSON configuration file and decodes it into a ClientAuthConfig struct.
-// It is used to retrieve authentication details like BaseURL, Username, and Password for the client.
-func LoadClientAuthConfig(filename string) (*ClientAuthConfig, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	config := &ClientAuthConfig{}
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(config)
-	if err != nil {
-		return nil, err
-	}
-
-	return config, nil
-}
-
 // NewClient initializes a new http client instance with the given baseURL, logger, concurrency manager and client configuration
 /*
 If TokenLifespan and BufferPeriod aren't set in the config, they default to 30 minutes and 5 minutes, respectively.
@@ -182,7 +161,7 @@ func NewClient(instanceName string, config Config, authConfig *ClientAuthConfig,
 	}
 
 	// Set authentication credentials and determine AuthMethod
-	client.SetAuthenticationCredentials(map[string]string{
+	client.SetGraphAuthenticationMethod(map[string]string{
 		"clientID":           authConfig.ClientID,
 		"clientSecret":       authConfig.ClientSecret,
 		"certificatePath":    authConfig.CertificatePath,

@@ -26,15 +26,6 @@ type OAuthResponse struct {
 	Error        string `json:"error,omitempty"`
 }
 
-/*
-// SetOAuthCredentials sets the OAuth credentials (Client ID and Client Secret)
-// for the client instance. These credentials are used for obtaining and refreshing
-// OAuth tokens for authentication.
-
-	func (c *Client) SetOAuthCredentials(credentials OAuthCredentials) {
-		c.OAuthCredentials = credentials
-	}
-*/
 const Authority = "https://login.microsoftonline.com/"
 const Scope = "https://graph.microsoft.com/.default"
 
@@ -171,37 +162,6 @@ func (c *Client) ObtainOauthTokenWithCertificate(tenantID, clientID, thumbprint,
 		"Expires at", formattedExpirationTime)
 
 	return oauthResp, nil
-}
-
-// SetAuthenticationCredentials interprets and sets the credentials for the Client.
-func (c *Client) SetAuthenticationCredentials(creds map[string]string) {
-	// Check for OAuth App credentials
-	if clientID, ok := creds["clientID"]; ok {
-		c.OAuthCredentials.ClientID = clientID
-
-		if clientSecret, ok := creds["clientSecret"]; ok {
-			// Client Secret is present, use OAuth App authentication
-			c.OAuthCredentials.ClientSecret = clientSecret
-			c.AuthMethod = "oauthApp"
-		} else if certPath, ok := creds["certificatePath"]; ok {
-			// Certificate path is present, use OAuth Certificate authentication
-			c.OAuthCredentials.CertificatePath = certPath
-			c.AuthMethod = "oauthCertificate"
-
-			// Optionally, load additional certificate details if provided
-			if certKeyPath, ok := creds["certificateKeyPath"]; ok {
-				c.OAuthCredentials.CertificateKeyPath = certKeyPath
-			}
-			if thumbprint, ok := creds["certThumbprint"]; ok {
-				c.OAuthCredentials.CertThumbprint = thumbprint
-			}
-		} else {
-			// Neither Client Secret nor Certificate Path is provided
-			fmt.Errorf("OAuth credentials are incomplete: either client secret or certificate path must be provided")
-		}
-	} else {
-		fmt.Errorf("client ID is required for OAuth authentication")
-	}
 }
 
 // GetOAuthCredentials retrieves the current OAuth credentials (Client ID and Client Secret)

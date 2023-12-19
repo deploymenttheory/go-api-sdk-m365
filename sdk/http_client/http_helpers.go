@@ -2,8 +2,10 @@
 package http_client
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -27,4 +29,23 @@ func CheckDeprecationHeader(resp *http.Response, logger Logger) {
 	if deprecationHeader != "" {
 		logger.Warn("API endpoint is deprecated as of", "Date", deprecationHeader)
 	}
+}
+
+// LoadClientAuthConfig reads a JSON configuration file and decodes it into a ClientAuthConfig struct.
+// It is used to retrieve authentication details like BaseURL, Username, and Password for the client.
+func LoadClientAuthConfig(filename string) (*ClientAuthConfig, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	config := &ClientAuthConfig{}
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }
