@@ -25,7 +25,7 @@ func main() {
 
 	// Configuration for the HTTP client
 	httpClientconfig := http_client.Config{
-		LogLevel:                  http_client.LogLevelInfo,
+		LogLevel:                  http_client.LogLevelDebug,
 		MaxRetryAttempts:          3,
 		EnableDynamicRateLimiting: true,
 		Logger:                    logger,
