@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/deploymenttheory/go-api-sdk-intune/sdk/http_client" // Import http_client for logging
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
+	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
-	configFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-intune/clientauth.json"
+	configFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/clientauth.json"
 
 	// Load the client OAuth credentials from the configuration file
 	clientAuthConfig, err := http_client.LoadClientAuthConfig(configFilePath)

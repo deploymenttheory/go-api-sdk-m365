@@ -7,7 +7,6 @@ import (
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
-	utils "github.com/deploymenttheory/go-api-sdk-m365/sdk/utils"
 )
 
 func main() {
@@ -26,7 +25,7 @@ func main() {
 
 	// Configuration for the HTTP client
 	httpClientconfig := http_client.Config{
-		LogLevel:                  http_client.LogLevelInfo,
+		LogLevel:                  http_client.LogLevelDebug,
 		MaxRetryAttempts:          3,
 		EnableDynamicRateLimiting: true,
 		Logger:                    logger,
@@ -42,28 +41,31 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceManagementScriptName := "Intune-Script-Windows10-NewOSDTattoo"
-
-	// Use the Intune client to perform operations
-	deviceManagementScript, err := intune.GetDeviceManagementScriptByDisplayName(deviceManagementScriptName)
-	if err != nil {
-		log.Fatalf("Failed to get device management scripts: %v", err)
+	// Define the new script details
+	updatedScriptDetails := intuneSDK.ResourceDeviceManagementScriptRequest{
+		OdataType:             "#microsoft.graph.deviceManagementScript", // Update this according to the Intune API requirements
+		DisplayName:           "New name of Script",
+		Description:           "This is a new script created for demonstration purposes.",
+		ScriptContent:         "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
+		RunAsAccount:          "system",               // or "user"
+		EnforceSignatureCheck: false,
+		FileName:              "NewScript.ps1",
+		RoleScopeTagIds:       []string{"0"},
+		RunAs32Bit:            false,
 	}
 
-	// Pretty print the device management scripts
-	jsonData, err := json.MarshalIndent(deviceManagementScript, "", "  ")
+	deviceManagementScriptID := "0542155b-6f91-49d0-b32c-033fd290cfdc"
+
+	// Create the new device management script
+	newScript, err := intune.UpdateDeviceManagementScriptByID(deviceManagementScriptID, &updatedScriptDetails)
 	if err != nil {
-		log.Fatalf("Failed to marshal device management scripts: %v", err)
+		log.Fatalf("Failed to create device management script: %v", err)
+	}
+
+	// Pretty print the created device management script
+	jsonData, err := json.MarshalIndent(newScript, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal created device management script: %v", err)
 	}
 	fmt.Println(string(jsonData))
-
-	// Base64 decode the scriptContent field
-	decodedContent, err := utils.Base64Decode(deviceManagementScript.ScriptContent)
-	if err != nil {
-		log.Fatalf("Failed to Base64 decode the script content: %v", err)
-	}
-
-	// Assuming the decoded content is a string, print it
-	fmt.Println("Decoded Intune Script Content:")
-	fmt.Println(string(decodedContent))
 }

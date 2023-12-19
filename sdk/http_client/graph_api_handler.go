@@ -53,7 +53,6 @@ import (
 // Endpoint constants represent the URL suffixes used for Jamf API token interactions.
 const (
 	DefaultBaseDomain       = "graph.microsoft.com"           // DefaultBaseDomain: represents the base domain for graph.
-	OAuthTokenEndpoint      = "/oauth2/v2.0/token"            // OAuthTokenEndpoint: The endpoint to obtain an OAuth token.
 	TokenInvalidateEndpoint = "/api/v1/auth/invalidate-token" // TokenInvalidateEndpoint: The endpoint to invalidate an active token.
 )
 
@@ -123,7 +122,7 @@ type UnifiedGraphAPIHandler struct {
 }
 
 // Functions
-
+/*
 // GetBaseDomain returns the appropriate base domain for URL construction.
 // It uses OverrideBaseDomain if set, otherwise falls back to DefaultBaseDomain.
 func (c *Client) GetBaseDomain() string {
@@ -132,7 +131,8 @@ func (c *Client) GetBaseDomain() string {
 	}
 	return DefaultBaseDomain
 }
-
+*/
+/*
 // ConstructAPIResourceEndpoint returns the full URL for a Jamf API resource endpoint path.
 func (c *Client) ConstructAPIResourceEndpoint(endpointPath string) string {
 	baseDomain := c.GetBaseDomain()
@@ -140,7 +140,7 @@ func (c *Client) ConstructAPIResourceEndpoint(endpointPath string) string {
 	c.logger.Info("Request will be made to API Resource URL:", "URL", url)
 	return url
 }
-
+*/
 // ConstructMSGraphAPIEndpoint constructs the full URL for an MS Graph API endpoint.
 // The function takes version (e.g., "/v1.0" or "/beta") and the specific API path.
 func (c *Client) ConstructMSGraphAPIEndpoint(endpointPath string) string {
@@ -180,8 +180,7 @@ func (u *UnifiedGraphAPIHandler) SetLogger(logger Logger) {
 // It attempts to find a content type that matches the endpoint prefix in the global configMap.
 // If a match is found and the content type is defined (not nil), it returns the specified content type.
 // If the content type is nil or no match is found in configMap, it falls back to default behaviors:
-// - For url endpoints starting with "/JSSResource", it defaults to "application/xml" for the Classic API.
-// - For url endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
+// - For all url endpoints it defaults to "application/json" for the graph beta and V1.0 API's.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (u *UnifiedGraphAPIHandler) GetContentTypeHeader(endpoint string) string {
@@ -198,17 +197,8 @@ func (u *UnifiedGraphAPIHandler) GetContentTypeHeader(endpoint string) string {
 		}
 	}
 
-	// If no specific configuration is found, then check for standard URL patterns.
-	if strings.Contains(endpoint, "/JSSResource") {
-		u.logger.Debug("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
-		return "application/xml" // Classic API uses XML
-	} else if strings.Contains(endpoint, "/api") {
-		u.logger.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", "endpoint", endpoint)
-		return "application/json" // JamfPro API uses JSON
-	}
-
 	// Fallback to JSON if no other match is found.
-	u.logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", "endpoint", endpoint)
+	u.logger.Debug("Content-Type for endpoint not found in configMap, using default JSON for Graph API for endpoint", endpoint)
 	return "application/json"
 }
 

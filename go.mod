@@ -1,4 +1,4 @@
-module github.com/deploymenttheory/go-api-sdk-intune
+module github.com/deploymenttheory/go-api-sdk-m365
 
 go 1.21
 

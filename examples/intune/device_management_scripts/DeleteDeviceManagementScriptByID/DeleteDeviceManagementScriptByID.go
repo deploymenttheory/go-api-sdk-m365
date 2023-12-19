@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
-	utils "github.com/deploymenttheory/go-api-sdk-m365/sdk/utils"
 )
 
 func main() {
@@ -26,7 +24,7 @@ func main() {
 
 	// Configuration for the HTTP client
 	httpClientconfig := http_client.Config{
-		LogLevel:                  http_client.LogLevelInfo,
+		LogLevel:                  http_client.LogLevelDebug,
 		MaxRetryAttempts:          3,
 		EnableDynamicRateLimiting: true,
 		Logger:                    logger,
@@ -42,28 +40,14 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceManagementScriptName := "Intune-Script-Windows10-NewOSDTattoo"
+	// Example script ID to delete
+	scriptID := "14f2427c-6669-47d4-9156-3145d8f4a311"
 
-	// Use the Intune client to perform operations
-	deviceManagementScript, err := intune.GetDeviceManagementScriptByDisplayName(deviceManagementScriptName)
+	// Call the function to delete the device management script by ID
+	err = intune.DeleteDeviceManagementScriptByID(scriptID)
 	if err != nil {
-		log.Fatalf("Failed to get device management scripts: %v", err)
+		log.Fatalf("Error deleting device management script: %v", err)
 	}
 
-	// Pretty print the device management scripts
-	jsonData, err := json.MarshalIndent(deviceManagementScript, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal device management scripts: %v", err)
-	}
-	fmt.Println(string(jsonData))
-
-	// Base64 decode the scriptContent field
-	decodedContent, err := utils.Base64Decode(deviceManagementScript.ScriptContent)
-	if err != nil {
-		log.Fatalf("Failed to Base64 decode the script content: %v", err)
-	}
-
-	// Assuming the decoded content is a string, print it
-	fmt.Println("Decoded Intune Script Content:")
-	fmt.Println(string(decodedContent))
+	fmt.Println("Device management script deleted successfully")
 }
