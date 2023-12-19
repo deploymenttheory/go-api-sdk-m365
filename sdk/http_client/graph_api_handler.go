@@ -180,8 +180,7 @@ func (u *UnifiedGraphAPIHandler) SetLogger(logger Logger) {
 // It attempts to find a content type that matches the endpoint prefix in the global configMap.
 // If a match is found and the content type is defined (not nil), it returns the specified content type.
 // If the content type is nil or no match is found in configMap, it falls back to default behaviors:
-// - For url endpoints starting with "/JSSResource", it defaults to "application/xml" for the Classic API.
-// - For url endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
+// - For all url endpoints it defaults to "application/json" for the graph beta and V1.0 API's.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (u *UnifiedGraphAPIHandler) GetContentTypeHeader(endpoint string) string {
