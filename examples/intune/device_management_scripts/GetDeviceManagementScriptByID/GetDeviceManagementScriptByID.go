@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-sdk-intune/sdk/http_client" // Import http_client for logging
-	intune "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
+	intuneSDK "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
+	utils "github.com/deploymenttheory/go-api-sdk-intune/sdk/utils"
 )
 
 func main() {
@@ -43,12 +44,12 @@ func main() {
 	}
 
 	// Create an Intune client with the HTTP client
-	intuneClient := &intune.Client{HTTP: httpClient}
+	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	deviceManagementScriptID := "091f4207-c3c9-46e4-9255-6c8f69c9e951"
 
 	// Use the Intune client to perform operations
-	deviceManagementScript, err := intuneClient.GetDeviceManagementScriptByID(deviceManagementScriptID)
+	deviceManagementScript, err := intune.GetDeviceManagementScriptByID(deviceManagementScriptID)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
@@ -59,4 +60,14 @@ func main() {
 		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}
 	fmt.Println(string(jsonData))
+
+	// Base64 decode the scriptContent field
+	decodedContent, err := utils.Base64Decode(deviceManagementScript.ScriptContent)
+	if err != nil {
+		log.Fatalf("Failed to Base64 decode the script content: %v", err)
+	}
+
+	// Assuming the decoded content is a string, print it
+	fmt.Println("Decoded Intune Script Content:")
+	fmt.Println(string(decodedContent))
 }

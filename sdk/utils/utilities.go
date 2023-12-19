@@ -52,17 +52,28 @@ func ConvertFromXMLSafeString(s string) string {
 	return s
 }
 
-func Base64EncodeCertificate(certPath string) (string, error) {
+// Base64Encode reads a file from the given file path and returns its base64 encoded string.
+func Base64Encode(decodedStr string) (string, error) {
 	// Read the certificate file
-	data, err := os.ReadFile(certPath)
+	data, err := os.ReadFile(decodedStr)
 	if err != nil {
-		return "", fmt.Errorf("failed to read certificate file: %v", err)
+		return "", fmt.Errorf("failed to read file: %v", err)
 	}
 
 	// Base64 encode the file's content
 	encoded := base64.StdEncoding.EncodeToString(data)
 
 	return encoded, nil
+}
+
+// Base64Decode takes a base64 encoded string and decodes it back to its original binary form.
+func Base64Decode(encodedStr string) ([]byte, error) {
+	decoded, err := base64.StdEncoding.DecodeString(encodedStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode base64 string: %v", err)
+	}
+
+	return decoded, nil
 }
 
 // EnsureXMLSafeString checks if a string contains disallowed XML characters.

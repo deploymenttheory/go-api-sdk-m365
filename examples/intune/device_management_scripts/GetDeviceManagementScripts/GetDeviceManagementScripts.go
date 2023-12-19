@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-sdk-intune/sdk/http_client" // Import http_client for logging
-	intune "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
+	intuneSDK "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
 )
 
 func main() {
@@ -43,10 +43,10 @@ func main() {
 	}
 
 	// Create an Intune client with the HTTP client
-	intuneClient := &intune.Client{HTTP: httpClient}
+	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Use the Intune client to perform operations
-	deviceManagementScripts, err := intuneClient.GetDeviceManagementScripts()
+	deviceManagementScripts, err := intune.GetDeviceManagementScripts()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
