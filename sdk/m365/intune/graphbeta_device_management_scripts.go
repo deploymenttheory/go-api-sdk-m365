@@ -42,6 +42,7 @@ type ResourceDeviceManagementScript struct {
 	RoleScopeTagIds       []string  `json:"roleScopeTagIds"`
 }
 
+/*
 // GetDeviceManagementScripts gets a list of all Intune Device Management Scripts
 func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
 	endpoint := urideviceManagementScripts
@@ -50,6 +51,25 @@ func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsL
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch all Sites: %v", err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &deviceManagementScripts, nil
+}
+*/
+
+// GetDeviceManagementScripts gets a list of all Intune Device Management Scripts
+func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
+	endpoint := urideviceManagementScripts
+
+	var deviceManagementScripts ResourceDeviceManagementScriptsList
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
+
+	if err != nil {
+		return nil, fmt.Errorf(shared.errorMsgFailedGet, "device management scripts", err)
 	}
 
 	if resp != nil && resp.Body != nil {
