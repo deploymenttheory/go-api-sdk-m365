@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/deploymenttheory/go-api-sdk-intune/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-intune/sdk/m365/intune"
@@ -31,9 +30,6 @@ func main() {
 		EnableDynamicRateLimiting: true,
 		Logger:                    logger,
 		MaxConcurrentRequests:     5,
-		TokenLifespan:             30 * time.Minute,
-		TokenRefreshBufferPeriod:  5 * time.Minute,
-		TotalRetryDuration:        1 * time.Minute,
 	}
 
 	// initialize HTTP client instance

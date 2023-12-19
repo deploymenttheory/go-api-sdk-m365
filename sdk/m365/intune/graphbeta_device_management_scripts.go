@@ -1,8 +1,17 @@
+// graphbeta_device_management_scripts.go
+// Graph Beta Api - Intune: Proactive Remediation
+// Documentation: https://learn.microsoft.com/en-us/mem/intune/fundamentals/remediations
+// Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/remediations
+// API reference: https://developer.jamf.com/jamf-pro/reference/mobiledevices
+// Jamf Pro Classic API requires the structs to support an XML data structure.
+
 package intune
 
 import (
 	"fmt"
 	"time"
+
+	shared "github.com/deploymenttheory/go-api-sdk-intune/sdk/shared"
 )
 
 const urideviceManagementScripts = "/beta/deviceManagement/deviceManagementScripts"
@@ -42,24 +51,17 @@ type ResourceDeviceManagementScript struct {
 	RoleScopeTagIds       []string  `json:"roleScopeTagIds"`
 }
 
-/*
-// GetDeviceManagementScripts gets a list of all Intune Device Management Scripts
-func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
-	endpoint := urideviceManagementScripts
-
-	var deviceManagementScripts ResourceDeviceManagementScriptsList
-	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch all Sites: %v", err)
-	}
-
-	if resp != nil && resp.Body != nil {
-		defer resp.Body.Close()
-	}
-
-	return &deviceManagementScripts, nil
+type ResourceDeviceManagementScriptRequest struct {
+	OdataType             string   `json:"@odata.type"`
+	DisplayName           string   `json:"displayName"`
+	Description           string   `json:"description"`
+	ScriptContent         string   `json:"scriptContent"`
+	RunAsAccount          string   `json:"runAsAccount"`
+	EnforceSignatureCheck bool     `json:"enforceSignatureCheck"`
+	FileName              string   `json:"fileName"`
+	RoleScopeTagIds       []string `json:"roleScopeTagIds"`
+	RunAs32Bit            bool     `json:"runAs32Bit"`
 }
-*/
 
 // GetDeviceManagementScripts gets a list of all Intune Device Management Scripts
 func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
@@ -69,7 +71,7 @@ func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsL
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
 
 	if err != nil {
-		return nil, fmt.Errorf(shared.errorMsgFailedGet, "device management scripts", err)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device management scripts", err)
 	}
 
 	if resp != nil && resp.Body != nil {
@@ -86,7 +88,7 @@ func (c *Client) GetDeviceManagementScriptByID(id string) (*ResourceDeviceManage
 	var deviceManagementScript ResourceDeviceManagementScript
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScript)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch Site by ID: %v", err)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device management script", id, err)
 	}
 
 	if resp != nil && resp.Body != nil {
@@ -100,7 +102,7 @@ func (c *Client) GetDeviceManagementScriptByID(id string) (*ResourceDeviceManage
 func (c *Client) GetDeviceManagementScriptByDisplayName(displayName string) (*ResourceDeviceManagementScript, error) {
 	scripts, err := c.GetDeviceManagementScripts()
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch all scripts: %v", err)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device management scripts", err)
 	}
 
 	var scriptID string
@@ -112,8 +114,25 @@ func (c *Client) GetDeviceManagementScriptByDisplayName(displayName string) (*Re
 	}
 
 	if scriptID == "" {
-		return nil, fmt.Errorf("no script found with the name: %s", displayName)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "device management script", displayName, err)
 	}
 
 	return c.GetDeviceManagementScriptByID(scriptID)
+}
+
+// CreateDeviceManagementScript creates a new device management script.
+func (c *Client) CreateDeviceManagementScript(request *ResourceDeviceManagementScriptRequest) (*ResourceDeviceManagementScript, error) {
+	endpoint := urideviceManagementScripts
+
+	var createdScript ResourceDeviceManagementScript
+	resp, err := c.HTTP.DoRequest("POST", endpoint, request, &createdScript)
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device management script", err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &createdScript, nil
 }
