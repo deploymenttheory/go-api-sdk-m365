@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// Create a new client
-	client, err := http_client.NewClient(authConfig.TenantID, loggingConfig, authConfig, logger)
+	client, err := http_client.NewClient(loggingConfig, authConfig, logger)
 	if err != nil {
 		log.Fatalf("Failed to create new client: %v", err)
 	}
