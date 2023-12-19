@@ -20,18 +20,27 @@ const DefaultTimeout = 10 * time.Second
 
 // Client represents an HTTP client to interact with a specific API.
 type Client struct {
-	TenantName         string           // Website Instance name without the root domain
+	TenantID           string           // M365 tenant ID
+	TenantName         string           // M365 tenant name
 	AuthMethod         string           // Specifies the authentication method: "clientApp" or "clientCertificate"
 	Token              string           // Authentication Token
 	OverrideBaseDomain string           // Base domain override used when the default in the api handler isn't suitable
 	OAuthCredentials   OAuthCredentials // ClientID / Client Secret
 	Expiry             time.Time        // Expiry time set for the auth token
 	httpClient         *http.Client
-	//tokenLock          sync.Mutex
-	config         Config
-	logger         Logger
-	ConcurrencyMgr *ConcurrencyManager
-	PerfMetrics    ClientPerformanceMetrics
+	config             Config
+	logger             Logger
+	ConcurrencyMgr     *ConcurrencyManager
+	PerfMetrics        ClientPerformanceMetrics
+}
+
+// OAuthCredentials contains the client ID and client secret required for OAuth authentication.
+type OAuthCredentials struct {
+	ClientID           string
+	ClientSecret       string
+	CertificatePath    string
+	CertificateKeyPath string
+	CertThumbprint     string
 }
 
 // Config holds configuration options for the HTTP Client.
@@ -59,8 +68,8 @@ type ClientPerformanceMetrics struct {
 
 // ClientAuthConfig represents the structure to read authentication details from a JSON configuration file.
 type ClientAuthConfig struct {
+	TenantID           string `json:"tenantID,omitempty"`
 	TenantName         string `json:"tenantName,omitempty"`
-	OverrideBaseDomain string `json:"overrideBaseDomain,omitempty"`
 	Username           string `json:"username,omitempty"`
 	Password           string `json:"password,omitempty"`
 	ClientID           string `json:"clientID,omitempty"`
@@ -108,7 +117,7 @@ If no logger is provided, a default logger will be used.
 Any additional options provided will be applied to the client during initialization.
 Detect authentication method based on supplied credential type
 */
-func NewClient(instanceName string, config Config, logger Logger, options ...ClientOption) (*Client, error) {
+func NewClient(instanceName string, config Config, authConfig *ClientAuthConfig, logger Logger, options ...ClientOption) (*Client, error) {
 	// Config Check
 	if instanceName == "" {
 		return nil, fmt.Errorf("instanceName cannot be empty")
@@ -163,13 +172,23 @@ func NewClient(instanceName string, config Config, logger Logger, options ...Cli
 	logger.SetLevel(config.LogLevel)
 
 	client := &Client{
-		TenantName:     instanceName,
+		TenantName:     authConfig.TenantName,
+		TenantID:       authConfig.TenantID,
 		httpClient:     &http.Client{Timeout: DefaultTimeout},
 		config:         config,
 		logger:         logger,
 		ConcurrencyMgr: NewConcurrencyManager(config.MaxConcurrentRequests, logger, config.LogLevel >= LogLevelDebug),
 		PerfMetrics:    ClientPerformanceMetrics{},
 	}
+
+	// Set authentication credentials and determine AuthMethod
+	client.SetAuthenticationCredentials(map[string]string{
+		"clientID":           authConfig.ClientID,
+		"clientSecret":       authConfig.ClientSecret,
+		"certificatePath":    authConfig.CertificatePath,
+		"certificateKeyPath": authConfig.CertificateKeyPath,
+		"certThumbprint":     authConfig.CertThumbprint,
+	})
 
 	// Apply any additional client options provided during initialization
 	for _, opt := range options {
@@ -183,6 +202,7 @@ func NewClient(instanceName string, config Config, logger Logger, options ...Cli
 		client.logger.Debug(
 			"New client initialized with the following details:",
 			"TenantName", client.TenantName,
+			"AuthMethod", client.AuthMethod,
 			"Timeout", client.httpClient.Timeout,
 			"TokenLifespan", client.config.TokenLifespan,
 			"TokenRefreshBufferPeriod", client.config.TokenRefreshBufferPeriod,

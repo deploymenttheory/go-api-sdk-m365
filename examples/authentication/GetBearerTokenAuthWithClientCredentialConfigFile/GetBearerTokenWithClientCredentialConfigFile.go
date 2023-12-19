@@ -31,17 +31,10 @@ func main() {
 	}
 
 	// Create a new client instance using the loaded InstanceName
-	client, err := http_client.NewClient(authConfig.TenantName, config, nil)
+	client, err := http_client.NewClient(authConfig.TenantName, config, authConfig, logger)
 	if err != nil {
 		log.Fatalf("Failed to create new client: %v", err)
 	}
-
-	// Set OAuth credentials for the client
-	oAuthCreds := http_client.OAuthCredentials{
-		ClientID:     authConfig.ClientID,
-		ClientSecret: authConfig.ClientSecret,
-	}
-	client.SetOAuthCredentials(oAuthCreds)
 
 	// Call the ValidAuthTokenCheck function to ensure that a valid token is set in the client
 	isTokenValid, err := client.ValidAuthTokenCheck()

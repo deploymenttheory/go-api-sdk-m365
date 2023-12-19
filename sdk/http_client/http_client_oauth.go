@@ -26,28 +26,21 @@ type OAuthResponse struct {
 	Error        string `json:"error,omitempty"`
 }
 
-// OAuthCredentials contains the client ID and client secret required for OAuth authentication.
-type OAuthCredentials struct {
-	ClientID           string
-	ClientSecret       string
-	CertificatePath    string
-	CertificateKeyPath string
-	CertThumbprint     string
-}
-
+/*
 // SetOAuthCredentials sets the OAuth credentials (Client ID and Client Secret)
 // for the client instance. These credentials are used for obtaining and refreshing
 // OAuth tokens for authentication.
-func (c *Client) SetOAuthCredentials(credentials OAuthCredentials) {
-	c.OAuthCredentials = credentials
-}
 
+	func (c *Client) SetOAuthCredentials(credentials OAuthCredentials) {
+		c.OAuthCredentials = credentials
+	}
+*/
 const Authority = "https://login.microsoftonline.com/"
 const Scope = "https://graph.microsoft.com/.default"
 
 // ObtainOauthTokenWithApp fetches an OAuth access token using client credentials.
-func (c *Client) ObtainOauthTokenWithApp(tenantName, clientID, clientSecret string) (*OAuthResponse, error) {
-	endpoint := fmt.Sprintf("%s%s/oauth2/v2.0/token", Authority, tenantName)
+func (c *Client) ObtainOauthTokenWithApp(tenantID, clientID, clientSecret string) (*OAuthResponse, error) {
+	endpoint := fmt.Sprintf("%s%s/oauth2/v2.0/token", Authority, tenantID)
 
 	data := url.Values{}
 	data.Set("client_id", clientID)
@@ -103,8 +96,8 @@ func (c *Client) ObtainOauthTokenWithApp(tenantName, clientID, clientSecret stri
 }
 
 // ObtainOauthTokenWithCertificate fetches an OAuth access token using a certificate.
-func (c *Client) ObtainOauthTokenWithCertificate(tenantName, clientID, thumbprint, keyFile string) (*OAuthResponse, error) {
-	endpoint := fmt.Sprintf("%s%s/oauth2/v2.0/token", Authority, tenantName)
+func (c *Client) ObtainOauthTokenWithCertificate(tenantID, clientID, thumbprint, keyFile string) (*OAuthResponse, error) {
+	endpoint := fmt.Sprintf("%s%s/oauth2/v2.0/token", Authority, tenantID)
 
 	// Load the certificate
 	certData, err := os.ReadFile(keyFile)
@@ -178,4 +171,41 @@ func (c *Client) ObtainOauthTokenWithCertificate(tenantName, clientID, thumbprin
 		"Expires at", formattedExpirationTime)
 
 	return oauthResp, nil
+}
+
+// SetAuthenticationCredentials interprets and sets the credentials for the Client.
+func (c *Client) SetAuthenticationCredentials(creds map[string]string) {
+	// Check for OAuth App credentials
+	if clientID, ok := creds["clientID"]; ok {
+		c.OAuthCredentials.ClientID = clientID
+
+		if clientSecret, ok := creds["clientSecret"]; ok {
+			// Client Secret is present, use OAuth App authentication
+			c.OAuthCredentials.ClientSecret = clientSecret
+			c.AuthMethod = "oauthApp"
+		} else if certPath, ok := creds["certificatePath"]; ok {
+			// Certificate path is present, use OAuth Certificate authentication
+			c.OAuthCredentials.CertificatePath = certPath
+			c.AuthMethod = "oauthCertificate"
+
+			// Optionally, load additional certificate details if provided
+			if certKeyPath, ok := creds["certificateKeyPath"]; ok {
+				c.OAuthCredentials.CertificateKeyPath = certKeyPath
+			}
+			if thumbprint, ok := creds["certThumbprint"]; ok {
+				c.OAuthCredentials.CertThumbprint = thumbprint
+			}
+		} else {
+			// Neither Client Secret nor Certificate Path is provided
+			fmt.Errorf("OAuth credentials are incomplete: either client secret or certificate path must be provided")
+		}
+	} else {
+		fmt.Errorf("client ID is required for OAuth authentication")
+	}
+}
+
+// GetOAuthCredentials retrieves the current OAuth credentials (Client ID and Client Secret)
+// set for the client instance. Used for test cases.
+func (c *Client) GetOAuthCredentials() OAuthCredentials {
+	return c.OAuthCredentials
 }
