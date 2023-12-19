@@ -1,7 +1,7 @@
 package intune
 
 import (
-	"github.com/deploymenttheory/go-api-sdk-intune/sdk/http_client"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client"
 )
 
 type Client struct {

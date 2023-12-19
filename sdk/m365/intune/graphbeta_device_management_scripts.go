@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"time"
 
-	shared "github.com/deploymenttheory/go-api-sdk-intune/sdk/shared"
+	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
 
 const urideviceManagementScripts = "/beta/deviceManagement/deviceManagementScripts"
