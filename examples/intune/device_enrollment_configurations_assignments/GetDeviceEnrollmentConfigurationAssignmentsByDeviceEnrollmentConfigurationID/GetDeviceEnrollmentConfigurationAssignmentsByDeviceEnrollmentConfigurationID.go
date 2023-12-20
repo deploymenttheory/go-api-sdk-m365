@@ -1,9 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
@@ -41,16 +41,18 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Define the script ID and group ID you want to assign
-	scriptID := "2fa362c5-22cd-42a6-b7d3-2bdde4850356" // Replace with your actual script ID
-	groupID := "f15ab091-95be-4ff2-bc28-7dd10f5b6829"  // Replace with your actual group ID
+	deviceEnrollmentConfigurationID := "be94fc43-03c5-4787-b42e-cfe57a24a7d8_PlatformRestrictions"
 
-	// Call the assign function
-	err = intune.AssignDeviceManagementScriptByGroupID(scriptID, groupID)
+	// Use the Intune client to perform operations
+	deviceEnrollmentConfigurationAssignments, err := intune.GetDeviceEnrollmentConfigurationAssignmentsByDeviceEnrollmentConfigurationID(deviceEnrollmentConfigurationID)
 	if err != nil {
-		fmt.Printf("Error assigning device management script: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
 
-	fmt.Println("Device management script assigned successfully.")
+	// Pretty print the device management scripts
+	jsonData, err := json.MarshalIndent(deviceEnrollmentConfigurationAssignments, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal device management scripts: %v", err)
+	}
+	fmt.Println(string(jsonData))
 }
