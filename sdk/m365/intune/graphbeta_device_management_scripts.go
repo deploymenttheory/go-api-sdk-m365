@@ -100,7 +100,7 @@ func (c *Client) GetDeviceManagementScriptByID(id string) (*ResourceDeviceManage
 	return &deviceManagementScript, nil
 }
 
-// GetDeviceManagementScriptByName retrieves a device management script by its display name.
+// GetDeviceManagementScriptByDisplayName retrieves a device management script by its display name.
 func (c *Client) GetDeviceManagementScriptByDisplayName(displayName string) (*ResourceDeviceManagementScript, error) {
 	scripts, err := c.GetDeviceManagementScripts()
 	if err != nil {
