@@ -19,11 +19,11 @@ const uriDeviceManagementConfigurationPolicies = "/deviceManagement/configuratio
 
 // ResourceDeviceManagementConfigurationPoliciesList represents the response structure for configuration policies.
 type ResourceDeviceManagementConfigurationPoliciesList struct {
-	Value []DeviceManagementConfigurationPolicy `json:"value"`
+	Value []ResourceDeviceManagementConfigurationPolicy `json:"value"`
 }
 
-// DeviceManagementConfigurationPolicy represents a configuration policy.
-type DeviceManagementConfigurationPolicy struct {
+// ResourceDeviceManagementConfigurationPolicy represents a device management configuration policy.
+type ResourceDeviceManagementConfigurationPolicy struct {
 	OdataType            string                                                     `json:"@odata.type"`
 	ID                   string                                                     `json:"id"`
 	Name                 string                                                     `json:"name"`
@@ -86,8 +86,9 @@ type DeviceManagementConfigurationSubsetChoiceSettingValue struct {
 
 // DeviceManagementConfigurationSimpleSettingValue represents the value of a simple setting.
 type DeviceManagementConfigurationSubsetSimpleSettingValue struct {
-	Value                         interface{}                                    `json:"value"` // Changed to interface{} to handle both string and numeric values
+	OdataType                     string                                         `json:"@odata.type"`
 	SettingValueTemplateReference *DeviceManagementSettingValueTemplateReference `json:"settingValueTemplateReference,omitempty"`
+	Value                         interface{}
 }
 
 type DeviceManagementSettingValueTemplateReference struct {
@@ -113,11 +114,11 @@ func (c *Client) GetDeviceManagementConfigurationPolicies() (*ResourceDeviceMana
 }
 
 // GetDeviceManagementConfigurationPolicyByID retrieves a specific device management configuration policy by its ID.
-func (c *Client) GetDeviceManagementConfigurationPolicyByID(policyId string) (*DeviceManagementConfigurationPolicy, error) {
+func (c *Client) GetDeviceManagementConfigurationPolicyByID(policyId string) (*ResourceDeviceManagementConfigurationPolicy, error) {
 	endpoint := fmt.Sprintf("%s('%s')?$expand=settings", uriBetaDeviceManagementConfigurationPolicies, policyId)
 
-	var policy DeviceManagementConfigurationPolicy
-	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &policy)
+	var deviceManagementConfigurationPolicy ResourceDeviceManagementConfigurationPolicy
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementConfigurationPolicy)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device management configuration policy", policyId, err)
 	}
@@ -126,11 +127,11 @@ func (c *Client) GetDeviceManagementConfigurationPolicyByID(policyId string) (*D
 		defer resp.Body.Close()
 	}
 
-	return &policy, nil
+	return &deviceManagementConfigurationPolicy, nil
 }
 
 // GetDeviceManagementConfigurationPolicyByName retrieves a specific device management configuration policy by its name.
-func (c *Client) GetDeviceManagementConfigurationPolicyByName(policyName string) (*DeviceManagementConfigurationPolicy, error) {
+func (c *Client) GetDeviceManagementConfigurationPolicyByName(policyName string) (*ResourceDeviceManagementConfigurationPolicy, error) {
 	// Retrieve all policies
 	policiesList, err := c.GetDeviceManagementConfigurationPolicies()
 	if err != nil {
@@ -152,4 +153,21 @@ func (c *Client) GetDeviceManagementConfigurationPolicyByName(policyName string)
 
 	// Retrieve the full details of the policy using its ID
 	return c.GetDeviceManagementConfigurationPolicyByID(policyID)
+}
+
+// CreateDeviceManagementConfigurationPolicy creates a new device management configuration policy.
+func (c *Client) CreateDeviceManagementConfigurationPolicy(request *ResourceDeviceManagementConfigurationPolicy) (*ResourceDeviceManagementConfigurationPolicy, error) {
+	endpoint := uriBetaDeviceManagementConfigurationPolicies
+
+	var createdPolicy ResourceDeviceManagementConfigurationPolicy
+	resp, err := c.HTTP.DoRequest("POST", endpoint, request, &createdPolicy)
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device management configuration policy", err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &createdPolicy, nil
 }
