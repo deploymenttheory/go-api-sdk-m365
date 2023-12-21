@@ -98,10 +98,6 @@ type DeviceManagementSettingValueTemplateReference struct {
 	UseTemplateDefault     bool   `json:"useTemplateDefault,omitempty"`
 }
 
-type RequestReorderPolicy struct {
-	Priority int `json:"priority"`
-}
-
 // GetDeviceManagementConfigurationPolicies retrieves a list of all device management configuration policies.
 func (c *Client) GetDeviceManagementConfigurationPolicies() (*ResponseDeviceManagementConfigurationPoliciesList, error) {
 	endpoint := uriBetaDeviceManagementConfigurationPolicies
@@ -154,9 +150,8 @@ func (c *Client) GetDeviceManagementConfigurationPolicyByName(policyName string)
 	}
 
 	if policyID == "" {
-		return nil, fmt.Errorf("no device management configuration policy found with name: %s", policyName)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "device management configuration policy", policyName, "Policy not found")
 	}
-
 	// Retrieve the full details of the policy using its ID
 	return c.GetDeviceManagementConfigurationPolicyByID(policyID)
 }
@@ -220,7 +215,7 @@ func (c *Client) CreateCopyOfDeviceManagementConfigurationPolicyByName(sourcePol
 	}
 
 	if policyID == "" {
-		return nil, fmt.Errorf("no device management configuration policy found with name: %s", sourcePolicyName)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "device management configuration policy", sourcePolicyName, "Policy not found")
 	}
 
 	// Create a copy of the policy using its ID
@@ -253,28 +248,6 @@ func (c *Client) UpdateDeviceManagementConfigurationPolicyByID(policyId string, 
 func (c *Client) ReorderDeviceManagementConfigurationPolicyByID(policyId string, newPriority int) (*ResourceDeviceManagementConfigurationPolicy, error) {
 	endpoint := fmt.Sprintf("%s/%s/reorder", uriBetaDeviceManagementConfigurationPolicies, policyId)
 
-	// Create the request body
-	requestBody := RequestReorderPolicy{
-		Priority: newPriority,
-	}
-
-	var reorderedPolicy ResourceDeviceManagementConfigurationPolicy
-	resp, err := c.HTTP.DoRequest("POST", endpoint, requestBody, &reorderedPolicy)
-	if err != nil {
-		return nil, fmt.Errorf(shared.ErrorMsgFailedReorder, "device management configuration policy", policyId, err)
-	}
-
-	if resp != nil && resp.Body != nil {
-		defer resp.Body.Close()
-	}
-
-	return &reorderedPolicy, nil
-}
-
-// ReorderDeviceManagementConfigurationPolicyByID updates the priority of a device management configuration policy.
-func (c *Client) ReorderDeviceManagementConfigurationPolicyByID(policyId string, newPriority int) (*ResourceDeviceManagementConfigurationPolicy, error) {
-	endpoint := fmt.Sprintf("%s/%s/reorder", uriBetaDeviceManagementConfigurationPolicies, policyId)
-
 	// Create the request body using a map
 	requestBody := map[string]int{
 		"priority": newPriority,
@@ -291,4 +264,47 @@ func (c *Client) ReorderDeviceManagementConfigurationPolicyByID(policyId string,
 	}
 
 	return &reorderedPolicy, nil
+}
+
+// DeleteDeviceManagementConfigurationPolicyByID deletes a device management configuration policy by its ID.
+func (c *Client) DeleteDeviceManagementConfigurationPolicyByID(policyId string) error {
+	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceManagementConfigurationPolicies, policyId)
+
+	resp, err := c.HTTP.DoRequest("DELETE", endpoint, nil, nil)
+	if err != nil {
+		return fmt.Errorf(shared.ErrorMsgFailedDeleteByID, "device management configuration policy", policyId, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return nil
+}
+
+// DeleteDeviceManagementConfigurationPolicyByName deletes a device management configuration policy by its name.
+func (c *Client) DeleteDeviceManagementConfigurationPolicyByName(policyName string) error {
+	policiesList, err := c.GetDeviceManagementConfigurationPolicies()
+	if err != nil {
+		return fmt.Errorf(shared.ErrorMsgFailedGet, "device management configuration policies", err)
+	}
+
+	var policyID string
+	for _, policy := range policiesList.Value {
+		if policy.Name == policyName {
+			policyID = policy.ID
+			break
+		}
+	}
+
+	if policyID == "" {
+		return fmt.Errorf(shared.ErrorMsgFailedGetByName, "device management configuration policy", policyName, "Policy not found")
+	}
+
+	err = c.DeleteDeviceManagementConfigurationPolicyByID(policyID)
+	if err != nil {
+		return fmt.Errorf(shared.ErrorMsgFailedDeleteByName, "device management configuration policy", policyName, err)
+	}
+
+	return nil
 }
