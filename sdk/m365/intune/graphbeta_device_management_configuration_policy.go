@@ -56,7 +56,7 @@ type DeviceManagementSubsetPriorityMetaData struct {
 	Priority  int    `json:"priority"`
 }
 
-// DeviceManagementConfigurationSetting represents a configuration setting within a configuration policy.
+// DeviceManagementConfigurationSetting represents a configuration settings within a configuration policy.
 type DeviceManagementConfigurationSubsetSetting struct {
 	ID              string                                       `json:"id"`
 	SettingInstance DeviceManagementConfigurationSettingInstance `json:"settingInstance"`
@@ -73,7 +73,6 @@ type DeviceManagementConfigurationSettingInstance struct {
 
 // DeviceManagementConfigurationSettingInstanceReference represents a reference to a setting instance.
 type DeviceManagementConfigurationSubsetSettingInstanceReference struct {
-	// Define potential fields here
 	SettingInstanceTemplateId string `json:"settingInstanceTemplateId,omitempty"`
 }
 

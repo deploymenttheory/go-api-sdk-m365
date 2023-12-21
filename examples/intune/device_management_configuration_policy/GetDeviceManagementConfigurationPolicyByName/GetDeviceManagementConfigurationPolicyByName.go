@@ -42,7 +42,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Example policy name to get
-	policyName := "[Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1"
+	policyName := "[Base] Dev | Windows - Settings Catalog | Microsoft Teams ver0.1"
 
 	// Use the Intune client to perform operations
 	deviceManagementPolicy, err := intune.GetDeviceManagementConfigurationPolicyByName(policyName)
