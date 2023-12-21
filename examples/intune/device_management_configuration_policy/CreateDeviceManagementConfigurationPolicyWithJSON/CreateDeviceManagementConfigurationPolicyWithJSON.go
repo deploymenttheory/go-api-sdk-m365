@@ -1,9 +1,12 @@
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
@@ -41,19 +44,27 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
-
-	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	// Read the JSON file
+	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_management_configuration_policy/CreateDeviceManagementConfigurationPolicyWithJSON/payload.json") // Replace with your JSON file path
 	if err != nil {
-		log.Fatalf("Failed to get device configuration policy: %v", err)
+		fmt.Println("Error reading JSON file:", err)
+		return
 	}
 
-	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
+	// Unmarshal the JSON data into the struct
+	var policyRequest intuneSDK.ResourceDeviceManagementConfigurationPolicy
+	err = json.Unmarshal(byteValue, &policyRequest)
 	if err != nil {
-		log.Fatalf("Failed to marshal device configuration policy: %v", err)
+		fmt.Println("Error unmarshaling JSON:", err)
+		return
 	}
-	fmt.Println(string(jsonData))
+
+	// Create the new policy
+	createdPolicy, err := intune.CreateDeviceManagementConfigurationPolicy(&policyRequest)
+	if err != nil {
+		fmt.Printf("Error creating policy: %s\n", err)
+		return
+	}
+
+	fmt.Printf("Created Policy: %+v\n", createdPolicy)
 }

@@ -41,17 +41,17 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
+	// Example policy name to get
+	policyName := "[Base] Dev | Windows - Settings Catalog | Microsoft Teams ver0.1"
 
 	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	deviceManagementPolicy, err := intune.GetDeviceManagementConfigurationPolicyByName(policyName)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}
 
 	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
+	jsonData, err := json.MarshalIndent(deviceManagementPolicy, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal device configuration policy: %v", err)
 	}

@@ -41,19 +41,16 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
-
 	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	deviceManagementPolicies, err := intune.GetResourceDeviceManagementReusablePolicySettings()
 	if err != nil {
-		log.Fatalf("Failed to get device configuration policy: %v", err)
+		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
 
-	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
+	// Pretty print the device management scripts
+	jsonData, err := json.MarshalIndent(deviceManagementPolicies, "", "  ")
 	if err != nil {
-		log.Fatalf("Failed to marshal device configuration policy: %v", err)
+		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}
 	fmt.Println(string(jsonData))
 }

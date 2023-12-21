@@ -41,21 +41,19 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example script ID and group ID
-	scriptID := "18f676c3-5835-4f9c-9437-438652a3ef76" // Replace with actual script ID
-	groupID := "4f03648f-2a22-4aa2-8131-fb22eea9db3c"  // Replace with actual group ID
+	// Example policy ID to get
+	groupPolicyConfigurationID := "3d211a29-07ee-46a7-b178-80e2db565711"
 
-	// Create a device management script group assignment
-	response, err := intune.CreateDeviceManagementScriptGroupAssignmentByScriptIDAndGroupID(scriptID, groupID)
+	// Use the Intune client to perform operations
+	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByID(groupPolicyConfigurationID)
 	if err != nil {
-		log.Fatalf("Failed to create device management script group assignment: %v", err)
+		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}
 
-	// Pretty print the response
-	jsonData, err := json.MarshalIndent(response, "", "  ")
+	// Pretty print the device configuration policy
+	jsonData, err := json.MarshalIndent(deviceManagementGroupPolicyConfiguration, "", "  ")
 	if err != nil {
-		log.Fatalf("Failed to marshal response: %v", err)
+		log.Fatalf("Failed to marshal device configuration policy: %v", err)
 	}
-	fmt.Println("Created Group Assignment:")
 	fmt.Println(string(jsonData))
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -41,19 +40,16 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
+	// Replace with your actual policy ID and desired new priority
+	policyID := "57ddf6b9-29d0-43d6-9a1d-5b9688da0487"
+	newPriority := 8
 
-	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	// Call ReorderDeviceManagementConfigurationPolicyByID
+	reorderedPolicy, err := intune.ReorderDeviceManagementConfigurationPolicyByID(policyID, newPriority)
 	if err != nil {
-		log.Fatalf("Failed to get device configuration policy: %v", err)
+		log.Fatalf("Error reordering policy: %v", err)
 	}
 
-	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal device configuration policy: %v", err)
-	}
-	fmt.Println(string(jsonData))
+	// Output the result
+	fmt.Printf("Reordered Policy: %+v\n", reorderedPolicy)
 }

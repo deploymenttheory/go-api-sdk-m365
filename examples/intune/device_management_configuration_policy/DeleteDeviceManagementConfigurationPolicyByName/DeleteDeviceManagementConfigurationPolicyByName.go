@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -41,19 +40,15 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
+	// Example policy name to get
+	policyName := "intuneSDK | [Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1"
 
-	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	// Delete the policy
+	err = intune.DeleteDeviceManagementConfigurationPolicyByName(policyName)
 	if err != nil {
-		log.Fatalf("Failed to get device configuration policy: %v", err)
+		fmt.Printf("Error deleting policy: %s\n", err)
+		return
 	}
 
-	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal device configuration policy: %v", err)
-	}
-	fmt.Println(string(jsonData))
+	fmt.Println("Policy deleted successfully")
 }

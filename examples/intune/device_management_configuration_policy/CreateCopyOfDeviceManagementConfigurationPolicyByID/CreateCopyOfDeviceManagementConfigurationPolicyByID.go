@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -42,18 +41,16 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Example policy ID to get
-	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
+	sourcePolicyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
+	copyDisplayName := "New Policy Display Name"
+	copyDescription := "New Policy Description"
 
-	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	// Create a copy of the policy
+	copiedPolicy, err := intune.CreateCopyOfDeviceManagementConfigurationPolicyByID(sourcePolicyID, copyDisplayName, copyDescription)
 	if err != nil {
-		log.Fatalf("Failed to get device configuration policy: %v", err)
+		log.Fatalf("Failed to create a copy of the policy: %v", err)
 	}
 
-	// Pretty print the device configuration policy
-	jsonData, err := json.MarshalIndent(deviceManagementConfigurationPolicy, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal device configuration policy: %v", err)
-	}
-	fmt.Println(string(jsonData))
+	// Output the details of the copied policy
+	fmt.Printf("Copied Policy: %+v\n", copiedPolicy)
 }
