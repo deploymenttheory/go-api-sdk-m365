@@ -26,14 +26,82 @@ type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 
 // Struct for individual Group Policy Configuration
 type ResourceDeviceManagementGroupPolicyConfiguration struct {
-	OdataType                        string    `json:"@odata.type"`
-	ID                               string    `json:"id"`
-	DisplayName                      string    `json:"displayName"`
-	Description                      string    `json:"description"`
-	RoleScopeTagIds                  []string  `json:"roleScopeTagIds"`
-	PolicyConfigurationIngestionType string    `json:"policyConfigurationIngestionType"`
-	CreatedDateTime                  time.Time `json:"createdDateTime"`
-	LastModifiedDateTime             time.Time `json:"lastModifiedDateTime"`
+	OdataType                        string                       `json:"@odata.type"`
+	ID                               string                       `json:"id"`
+	DisplayName                      string                       `json:"displayName"`
+	Description                      string                       `json:"description"`
+	RoleScopeTagIds                  []string                     `json:"roleScopeTagIds"`
+	PolicyConfigurationIngestionType string                       `json:"policyConfigurationIngestionType"`
+	CreatedDateTime                  time.Time                    `json:"createdDateTime"`
+	LastModifiedDateTime             time.Time                    `json:"lastModifiedDateTime"`
+	DefinitionValues                 []GroupPolicyDefinitionValue `json:"definitionValues,omitempty"`
+	Assignments                      []Assignment                 `json:"assignments,omitempty"`
+}
+
+// Struct for holding a list of Group Policy Definition Values
+type ResponseGroupPolicyDefinitionValuesList struct {
+	Value []GroupPolicyDefinitionValue `json:"value"`
+}
+
+// GroupPolicyDefinitionValue represents a single Group Policy Definition Value.
+type GroupPolicyDefinitionValue struct {
+	ID                   string                         `json:"id"`
+	Enabled              bool                           `json:"enabled"`
+	ConfigurationType    string                         `json:"configurationType"`
+	CreatedDateTime      time.Time                      `json:"createdDateTime"`
+	LastModifiedDateTime time.Time                      `json:"lastModifiedDateTime"`
+	Definition           *GroupPolicyDefinition         `json:"definition,omitempty"`
+	PresentationValues   []GroupPolicyPresentationValue `json:"presentationValues,omitempty"`
+}
+
+// GroupPolicyDefinition represents the definition of a Group Policy.
+type GroupPolicyDefinition struct {
+	ID          string `json:"id"`
+	DisplayName string `json:"displayName"`
+	Description string `json:"description"`
+	// Add other relevant fields as required
+}
+
+type ResponsePresentationValuesList struct {
+	Value []GroupPolicyPresentationValue `json:"value"`
+}
+
+// GroupPolicyPresentationValue represents a presentation value for a Group Policy Definition Value.
+type GroupPolicyPresentationValue struct {
+	ID          string       `json:"id"`
+	Label       string       `json:"label"`
+	Description string       `json:"description"`
+	ValueType   string       `json:"valueType"` // e.g., "string", "integer", "boolean", etc.
+	Value       DynamicValue `json:"value"`
+}
+
+// DynamicValue is a type that can hold different types of values.
+type DynamicValue struct {
+	// Use an interface to hold the actual value.
+	Value interface{}
+}
+
+// Struct for holding a list of Assignments
+type ResponseAssignmentsList struct {
+	Value []Assignment `json:"value"`
+}
+
+// Assignment represents an assignment of a Group Policy Configuration
+type Assignment struct {
+	ID                   string           `json:"id"`
+	LastModifiedDateTime time.Time        `json:"lastModifiedDateTime"`
+	Target               AssignmentTarget `json:"target"`
+	// Add other relevant fields as required
+}
+
+// AssignmentTarget represents the target of an Assignment (User, Group, etc.)
+type AssignmentTarget struct {
+	ID                                         string `json:"id"`
+	Type                                       string `json:"@odata.type"` // e.g., "#microsoft.graph.groupTarget", etc.
+	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	CollectionId                               string `json:"collectionId"`
+	// Add other relevant fields as required
 }
 
 // Function to get the list of Group Policy Configurations
@@ -53,19 +121,48 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurations() ([]ResourceDevic
 	return responseGroupPolicyConfigurations.Value, nil
 }
 
-// GetDeviceManagementGroupPolicyConfigurationByID retrieves a specific Group Policy Configuration by its ID.
+// GetDeviceManagementGroupPolicyConfigurationByID retrieves a specific Group Policy Configuration by its ID with expanded details.
 func (c *Client) GetDeviceManagementGroupPolicyConfigurationByID(policyConfigurationId string) (*ResourceDeviceManagementGroupPolicyConfiguration, error) {
-	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceManagementGroupPolicyConfigurations, policyConfigurationId)
-
-	var responseGroupPolicyConfiguration ResourceDeviceManagementGroupPolicyConfiguration
-	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseGroupPolicyConfiguration)
+	// Retrieve the base Group Policy Configuration
+	baseEndpoint := fmt.Sprintf("%s/%s", uriBetaDeviceManagementGroupPolicyConfigurations, policyConfigurationId)
+	var baseConfig ResourceDeviceManagementGroupPolicyConfiguration
+	_, err := c.HTTP.DoRequest("GET", baseEndpoint, nil, &baseConfig)
 	if err != nil {
-		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device management group policy configuration", policyConfigurationId, err)
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "group policy configuration", policyConfigurationId, err)
 	}
 
-	if resp != nil && resp.Body != nil {
-		defer resp.Body.Close()
+	// Retrieve Definition Values and expand each definition
+	defValuesEndpoint := fmt.Sprintf("%s/definitionValues?$expand=definition", baseEndpoint)
+	var defValuesList ResponseGroupPolicyDefinitionValuesList
+	_, err = c.HTTP.DoRequest("GET", defValuesEndpoint, nil, &defValuesList)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get definition values: %v", err)
 	}
 
-	return &responseGroupPolicyConfiguration, nil
+	// For each Definition Value, retrieve and expand Presentation Values
+	for i, defValue := range defValuesList.Value {
+		presentationEndpoint := fmt.Sprintf("%s/definitionValues/%s/presentationValues?$expand=presentation", baseEndpoint, defValue.ID)
+		var presentationList ResponsePresentationValuesList
+		_, err = c.HTTP.DoRequest("GET", presentationEndpoint, nil, &presentationList)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get presentation values: %v", err)
+		}
+		defValuesList.Value[i].PresentationValues = presentationList.Value
+	}
+
+	// Attach expanded Definition Values to the base configuration
+	baseConfig.DefinitionValues = defValuesList.Value
+
+	// Retrieve Assignments
+	assignmentsEndpoint := fmt.Sprintf("%s/assignments", baseEndpoint)
+	var assignmentsList ResponseAssignmentsList
+	_, err = c.HTTP.DoRequest("GET", assignmentsEndpoint, nil, &assignmentsList)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get assignments: %v", err)
+	}
+
+	// Attach Assignments to the base configuration
+	baseConfig.Assignments = assignmentsList.Value
+
+	return &baseConfig, nil
 }

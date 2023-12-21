@@ -42,7 +42,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Example policy ID to get
-	groupPolicyConfigurationID := "3d211a29-07ee-46a7-b178-80e2db565711"
+	groupPolicyConfigurationID := "6f9ba788-f719-46a7-b7c5-d566963d5999"
 
 	// Use the Intune client to perform operations
 	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByID(groupPolicyConfigurationID)
