@@ -100,8 +100,11 @@ func main() {
 		Settings: policySettings,
 	}
 
+	// Example policy ID to get
+	policyID := "8077bf4b-2677-4521-b839-549396b052b1"
+
 	// Create the new policy
-	createdPolicy, err := intune.CreateDeviceManagementConfigurationPolicy(&policyRequest)
+	createdPolicy, err := intune.UpdateDeviceManagementConfigurationPolicyByID(policyID, &policyRequest)
 	if err != nil {
 		fmt.Printf("Error creating policy: %s\n", err)
 		return

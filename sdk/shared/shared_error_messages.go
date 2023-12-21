@@ -19,6 +19,7 @@ const (
 	ErrorMsgFailedDeleteByName   = "failed to delete %s by name: %s, error: %v"
 	ErrorMsgFailedDeleteMultiple = "failed to delete multiple %s, by ids: %v, error: %v"
 	ErrorMsgFailedAssign         = "failed to assign %s by id: %v, error: %v"
+	ErrorMsgFailedCreateCopy     = "failed to copy %s by id: %v, error: %v"
 
 	// Mapstructure - type: string, error: any
 	ErrorMsgFailedMapstruct = "failed to map interfaced %s to structs, error: %v"
