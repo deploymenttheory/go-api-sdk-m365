@@ -14,7 +14,7 @@
   ],
   "isAssigned": false,
   "templateReference": {
-    "@odata.type": "microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
+    "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
     "templateId": "",
     "templateFamily": "none"
   },

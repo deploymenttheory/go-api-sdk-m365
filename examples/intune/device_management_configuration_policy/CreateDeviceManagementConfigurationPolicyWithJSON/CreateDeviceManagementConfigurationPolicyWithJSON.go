@@ -1,5 +1,5 @@
 // "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
-// "@odata.type": "microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 package main
 
 import (

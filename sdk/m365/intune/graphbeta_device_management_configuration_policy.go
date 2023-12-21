@@ -88,7 +88,7 @@ type DeviceManagementConfigurationSubsetChoiceSettingValue struct {
 type DeviceManagementConfigurationSubsetSimpleSettingValue struct {
 	OdataType                     string                                         `json:"@odata.type"`
 	SettingValueTemplateReference *DeviceManagementSettingValueTemplateReference `json:"settingValueTemplateReference,omitempty"`
-	Value                         interface{}
+	Value                         interface{}                                    `json:"value"`
 }
 
 type DeviceManagementSettingValueTemplateReference struct {
