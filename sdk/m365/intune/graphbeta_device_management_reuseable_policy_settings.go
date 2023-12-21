@@ -26,24 +26,24 @@ type ResponseDeviceManagementReusablePolicySettingsList struct {
 
 // ResourceDeviceManagementReusablePolicySetting represents a reusable policy setting resource in device management.
 type ResourceDeviceManagementReusablePolicySetting struct {
-	OdataType                           string                                             `json:"@odata.type"`
-	ID                                  string                                             `json:"id"`
-	DisplayName                         string                                             `json:"displayName"`
-	Description                         string                                             `json:"description"`
-	SettingDefinitionId                 string                                             `json:"settingDefinitionId"`
-	SettingInstance                     DeviceManagementConfigurationChoiceSettingInstance `json:"settingInstance"`
-	CreatedDateTime                     time.Time                                          `json:"createdDateTime"`
-	LastModifiedDateTime                time.Time                                          `json:"lastModifiedDateTime"`
-	Version                             int                                                `json:"version"`
-	ReferencingConfigurationPolicyCount int                                                `json:"referencingConfigurationPolicyCount"`
+	OdataType                           string                                              `json:"@odata.type"`
+	ID                                  string                                              `json:"id"`
+	DisplayName                         string                                              `json:"displayName"`
+	Description                         string                                              `json:"description"`
+	SettingDefinitionId                 string                                              `json:"settingDefinitionId"`
+	SettingInstance                     *DeviceManagementConfigurationChoiceSettingInstance `json:"settingInstance,omitempty"`
+	CreatedDateTime                     time.Time                                           `json:"createdDateTime"`
+	LastModifiedDateTime                time.Time                                           `json:"lastModifiedDateTime"`
+	Version                             int                                                 `json:"version"`
+	ReferencingConfigurationPolicyCount int                                                 `json:"referencingConfigurationPolicyCount"`
 }
 
 // DeviceManagementConfigurationChoiceSettingInstance represents an instance of a choice setting.
 type DeviceManagementConfigurationChoiceSettingInstance struct {
-	OdataType                        string                                                        `json:"@odata.type"`
-	SettingDefinitionId              string                                                        `json:"settingDefinitionId"`
-	SettingInstanceTemplateReference DeviceManagementConfigurationSettingInstanceTemplateReference `json:"settingInstanceTemplateReference"`
-	ChoiceSettingValue               DeviceManagementConfigurationChoiceSettingValue               `json:"choiceSettingValue"`
+	OdataType                        string                                                         `json:"@odata.type"`
+	SettingDefinitionId              string                                                         `json:"settingDefinitionId"`
+	SettingInstanceTemplateReference *DeviceManagementConfigurationSettingInstanceTemplateReference `json:"settingInstanceTemplateReference,omitempty"`
+	ChoiceSettingValue               *DeviceManagementConfigurationChoiceSettingValue               `json:"choiceSettingValue,omitempty"`
 }
 
 // DeviceManagementConfigurationSettingInstanceTemplateReference represents a reference to a setting instance template.
@@ -54,10 +54,10 @@ type DeviceManagementConfigurationSettingInstanceTemplateReference struct {
 
 // DeviceManagementConfigurationChoiceSettingValue represents the value of a choice setting.
 type DeviceManagementConfigurationChoiceSettingValue struct {
-	OdataType                     string                                                     `json:"@odata.type"`
-	SettingValueTemplateReference DeviceManagementConfigurationSettingValueTemplateReference `json:"settingValueTemplateReference"`
-	Value                         string                                                     `json:"value"`
-	Children                      []DeviceManagementConfigurationChoiceSettingInstance       `json:"children"`
+	OdataType                     string                                                      `json:"@odata.type"`
+	SettingValueTemplateReference *DeviceManagementConfigurationSettingValueTemplateReference `json:"settingValueTemplateReference,omitempty"`
+	Value                         string                                                      `json:"value"`
+	Children                      []*DeviceManagementConfigurationChoiceSettingInstance       `json:"children,omitempty"`
 }
 
 // DeviceManagementConfigurationSettingValueTemplateReference represents a template reference for a setting value.
@@ -100,3 +100,5 @@ func (c *Client) GetDeviceManagementReusablePolicySettingByID(policySettingId st
 
 	return &responseReusablePolicySetting, nil
 }
+
+//TODO - rest of the CRUD functions
