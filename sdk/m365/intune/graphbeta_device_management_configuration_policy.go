@@ -98,6 +98,10 @@ type DeviceManagementSettingValueTemplateReference struct {
 	UseTemplateDefault     bool   `json:"useTemplateDefault,omitempty"`
 }
 
+type RequestReorderPolicy struct {
+	Priority int `json:"priority"`
+}
+
 // GetDeviceManagementConfigurationPolicies retrieves a list of all device management configuration policies.
 func (c *Client) GetDeviceManagementConfigurationPolicies() (*ResponseDeviceManagementConfigurationPoliciesList, error) {
 	endpoint := uriBetaDeviceManagementConfigurationPolicies
@@ -243,4 +247,48 @@ func (c *Client) UpdateDeviceManagementConfigurationPolicyByID(policyId string, 
 	}
 
 	return &responseUpdatedPolicy, nil
+}
+
+// ReorderDeviceManagementConfigurationPolicyByID updates the priority of a device management configuration policy.
+func (c *Client) ReorderDeviceManagementConfigurationPolicyByID(policyId string, newPriority int) (*ResourceDeviceManagementConfigurationPolicy, error) {
+	endpoint := fmt.Sprintf("%s/%s/reorder", uriBetaDeviceManagementConfigurationPolicies, policyId)
+
+	// Create the request body
+	requestBody := RequestReorderPolicy{
+		Priority: newPriority,
+	}
+
+	var reorderedPolicy ResourceDeviceManagementConfigurationPolicy
+	resp, err := c.HTTP.DoRequest("POST", endpoint, requestBody, &reorderedPolicy)
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedReorder, "device management configuration policy", policyId, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &reorderedPolicy, nil
+}
+
+// ReorderDeviceManagementConfigurationPolicyByID updates the priority of a device management configuration policy.
+func (c *Client) ReorderDeviceManagementConfigurationPolicyByID(policyId string, newPriority int) (*ResourceDeviceManagementConfigurationPolicy, error) {
+	endpoint := fmt.Sprintf("%s/%s/reorder", uriBetaDeviceManagementConfigurationPolicies, policyId)
+
+	// Create the request body using a map
+	requestBody := map[string]int{
+		"priority": newPriority,
+	}
+
+	var reorderedPolicy ResourceDeviceManagementConfigurationPolicy
+	resp, err := c.HTTP.DoRequest("POST", endpoint, requestBody, &reorderedPolicy)
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedReorder, "device management configuration policy", policyId, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &reorderedPolicy, nil
 }
