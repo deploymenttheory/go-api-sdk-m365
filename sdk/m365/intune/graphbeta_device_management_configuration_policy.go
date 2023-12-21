@@ -24,25 +24,25 @@ type ResourceDeviceManagementConfigurationPoliciesList struct {
 
 // DeviceManagementConfigurationPolicy represents a configuration policy.
 type DeviceManagementConfigurationPolicy struct {
-	OdataType            string                                               `json:"@odata.type"`
-	ID                   string                                               `json:"id"`
-	Name                 string                                               `json:"name"`
-	Description          string                                               `json:"description"`
-	Platforms            string                                               `json:"platforms"`
-	Technologies         string                                               `json:"technologies"`
-	CreatedDateTime      time.Time                                            `json:"createdDateTime"`
-	LastModifiedDateTime time.Time                                            `json:"lastModifiedDateTime"`
-	SettingCount         int                                                  `json:"settingCount"`
-	CreationSource       string                                               `json:"creationSource"`
-	RoleScopeTagIds      []string                                             `json:"roleScopeTagIds"`
-	IsAssigned           bool                                                 `json:"isAssigned"`
-	TemplateReference    DeviceManagementConfigurationPolicyTemplateReference `json:"templateReference"`
-	PriorityMetaData     *DeviceManagementPriorityMetaData                    `json:"priorityMetaData,omitempty"`
-	Settings             []DeviceManagementConfigurationSetting               `json:"settings"`
+	OdataType            string                                                     `json:"@odata.type"`
+	ID                   string                                                     `json:"id"`
+	Name                 string                                                     `json:"name"`
+	Description          string                                                     `json:"description"`
+	Platforms            string                                                     `json:"platforms"`
+	Technologies         string                                                     `json:"technologies"`
+	CreatedDateTime      time.Time                                                  `json:"createdDateTime"`
+	LastModifiedDateTime time.Time                                                  `json:"lastModifiedDateTime"`
+	SettingCount         int                                                        `json:"settingCount"`
+	CreationSource       string                                                     `json:"creationSource"`
+	RoleScopeTagIds      []string                                                   `json:"roleScopeTagIds"`
+	IsAssigned           bool                                                       `json:"isAssigned"`
+	TemplateReference    DeviceManagementConfigurationPolicySubsetTemplateReference `json:"templateReference"`
+	PriorityMetaData     *DeviceManagementSubsetPriorityMetaData                    `json:"priorityMetaData,omitempty"`
+	Settings             []DeviceManagementConfigurationSubsetSetting               `json:"settings"`
 }
 
 // DeviceManagementConfigurationPolicyTemplateReference represents the template reference in a configuration policy.
-type DeviceManagementConfigurationPolicyTemplateReference struct {
+type DeviceManagementConfigurationPolicySubsetTemplateReference struct {
 	OdataType              string `json:"@odata.type"`
 	TemplateId             string `json:"templateId"`
 	TemplateFamily         string `json:"templateFamily"`
@@ -51,34 +51,48 @@ type DeviceManagementConfigurationPolicyTemplateReference struct {
 }
 
 // DeviceManagementPriorityMetaData represents the priority metadata in a configuration policy.
-type DeviceManagementPriorityMetaData struct {
+type DeviceManagementSubsetPriorityMetaData struct {
 	OdataType string `json:"@odata.type"`
 	Priority  int    `json:"priority"`
 }
 
 // DeviceManagementConfigurationSetting represents a configuration setting within a configuration policy.
-type DeviceManagementConfigurationSetting struct {
+type DeviceManagementConfigurationSubsetSetting struct {
 	ID              string                                       `json:"id"`
 	SettingInstance DeviceManagementConfigurationSettingInstance `json:"settingInstance"`
 }
 
 // DeviceManagementConfigurationSettingInstance represents an instance of a configuration setting.
 type DeviceManagementConfigurationSettingInstance struct {
-	OdataType                        string                                                 `json:"@odata.type"`
-	SettingDefinitionId              string                                                 `json:"settingDefinitionId"`
-	SettingInstanceTemplateReference *DeviceManagementConfigurationSettingInstanceReference `json:"settingInstanceTemplateReference,omitempty"`
-	ChoiceSettingValue               DeviceManagementConfigurationChoiceSettingValue        `json:"choiceSettingValue"`
+	OdataType                        string                                                       `json:"@odata.type"`
+	SettingDefinitionId              string                                                       `json:"settingDefinitionId"`
+	SettingInstanceTemplateReference *DeviceManagementConfigurationSubsetSettingInstanceReference `json:"settingInstanceTemplateReference,omitempty"`
+	ChoiceSettingValue               *DeviceManagementConfigurationSubsetChoiceSettingValue       `json:"choiceSettingValue,omitempty"`
+	SimpleSettingValue               *DeviceManagementConfigurationSubsetSimpleSettingValue       `json:"simpleSettingValue,omitempty"`
 }
 
 // DeviceManagementConfigurationSettingInstanceReference represents a reference to a setting instance.
-type DeviceManagementConfigurationSettingInstanceReference struct {
-	// Define fields if needed
+type DeviceManagementConfigurationSubsetSettingInstanceReference struct {
+	// Define potential fields here
+	SettingInstanceTemplateId string `json:"settingInstanceTemplateId,omitempty"`
 }
 
 // DeviceManagementConfigurationChoiceSettingValue represents the value of a choice setting.
-type DeviceManagementConfigurationChoiceSettingValue struct {
-	Value    string                                         `json:"value"`
-	Children []DeviceManagementConfigurationSettingInstance `json:"children"`
+type DeviceManagementConfigurationSubsetChoiceSettingValue struct {
+	Value                         string                                         `json:"value"`
+	Children                      []DeviceManagementConfigurationSettingInstance `json:"children"`
+	SettingValueTemplateReference *DeviceManagementSettingValueTemplateReference `json:"settingValueTemplateReference,omitempty"`
+}
+
+// DeviceManagementConfigurationSimpleSettingValue represents the value of a simple setting.
+type DeviceManagementConfigurationSubsetSimpleSettingValue struct {
+	Value                         interface{}                                    `json:"value"` // Changed to interface{} to handle both string and numeric values
+	SettingValueTemplateReference *DeviceManagementSettingValueTemplateReference `json:"settingValueTemplateReference,omitempty"`
+}
+
+type DeviceManagementSettingValueTemplateReference struct {
+	SettingValueTemplateId string `json:"settingValueTemplateId,omitempty"`
+	UseTemplateDefault     bool   `json:"useTemplateDefault,omitempty"`
 }
 
 // GetDeviceManagementConfigurationPolicies retrieves a list of all device management configuration policies.
@@ -113,4 +127,29 @@ func (c *Client) GetDeviceManagementConfigurationPolicyByID(policyId string) (*D
 	}
 
 	return &policy, nil
+}
+
+// GetDeviceManagementConfigurationPolicyByName retrieves a specific device management configuration policy by its name.
+func (c *Client) GetDeviceManagementConfigurationPolicyByName(policyName string) (*DeviceManagementConfigurationPolicy, error) {
+	// Retrieve all policies
+	policiesList, err := c.GetDeviceManagementConfigurationPolicies()
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device management configuration policies", err)
+	}
+
+	// Search for the policy with the matching name
+	var policyID string
+	for _, policy := range policiesList.Value {
+		if policy.Name == policyName {
+			policyID = policy.ID
+			break
+		}
+	}
+
+	if policyID == "" {
+		return nil, fmt.Errorf("no device management configuration policy found with name: %s", policyName)
+	}
+
+	// Retrieve the full details of the policy using its ID
+	return c.GetDeviceManagementConfigurationPolicyByID(policyID)
 }

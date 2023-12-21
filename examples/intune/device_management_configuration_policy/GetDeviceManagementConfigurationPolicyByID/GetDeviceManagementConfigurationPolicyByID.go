@@ -41,8 +41,8 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example script ID to delete
-	policyID := "077c120f-0f87-4efc-857d-d44a9ff61d92"
+	// Example policy ID to get
+	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
 
 	// Use the Intune client to perform operations
 	deviceManagementScript, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
