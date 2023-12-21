@@ -40,11 +40,11 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	policyID := "1d9cb549-d495-47c7-8f69-9c97783f1318"
+	// Example policy name to get
+	policyName := "intuneSDK | [Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1"
 
 	// Delete the policy
-	err = intune.DeleteDeviceManagementConfigurationPolicyByID(policyID)
+	err = intune.DeleteDeviceManagementConfigurationPolicyByName(policyName)
 	if err != nil {
 		fmt.Printf("Error deleting policy: %s\n", err)
 		return

@@ -1,7 +1,7 @@
 {
   "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
   "id": "17436f8b-a93c-45d6-a204-6a80d3d43155",
-  "name": "[Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1",
+  "name": "intuneSDK | [Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1",
   "description": "30.05.2022\nContext: Device\n\nConfig half done",
   "platforms": "windows10",
   "technologies": "mdm",

@@ -7,7 +7,7 @@ const (
 	// Pagination - type: string, error: any
 	ErrorMsgFailedPaginatedGet = "failed to get paginated %s, error: %v"
 
-	// CRUD - format always type: string, id/name: any, error: any
+	// Graph operations - format always type: string, id/name: any, error: any
 	ErrorMsgFailedGet            = "failed to get %s, error: %v"
 	ErrorMsgFailedGetByID        = "failed to get %s by id: %v, error: %v"
 	ErrorMsgFailedGetByName      = "failed to get %s by name: %s, error: %v"
