@@ -10,6 +10,7 @@ package intune
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
@@ -210,6 +211,7 @@ func (c *Client) CreateCopyOfDeviceManagementConfigurationPolicyByName(sourcePol
 	for _, policy := range policiesList.Value {
 		if policy.Name == sourcePolicyName {
 			policyID = policy.ID
+			log.Printf(shared.LogMsgFoundMatchedConfigID, policyID, "group policy configuration", sourcePolicyName)
 			break
 		}
 	}
@@ -293,6 +295,7 @@ func (c *Client) DeleteDeviceManagementConfigurationPolicyByName(policyName stri
 	for _, policy := range policiesList.Value {
 		if policy.Name == policyName {
 			policyID = policy.ID
+			log.Printf(shared.LogMsgFoundMatchedConfigID, policyID, "group policy configuration", policyName)
 			break
 		}
 	}

@@ -10,6 +10,7 @@ package intune
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
@@ -183,7 +184,7 @@ type AssignmentTarget struct {
 }
 
 // Function to get the list of Group Policy Configurations
-func (c *Client) GetDeviceManagementGroupPolicyConfigurations() ([]ResourceDeviceManagementGroupPolicyConfiguration, error) {
+func (c *Client) GetDeviceManagementGroupPolicyConfigurations() (*ResponseDeviceManagementGroupPolicyConfigurationsList, error) {
 	endpoint := uriBetaDeviceManagementGroupPolicyConfigurations
 
 	var responseGroupPolicyConfigurations ResponseDeviceManagementGroupPolicyConfigurationsList
@@ -196,7 +197,7 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurations() ([]ResourceDevic
 		defer resp.Body.Close()
 	}
 
-	return responseGroupPolicyConfigurations.Value, nil
+	return &responseGroupPolicyConfigurations, nil
 }
 
 // GetDeviceManagementGroupPolicyConfigurationByID retrieves a specific Group Policy Configuration by its ID with expanded details.
@@ -243,4 +244,28 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurationByID(policyConfigura
 	baseConfig.Assignments = assignmentsList.Value
 
 	return &baseConfig, nil
+}
+
+// GetDeviceManagementGroupPolicyConfigurationByName retrieves a specific Group Policy Configuration by its name.
+func (c *Client) GetDeviceManagementGroupPolicyConfigurationByName(policyConfigurationName string) (*ResourceDeviceManagementGroupPolicyConfiguration, error) {
+	response, err := c.GetDeviceManagementGroupPolicyConfigurations()
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "group policy configuration", policyConfigurationName, err)
+	}
+
+	var matchedConfigID string
+	for _, config := range response.Value {
+		if config.DisplayName == policyConfigurationName {
+			matchedConfigID = config.ID
+			log.Printf(shared.LogMsgFoundMatchedConfigID, matchedConfigID, "group policy configuration", policyConfigurationName)
+			break
+		}
+	}
+
+	if matchedConfigID == "" {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "group policy configuration", policyConfigurationName, "Policy not found")
+	}
+
+	// Use the found ID to get the full details of the configuration
+	return c.GetDeviceManagementGroupPolicyConfigurationByID(matchedConfigID)
 }

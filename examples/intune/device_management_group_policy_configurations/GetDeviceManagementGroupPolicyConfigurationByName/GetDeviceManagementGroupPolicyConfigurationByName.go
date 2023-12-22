@@ -41,11 +41,11 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example policy ID to get
-	groupPolicyConfigurationID := "6f9ba788-f719-46a7-b7c5-d566963d5999" // "7f774f0f-2f2d-4dc3-a76f-6d45af51019e" / "7f774f0f-2f2d-4dc3-a76f-6d45af51019e" / "6f9ba788-f719-46a7-b7c5-d566963d5999"
+	// Example policy Name to get
+	groupPolicyConfigurationName := "[Base] Prod | Windows - AdministrativeTemplates | OneDrive ver1.0" // "[Base] Prod | Windows - AdministrativeTemplates | Microsoft Office 2016 ver1.0"
 
 	// Use the Intune client to perform operations
-	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByID(groupPolicyConfigurationID)
+	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByName(groupPolicyConfigurationName)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}
