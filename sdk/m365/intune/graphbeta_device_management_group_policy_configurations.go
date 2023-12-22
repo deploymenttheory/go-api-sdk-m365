@@ -66,19 +66,33 @@ type ResponsePresentationValuesList struct {
 	Value []GroupPolicyPresentationValue `json:"value"`
 }
 
-// GroupPolicyPresentationValue represents a presentation value for a Group Policy Definition Value.
 type GroupPolicyPresentationValue struct {
-	ID          string       `json:"id"`
-	Label       string       `json:"label"`
-	Description string       `json:"description"`
-	ValueType   string       `json:"valueType"` // e.g., "string", "integer", "boolean", etc.
-	Value       DynamicValue `json:"value"`
+	ID                   string                  `json:"id"`
+	LastModifiedDateTime time.Time               `json:"lastModifiedDateTime"`
+	CreatedDateTime      time.Time               `json:"createdDateTime"`
+	Label                string                  `json:"label"`
+	Description          string                  `json:"description"`
+	ValueType            string                  `json:"valueType"`
+	Value                DynamicValue            `json:"value"`
+	Presentation         GroupPolicyPresentation `json:"presentation,omitempty"`
 }
 
-// DynamicValue is a type that can hold different types of values.
+type GroupPolicyPresentation struct {
+	Label       string             `json:"label"`
+	ID          string             `json:"id"`
+	Required    bool               `json:"required"`
+	DefaultItem PresentationItem   `json:"defaultItem"`
+	Items       []PresentationItem `json:"items"`
+}
+
+type PresentationItem struct {
+	DisplayName string `json:"displayName"`
+	Value       string `json:"value"`
+}
+
 type DynamicValue struct {
 	// Use an interface to hold the actual value.
-	Value interface{}
+	Value interface{} `json:"Value"`
 }
 
 // Struct for holding a list of Assignments
