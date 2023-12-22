@@ -18,6 +18,68 @@ import (
 // Constant for the endpoint URL
 const uriBetaDeviceManagementGroupPolicyConfigurations = "/beta/deviceManagement/groupPolicyConfigurations"
 
+/*
+// Example of struct hierarchy using embedded anonymous structs
+type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
+	ODataContext string `json:"@odata.context"`
+	Value []struct {
+		OdataType                        string    `json:"@odata.type"`
+		ID                               string    `json:"id"`
+		DisplayName                      string    `json:"displayName"`
+		Description                      string    `json:"description"`
+		RoleScopeTagIds                  []string  `json:"roleScopeTagIds"`
+		PolicyConfigurationIngestionType string    `json:"policyConfigurationIngestionType"`
+		CreatedDateTime                  time.Time `json:"createdDateTime"`
+		LastModifiedDateTime             time.Time `json:"lastModifiedDateTime"`
+		DefinitionValues []struct {
+			ID                   string    `json:"id"`
+			Enabled              bool      `json:"enabled"`
+			ConfigurationType    string    `json:"configurationType"`
+			CreatedDateTime      time.Time `json:"createdDateTime"`
+			LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+			Definition struct {
+				ID          string `json:"id"`
+				DisplayName string `json:"displayName"`
+				Description string `json:"description"`
+			} `json:"definition,omitempty"`
+			PresentationValues []struct {
+				ID                   string    `json:"id"`
+				LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+				CreatedDateTime      time.Time `json:"createdDateTime"`
+				Label                string    `json:"label"`
+				Description          string    `json:"description"`
+				ValueType            string    `json:"valueType"`
+				Value                interface{} `json:"value"`
+				Presentation struct {
+					Label       string `json:"label"`
+					ID          string `json:"id"`
+					Required    bool   `json:"required"`
+					DefaultItem struct {
+						DisplayName string `json:"displayName"`
+						Value       string `json:"value"`
+					} `json:"defaultItem"`
+					Items []struct {
+						DisplayName string `json:"displayName"`
+						Value       string `json:"value"`
+					} `json:"items"`
+				} `json:"presentation,omitempty"`
+			} `json:"presentationValues,omitempty"`
+		} `json:"definitionValues,omitempty"`
+		Assignments []struct {
+			ID                   string    `json:"id"`
+			LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+			Target struct {
+				ID                                         string `json:"id"`
+				Type                                       string `json:"@odata.type"`
+				DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+				DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+				CollectionId                               string `json:"collectionId"`
+			} `json:"target"`
+		} `json:"assignments,omitempty"`
+	} `json:"value"`
+}
+*/
+
 // ResponseDeviceManagementGroupPolicyConfigurationsList is used to parse the list response of Group Policy Configurations from Microsoft Graph API.
 type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 	ODataContext string                                             `json:"@odata.context"`
