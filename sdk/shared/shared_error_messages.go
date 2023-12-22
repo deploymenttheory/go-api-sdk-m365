@@ -30,4 +30,8 @@ const (
 
 	// Client Credentials
 	ErrorMsgFailedRefreshClientCreds = "failed to refresh client credentials at id: %s, error :%v"
+
+	// Logging
+	// matched configuration
+	LogMsgFoundMatchedConfigID = "found matched configuration ID: %v for %s with search name: %s"
 )

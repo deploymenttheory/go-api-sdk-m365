@@ -10,6 +10,7 @@ package intune
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
@@ -18,13 +19,75 @@ import (
 // Constant for the endpoint URL
 const uriBetaDeviceManagementGroupPolicyConfigurations = "/beta/deviceManagement/groupPolicyConfigurations"
 
-// Struct for the list response
+/*
+// Example of struct hierarchy using embedded anonymous structs
+type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
+	ODataContext string `json:"@odata.context"`
+	Value []struct {
+		OdataType                        string    `json:"@odata.type"`
+		ID                               string    `json:"id"`
+		DisplayName                      string    `json:"displayName"`
+		Description                      string    `json:"description"`
+		RoleScopeTagIds                  []string  `json:"roleScopeTagIds"`
+		PolicyConfigurationIngestionType string    `json:"policyConfigurationIngestionType"`
+		CreatedDateTime                  time.Time `json:"createdDateTime"`
+		LastModifiedDateTime             time.Time `json:"lastModifiedDateTime"`
+		DefinitionValues []struct {
+			ID                   string    `json:"id"`
+			Enabled              bool      `json:"enabled"`
+			ConfigurationType    string    `json:"configurationType"`
+			CreatedDateTime      time.Time `json:"createdDateTime"`
+			LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+			Definition struct {
+				ID          string `json:"id"`
+				DisplayName string `json:"displayName"`
+				Description string `json:"description"`
+			} `json:"definition,omitempty"`
+			PresentationValues []struct {
+				ID                   string    `json:"id"`
+				LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+				CreatedDateTime      time.Time `json:"createdDateTime"`
+				Label                string    `json:"label"`
+				Description          string    `json:"description"`
+				ValueType            string    `json:"valueType"`
+				Value                interface{} `json:"value"`
+				Presentation struct {
+					Label       string `json:"label"`
+					ID          string `json:"id"`
+					Required    bool   `json:"required"`
+					DefaultItem struct {
+						DisplayName string `json:"displayName"`
+						Value       string `json:"value"`
+					} `json:"defaultItem"`
+					Items []struct {
+						DisplayName string `json:"displayName"`
+						Value       string `json:"value"`
+					} `json:"items"`
+				} `json:"presentation,omitempty"`
+			} `json:"presentationValues,omitempty"`
+		} `json:"definitionValues,omitempty"`
+		Assignments []struct {
+			ID                   string    `json:"id"`
+			LastModifiedDateTime time.Time `json:"lastModifiedDateTime"`
+			Target struct {
+				ID                                         string `json:"id"`
+				Type                                       string `json:"@odata.type"`
+				DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+				DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+				CollectionId                               string `json:"collectionId"`
+			} `json:"target"`
+		} `json:"assignments,omitempty"`
+	} `json:"value"`
+}
+*/
+
+// ResponseDeviceManagementGroupPolicyConfigurationsList is used to parse the list response of Group Policy Configurations from Microsoft Graph API.
 type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 	ODataContext string                                             `json:"@odata.context"`
 	Value        []ResourceDeviceManagementGroupPolicyConfiguration `json:"value"`
 }
 
-// Struct for individual Group Policy Configuration
+// ResourceDeviceManagementGroupPolicyConfiguration represents an individual Group Policy Configuration resource from Microsoft Graph API.
 type ResourceDeviceManagementGroupPolicyConfiguration struct {
 	OdataType                        string                       `json:"@odata.type"`
 	ID                               string                       `json:"id"`
@@ -38,12 +101,12 @@ type ResourceDeviceManagementGroupPolicyConfiguration struct {
 	Assignments                      []Assignment                 `json:"assignments,omitempty"`
 }
 
-// Struct for holding a list of Group Policy Definition Values
+// ResponseGroupPolicyDefinitionValuesList is used to parse the list response of Group Policy Definition Values from Microsoft Graph API.
 type ResponseGroupPolicyDefinitionValuesList struct {
 	Value []GroupPolicyDefinitionValue `json:"value"`
 }
 
-// GroupPolicyDefinitionValue represents a single Group Policy Definition Value.
+// GroupPolicyDefinitionValue represents a single Group Policy Definition Value, including its associated definitions and presentation values.
 type GroupPolicyDefinitionValue struct {
 	ID                   string                         `json:"id"`
 	Enabled              bool                           `json:"enabled"`
@@ -54,58 +117,74 @@ type GroupPolicyDefinitionValue struct {
 	PresentationValues   []GroupPolicyPresentationValue `json:"presentationValues,omitempty"`
 }
 
-// GroupPolicyDefinition represents the definition of a Group Policy.
+// GroupPolicyDefinition represents the basic information of a Group Policy Definition.
 type GroupPolicyDefinition struct {
 	ID          string `json:"id"`
 	DisplayName string `json:"displayName"`
 	Description string `json:"description"`
-	// Add other relevant fields as required
 }
 
+// ResponsePresentationValuesList is used to parse the list response of Group Policy Presentation Values from Microsoft Graph API.
 type ResponsePresentationValuesList struct {
 	Value []GroupPolicyPresentationValue `json:"value"`
 }
 
-// GroupPolicyPresentationValue represents a presentation value for a Group Policy Definition Value.
+// GroupPolicyPresentationValue represents a presentation value for a Group Policy Definition Value, including its type and value.
 type GroupPolicyPresentationValue struct {
-	ID          string       `json:"id"`
-	Label       string       `json:"label"`
-	Description string       `json:"description"`
-	ValueType   string       `json:"valueType"` // e.g., "string", "integer", "boolean", etc.
-	Value       DynamicValue `json:"value"`
+	ID                   string                  `json:"id"`
+	LastModifiedDateTime time.Time               `json:"lastModifiedDateTime"`
+	CreatedDateTime      time.Time               `json:"createdDateTime"`
+	Label                string                  `json:"label"`
+	Description          string                  `json:"description"`
+	ValueType            string                  `json:"valueType"`
+	Value                DynamicValue            `json:"value"`
+	Presentation         GroupPolicyPresentation `json:"presentation,omitempty"`
 }
 
-// DynamicValue is a type that can hold different types of values.
+// GroupPolicyPresentation defines the presentation details for a Group Policy Presentation Value, such as labels, items, and default values.
+type GroupPolicyPresentation struct {
+	Label       string             `json:"label"`
+	ID          string             `json:"id"`
+	Required    bool               `json:"required"`
+	DefaultItem PresentationItem   `json:"defaultItem"`
+	Items       []PresentationItem `json:"items"`
+}
+
+// PresentationItem represents an individual item in a Group Policy Presentation dropdown or similar collection.
+type PresentationItem struct {
+	DisplayName string `json:"displayName"`
+	Value       string `json:"value"`
+}
+
+// DynamicValue is a type that can hold different types of values, allowing for dynamic handling of the 'value' field in Group Policy Presentation Values.
 type DynamicValue struct {
 	// Use an interface to hold the actual value.
-	Value interface{}
+	Value interface{} `json:"Value"`
 }
 
-// Struct for holding a list of Assignments
+// ResponseAssignmentsList is used to parse the list response of Assignments from Microsoft Graph API.
 type ResponseAssignmentsList struct {
 	Value []Assignment `json:"value"`
 }
 
-// Assignment represents an assignment of a Group Policy Configuration
+// Assignment represents an assignment of a Group Policy Configuration to a target, such as a user or a group.
 type Assignment struct {
 	ID                   string           `json:"id"`
 	LastModifiedDateTime time.Time        `json:"lastModifiedDateTime"`
 	Target               AssignmentTarget `json:"target"`
-	// Add other relevant fields as required
 }
 
-// AssignmentTarget represents the target of an Assignment (User, Group, etc.)
+// AssignmentTarget represents the target of an Assignment, detailing the type and identifiers for the assignment target.
 type AssignmentTarget struct {
 	ID                                         string `json:"id"`
 	Type                                       string `json:"@odata.type"` // e.g., "#microsoft.graph.groupTarget", etc.
 	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
 	CollectionId                               string `json:"collectionId"`
-	// Add other relevant fields as required
 }
 
 // Function to get the list of Group Policy Configurations
-func (c *Client) GetDeviceManagementGroupPolicyConfigurations() ([]ResourceDeviceManagementGroupPolicyConfiguration, error) {
+func (c *Client) GetDeviceManagementGroupPolicyConfigurations() (*ResponseDeviceManagementGroupPolicyConfigurationsList, error) {
 	endpoint := uriBetaDeviceManagementGroupPolicyConfigurations
 
 	var responseGroupPolicyConfigurations ResponseDeviceManagementGroupPolicyConfigurationsList
@@ -118,7 +197,7 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurations() ([]ResourceDevic
 		defer resp.Body.Close()
 	}
 
-	return responseGroupPolicyConfigurations.Value, nil
+	return &responseGroupPolicyConfigurations, nil
 }
 
 // GetDeviceManagementGroupPolicyConfigurationByID retrieves a specific Group Policy Configuration by its ID with expanded details.
@@ -165,4 +244,28 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurationByID(policyConfigura
 	baseConfig.Assignments = assignmentsList.Value
 
 	return &baseConfig, nil
+}
+
+// GetDeviceManagementGroupPolicyConfigurationByName retrieves a specific Group Policy Configuration by its name.
+func (c *Client) GetDeviceManagementGroupPolicyConfigurationByName(policyConfigurationName string) (*ResourceDeviceManagementGroupPolicyConfiguration, error) {
+	response, err := c.GetDeviceManagementGroupPolicyConfigurations()
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "group policy configuration", policyConfigurationName, err)
+	}
+
+	var matchedConfigID string
+	for _, config := range response.Value {
+		if config.DisplayName == policyConfigurationName {
+			matchedConfigID = config.ID
+			log.Printf(shared.LogMsgFoundMatchedConfigID, matchedConfigID, "group policy configuration", policyConfigurationName)
+			break
+		}
+	}
+
+	if matchedConfigID == "" {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "group policy configuration", policyConfigurationName, "Policy not found")
+	}
+
+	// Use the found ID to get the full details of the configuration
+	return c.GetDeviceManagementGroupPolicyConfigurationByID(matchedConfigID)
 }
