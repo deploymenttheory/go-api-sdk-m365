@@ -18,13 +18,13 @@ import (
 // Constant for the endpoint URL
 const uriBetaDeviceManagementGroupPolicyConfigurations = "/beta/deviceManagement/groupPolicyConfigurations"
 
-// Struct for the list response
+// ResponseDeviceManagementGroupPolicyConfigurationsList is used to parse the list response of Group Policy Configurations from Microsoft Graph API.
 type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 	ODataContext string                                             `json:"@odata.context"`
 	Value        []ResourceDeviceManagementGroupPolicyConfiguration `json:"value"`
 }
 
-// Struct for individual Group Policy Configuration
+// ResourceDeviceManagementGroupPolicyConfiguration represents an individual Group Policy Configuration resource from Microsoft Graph API.
 type ResourceDeviceManagementGroupPolicyConfiguration struct {
 	OdataType                        string                       `json:"@odata.type"`
 	ID                               string                       `json:"id"`
@@ -38,12 +38,12 @@ type ResourceDeviceManagementGroupPolicyConfiguration struct {
 	Assignments                      []Assignment                 `json:"assignments,omitempty"`
 }
 
-// Struct for holding a list of Group Policy Definition Values
+// ResponseGroupPolicyDefinitionValuesList is used to parse the list response of Group Policy Definition Values from Microsoft Graph API.
 type ResponseGroupPolicyDefinitionValuesList struct {
 	Value []GroupPolicyDefinitionValue `json:"value"`
 }
 
-// GroupPolicyDefinitionValue represents a single Group Policy Definition Value.
+// GroupPolicyDefinitionValue represents a single Group Policy Definition Value, including its associated definitions and presentation values.
 type GroupPolicyDefinitionValue struct {
 	ID                   string                         `json:"id"`
 	Enabled              bool                           `json:"enabled"`
@@ -54,18 +54,19 @@ type GroupPolicyDefinitionValue struct {
 	PresentationValues   []GroupPolicyPresentationValue `json:"presentationValues,omitempty"`
 }
 
-// GroupPolicyDefinition represents the definition of a Group Policy.
+// GroupPolicyDefinition represents the basic information of a Group Policy Definition.
 type GroupPolicyDefinition struct {
 	ID          string `json:"id"`
 	DisplayName string `json:"displayName"`
 	Description string `json:"description"`
-	// Add other relevant fields as required
 }
 
+// ResponsePresentationValuesList is used to parse the list response of Group Policy Presentation Values from Microsoft Graph API.
 type ResponsePresentationValuesList struct {
 	Value []GroupPolicyPresentationValue `json:"value"`
 }
 
+// GroupPolicyPresentationValue represents a presentation value for a Group Policy Definition Value, including its type and value.
 type GroupPolicyPresentationValue struct {
 	ID                   string                  `json:"id"`
 	LastModifiedDateTime time.Time               `json:"lastModifiedDateTime"`
@@ -77,6 +78,7 @@ type GroupPolicyPresentationValue struct {
 	Presentation         GroupPolicyPresentation `json:"presentation,omitempty"`
 }
 
+// GroupPolicyPresentation defines the presentation details for a Group Policy Presentation Value, such as labels, items, and default values.
 type GroupPolicyPresentation struct {
 	Label       string             `json:"label"`
 	ID          string             `json:"id"`
@@ -85,37 +87,37 @@ type GroupPolicyPresentation struct {
 	Items       []PresentationItem `json:"items"`
 }
 
+// PresentationItem represents an individual item in a Group Policy Presentation dropdown or similar collection.
 type PresentationItem struct {
 	DisplayName string `json:"displayName"`
 	Value       string `json:"value"`
 }
 
+// DynamicValue is a type that can hold different types of values, allowing for dynamic handling of the 'value' field in Group Policy Presentation Values.
 type DynamicValue struct {
 	// Use an interface to hold the actual value.
 	Value interface{} `json:"Value"`
 }
 
-// Struct for holding a list of Assignments
+// ResponseAssignmentsList is used to parse the list response of Assignments from Microsoft Graph API.
 type ResponseAssignmentsList struct {
 	Value []Assignment `json:"value"`
 }
 
-// Assignment represents an assignment of a Group Policy Configuration
+// Assignment represents an assignment of a Group Policy Configuration to a target, such as a user or a group.
 type Assignment struct {
 	ID                   string           `json:"id"`
 	LastModifiedDateTime time.Time        `json:"lastModifiedDateTime"`
 	Target               AssignmentTarget `json:"target"`
-	// Add other relevant fields as required
 }
 
-// AssignmentTarget represents the target of an Assignment (User, Group, etc.)
+// AssignmentTarget represents the target of an Assignment, detailing the type and identifiers for the assignment target.
 type AssignmentTarget struct {
 	ID                                         string `json:"id"`
 	Type                                       string `json:"@odata.type"` // e.g., "#microsoft.graph.groupTarget", etc.
 	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
 	CollectionId                               string `json:"collectionId"`
-	// Add other relevant fields as required
 }
 
 // Function to get the list of Group Policy Configurations
