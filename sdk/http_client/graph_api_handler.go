@@ -254,6 +254,15 @@ func (u *UnifiedGraphAPIHandler) UnmarshalResponse(resp *http.Response, out inte
 		}
 	}
 
+	// Handle PATCH method
+	if resp.Request.Method == "PATCH" {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		} else {
+			return fmt.Errorf("PATCH request failed with status code: %d", resp.StatusCode)
+		}
+	}
+
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		u.logger.Error("Failed reading response body", "error", err)

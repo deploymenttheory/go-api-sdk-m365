@@ -19,8 +19,8 @@ import (
 // Constant for the endpoint URL
 const uriBetaDeviceManagementGroupPolicyConfigurations = "/beta/deviceManagement/groupPolicyConfigurations"
 
+// Example of struct hierarchy using embedded anonymous structs for reference
 /*
-// Example of struct hierarchy using embedded anonymous structs
 type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 	ODataContext string `json:"@odata.context"`
 	Value []struct {
@@ -212,25 +212,25 @@ func (c *Client) GetDeviceManagementGroupPolicyConfigurationByID(policyConfigura
 
 	// Retrieve Definition Values and expand each definition
 	defValuesEndpoint := fmt.Sprintf("%s/definitionValues?$expand=definition", baseEndpoint)
-	var defValuesList ResponseGroupPolicyDefinitionValuesList
-	_, err = c.HTTP.DoRequest("GET", defValuesEndpoint, nil, &defValuesList)
+	var definitionValuesList ResponseGroupPolicyDefinitionValuesList
+	_, err = c.HTTP.DoRequest("GET", defValuesEndpoint, nil, &definitionValuesList)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get definition values: %v", err)
 	}
 
 	// For each Definition Value, retrieve and expand Presentation Values
-	for i, defValue := range defValuesList.Value {
-		presentationEndpoint := fmt.Sprintf("%s/definitionValues/%s/presentationValues?$expand=presentation", baseEndpoint, defValue.ID)
+	for i, definitionValue := range definitionValuesList.Value {
+		presentationEndpoint := fmt.Sprintf("%s/definitionValues/%s/presentationValues?$expand=presentation", baseEndpoint, definitionValue.ID)
 		var presentationList ResponsePresentationValuesList
 		_, err = c.HTTP.DoRequest("GET", presentationEndpoint, nil, &presentationList)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get presentation values: %v", err)
 		}
-		defValuesList.Value[i].PresentationValues = presentationList.Value
+		definitionValuesList.Value[i].PresentationValues = presentationList.Value
 	}
 
 	// Attach expanded Definition Values to the base configuration
-	baseConfig.DefinitionValues = defValuesList.Value
+	baseConfig.DefinitionValues = definitionValuesList.Value
 
 	// Retrieve Assignments
 	assignmentsEndpoint := fmt.Sprintf("%s/assignments", baseEndpoint)
