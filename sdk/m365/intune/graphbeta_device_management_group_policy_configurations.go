@@ -19,8 +19,8 @@ import (
 // Constant for the endpoint URL
 const uriBetaDeviceManagementGroupPolicyConfigurations = "/beta/deviceManagement/groupPolicyConfigurations"
 
-// Example of struct hierarchy using embedded anonymous structs for reference
-/*
+/* Struct hierarchy using embedded anonymous structs for reference
+
 type ResponseDeviceManagementGroupPolicyConfigurationsList struct {
 	ODataContext string `json:"@odata.context"`
 	Value []struct {
