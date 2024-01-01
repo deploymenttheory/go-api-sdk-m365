@@ -48,10 +48,18 @@ type PostAssignmentRequest struct {
 
 // AssignmentRequest represents the request structure for creating an assignment.
 type AssignmentRequest struct {
-	OdataType string       `json:"@odata.type"`
-	ID        string       `json:"id"`
-	Target    Target       `json:"target"`
-	Schedule  *RunSchedule `json:"runSchedule,omitempty"`
+	OdataType string         `json:"@odata.type"`
+	ID        string         `json:"id"`
+	Target    ResourceTarget `json:"target"`
+	Schedule  *RunSchedule   `json:"runSchedule,omitempty"`
+}
+
+// Struct representing the target of a script assignment
+type ResourceTarget struct {
+	OdataType                                  string `json:"@odata.type"`
+	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	GroupId                                    string `json:"groupId"`
 }
 
 // GetResourceGroupAssignmentsByResourceID retrieves all group assignments for a specified resource.

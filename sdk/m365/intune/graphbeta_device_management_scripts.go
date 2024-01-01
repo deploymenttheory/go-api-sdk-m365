@@ -14,7 +14,10 @@ import (
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
 
-const uriBetaDeviceManagementScripts = "/beta/deviceManagement/deviceManagementScripts"
+const (
+	uriBetaDeviceManagementScripts          = "/beta/deviceManagement/deviceManagementScripts"
+	uriBetaDeviceManagementScriptAssignment = "/beta/deviceManagement/deviceManagementScripts"
+)
 
 /* Struct hierarchy using embedded anonymous structs for reference
 type ResourceDeviceManagementScriptsList struct {
@@ -41,10 +44,7 @@ type ResourceDeviceManagementScriptsList struct {
                 DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
                 GroupId                                    string `json:"groupId"`
             } `json:"target"`
-        } `json:"assignments"`
-        RunSummary *struct {
-            // Define fields for RunSummary
-        } `json:"runSummary"`
+        }
     } `json:"value"`
 }
 */
@@ -70,27 +70,21 @@ type ResourceDeviceManagementScript struct {
 	RunAsAccount          string                                     `json:"runAsAccount"`
 	FileName              string                                     `json:"fileName"`
 	RoleScopeTagIds       []string                                   `json:"roleScopeTagIds"`
-	Assignments           []ResourceDeviceManagementScriptAssignment `json:"assignments"`
-	RunSummary            *RunSummary                                `json:"runSummary"`
+	Assignments           []ResponseDeviceManagementScriptAssignment `json:"assignments"`
 }
 
 // Struct representing an assignment of a Device Management Script
-type ResourceDeviceManagementScriptAssignment struct {
-	ID     string `json:"id"`
-	Target Target `json:"target"`
+type ResponseDeviceManagementScriptAssignment struct {
+	ID     string                               `json:"id"`
+	Target ResourceDeviceManagementScriptTarget `json:"target"`
 }
 
 // Struct representing the target of a script assignment
-type Target struct {
+type ResourceDeviceManagementScriptTarget struct {
 	OdataType                                  string `json:"@odata.type"`
 	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
 	GroupId                                    string `json:"groupId"`
-}
-
-// Struct representing the run summary of a Device Management Script
-type RunSummary struct {
-	// Define the fields of RunSummary based on the API response
 }
 
 // Struct for a Device Management Script resource creation and update request
@@ -110,7 +104,7 @@ type ResourceDeviceManagementScriptRequest struct {
 // with expanded information on assignments and run summary.
 func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
 	// Append query parameters to the endpoint URL
-	endpoint := uriBetaDeviceManagementScripts + "?$expand=assignments,runSummary"
+	endpoint := uriBetaDeviceManagementScripts + "?$expand=assignments"
 
 	var deviceManagementScripts ResourceDeviceManagementScriptsList
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
