@@ -42,7 +42,7 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceManagementScriptName := "Intune-Script-Windows10-NewOSDTattoo"
+	deviceManagementScriptName := "[Intune]-[Set_device_NTPServer+UniversalTimeZone]"
 
 	// Use the Intune client to perform operations
 	deviceManagementScript, err := intune.GetDeviceManagementScriptByDisplayName(deviceManagementScriptName)

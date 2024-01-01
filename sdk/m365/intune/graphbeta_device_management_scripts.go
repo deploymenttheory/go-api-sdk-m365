@@ -1,7 +1,7 @@
 // graphbeta_device_management_scripts.go
-// Graph Beta Api - Intune: Windows Scripts
-// Documentation: https://learn.microsoft.com/en-us/mem/intune/fundamentals/remediations
-// Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/remediations
+// Graph Beta Api - Intune: Windows (powershell) Scripts
+// Documentation: https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+// Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/powershell
 // API reference: https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-devicemanagementscript?view=graph-rest-beta
 // Microsoft Graph requires the structs to support a JSON data structure.
 
@@ -14,42 +14,77 @@ import (
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
 
-const uriBetaDeviceManagementScripts = "/beta/deviceManagement/deviceManagementScripts"
+const (
+	uriBetaDeviceManagementScripts          = "/beta/deviceManagement/deviceManagementScripts"
+	uriBetaDeviceManagementScriptAssignment = "/beta/deviceManagement/deviceManagementScripts"
+)
 
-// Struct for a list of Device Management Scripts
+/* Struct hierarchy using embedded anonymous structs for reference
 type ResourceDeviceManagementScriptsList struct {
-	OdataContext       string `json:"@odata.context"`
-	MicrosoftGraphTips string `json:"@microsoft.graph.tips"`
-	Value              []struct {
-		EnforceSignatureCheck bool        `json:"enforceSignatureCheck"`
-		RunAs32Bit            bool        `json:"runAs32Bit"`
-		ID                    string      `json:"id"`
-		DisplayName           string      `json:"displayName"`
-		Description           string      `json:"description"`
-		ScriptContent         interface{} `json:"scriptContent"`
-		CreatedDateTime       time.Time   `json:"createdDateTime"`
-		LastModifiedDateTime  time.Time   `json:"lastModifiedDateTime"`
-		RunAsAccount          string      `json:"runAsAccount"`
-		FileName              string      `json:"fileName"`
-		RoleScopeTagIds       []string    `json:"roleScopeTagIds"`
-	} `json:"value"`
+    ODataContext string `json:"@odata.context"`
+    Value        []struct {
+        OdataContext          string    `json:"@odata.context"`
+        MicrosoftGraphTips    string    `json:"@microsoft.graph.tips"`
+        EnforceSignatureCheck bool      `json:"enforceSignatureCheck"`
+        RunAs32Bit            bool      `json:"runAs32Bit"`
+        ID                    string    `json:"id"`
+        DisplayName           string    `json:"displayName"`
+        Description           string    `json:"description"`
+        ScriptContent         string    `json:"scriptContent"`
+        CreatedDateTime       time.Time `json:"createdDateTime"`
+        LastModifiedDateTime  time.Time `json:"lastModifiedDateTime"`
+        RunAsAccount          string    `json:"runAsAccount"`
+        FileName              string    `json:"fileName"`
+        RoleScopeTagIds       []string  `json:"roleScopeTagIds"`
+        Assignments           []struct {
+            ID     string `json:"id"`
+            Target struct {
+                OdataType                                  string `json:"@odata.type"`
+                DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+                DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+                GroupId                                    string `json:"groupId"`
+            } `json:"target"`
+        }
+    } `json:"value"`
+}
+*/
+
+// ResourceDeviceManagementScriptsList represents a list of Device Management Scripts.
+type ResourceDeviceManagementScriptsList struct {
+	ODataContext string                           `json:"@odata.context"`
+	Value        []ResourceDeviceManagementScript `json:"value"`
 }
 
-// Struct for a Device Management Script resource
+// ResourceDeviceManagementScript represents a Device Management Script resource
 type ResourceDeviceManagementScript struct {
-	OdataContext          string    `json:"@odata.context"`
-	MicrosoftGraphTips    string    `json:"@microsoft.graph.tips"`
-	EnforceSignatureCheck bool      `json:"enforceSignatureCheck"`
-	RunAs32Bit            bool      `json:"runAs32Bit"`
-	ID                    string    `json:"id"`
-	DisplayName           string    `json:"displayName"`
-	Description           string    `json:"description"`
-	ScriptContent         string    `json:"scriptContent"`
-	CreatedDateTime       time.Time `json:"createdDateTime"`
-	LastModifiedDateTime  time.Time `json:"lastModifiedDateTime"`
-	RunAsAccount          string    `json:"runAsAccount"`
-	FileName              string    `json:"fileName"`
-	RoleScopeTagIds       []string  `json:"roleScopeTagIds"`
+	OdataContext          string                                     `json:"@odata.context"`
+	MicrosoftGraphTips    string                                     `json:"@microsoft.graph.tips"`
+	EnforceSignatureCheck bool                                       `json:"enforceSignatureCheck"`
+	RunAs32Bit            bool                                       `json:"runAs32Bit"`
+	ID                    string                                     `json:"id"`
+	DisplayName           string                                     `json:"displayName"`
+	Description           string                                     `json:"description"`
+	ScriptContent         string                                     `json:"scriptContent"`
+	CreatedDateTime       time.Time                                  `json:"createdDateTime"`
+	LastModifiedDateTime  time.Time                                  `json:"lastModifiedDateTime"`
+	RunAsAccount          string                                     `json:"runAsAccount"`
+	FileName              string                                     `json:"fileName"`
+	RoleScopeTagIds       []string                                   `json:"roleScopeTagIds"`
+	Assignments           []ResponseDeviceManagementScriptAssignment `json:"assignments"`
+}
+
+// Struct representing an assignment of a Device Management Script
+type ResponseDeviceManagementScriptAssignment struct {
+	ID     string                               `json:"id"`
+	Target ResourceDeviceManagementScriptTarget `json:"target"`
+}
+
+// Struct representing the target of a script assignment
+type ResourceDeviceManagementScriptTarget struct {
+	OdataType                                  string `json:"@odata.type"`
+	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	GroupId                                    string `json:"groupId"`
 }
 
 // Struct for a Device Management Script resource creation and update request
@@ -66,8 +101,10 @@ type ResourceDeviceManagementScriptRequest struct {
 }
 
 // GetDeviceManagementScripts gets a list of all Intune Device Management Scripts
+// with expanded information on assignments and run summary.
 func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsList, error) {
-	endpoint := uriBetaDeviceManagementScripts
+	// Append query parameters to the endpoint URL
+	endpoint := uriBetaDeviceManagementScripts + "?$expand=assignments"
 
 	var deviceManagementScripts ResourceDeviceManagementScriptsList
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
@@ -85,7 +122,7 @@ func (c *Client) GetDeviceManagementScripts() (*ResourceDeviceManagementScriptsL
 
 // GetDeviceManagementScriptByID retrieves a Device Management Script by its ID.
 func (c *Client) GetDeviceManagementScriptByID(id string) (*ResourceDeviceManagementScript, error) {
-	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceManagementScripts, id)
+	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaDeviceManagementScripts, id)
 
 	var deviceManagementScript ResourceDeviceManagementScript
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScript)

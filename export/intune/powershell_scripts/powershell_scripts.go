@@ -15,11 +15,11 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 	// Retrieve all Device Management Scripts
 	scripts, err := client.GetDeviceManagementScripts()
 	if err != nil {
-		log.Println("Error getting device management scripts:", err)
+		log.Println("Error getting powershell scripts:", err)
 		return err
 	}
 
-	log.Printf("Found %d device management scripts\n", len(scripts.Value))
+	log.Printf("Found %d powershell scripts\n", len(scripts.Value))
 
 	// Process each script
 	for _, script := range scripts.Value {

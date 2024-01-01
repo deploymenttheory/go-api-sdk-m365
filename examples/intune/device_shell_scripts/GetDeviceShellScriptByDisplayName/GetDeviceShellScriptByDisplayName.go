@@ -42,23 +42,23 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceManagementScriptID := "d1f3d85e-ce75-404a-a3f8-8e48081617bd"
+	deviceShellScriptName := "macOS-shell_script-update_SSH_public_key"
 
 	// Use the Intune client to perform operations
-	deviceManagementScript, err := intune.GetDeviceManagementScriptByID(deviceManagementScriptID)
+	deviceShellScript, err := intune.GetDeviceShellScriptByDisplayName(deviceShellScriptName)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
 
 	// Pretty print the device management scripts
-	jsonData, err := json.MarshalIndent(deviceManagementScript, "", "  ")
+	jsonData, err := json.MarshalIndent(deviceShellScript, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}
 	fmt.Println(string(jsonData))
 
 	// Base64 decode the scriptContent field
-	decodedContent, err := utils.Base64Decode(deviceManagementScript.ScriptContent)
+	decodedContent, err := utils.Base64Decode(deviceShellScript.ScriptContent)
 	if err != nil {
 		log.Fatalf("Failed to Base64 decode the script content: %v", err)
 	}

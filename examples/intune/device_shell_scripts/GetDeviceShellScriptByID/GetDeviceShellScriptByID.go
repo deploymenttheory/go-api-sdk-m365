@@ -42,10 +42,10 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceManagementScriptID := "d1f3d85e-ce75-404a-a3f8-8e48081617bd"
+	deviceManagementScriptID := "c0a92030-70da-4355-843c-ad177eb8cd9c"
 
 	// Use the Intune client to perform operations
-	deviceManagementScript, err := intune.GetDeviceManagementScriptByID(deviceManagementScriptID)
+	deviceManagementScript, err := intune.GetDeviceShellScriptByID(deviceManagementScriptID)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
