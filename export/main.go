@@ -9,6 +9,7 @@ import (
 
 	powershellScripts "github.com/deploymenttheory/go-api-sdk-m365/export/intune/powershell_scripts"
 	proactiveRemediations "github.com/deploymenttheory/go-api-sdk-m365/export/intune/proactive_remediations"
+	shellScripts "github.com/deploymenttheory/go-api-sdk-m365/export/intune/shell_scripts"
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client"
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
@@ -164,10 +165,14 @@ func initializeHTTPClient(config *Config) (*http_client.Client, error) {
 }
 
 func performBackups(intuneClient *intuneSDK.Client, config *Config) {
-	if err := proactiveRemediations.Backup(intuneClient, config.OutputPath, config.OutputFormat, config.ExcludeAssignments, config.Prefix, config.AppendID); err != nil {
-		fmt.Println("Error during Proactive Remediation backup:", err)
+
+	if err := shellScripts.Backup(intuneClient, config.OutputPath, config.OutputFormat, config.ExcludeAssignments, config.Prefix, config.AppendID); err != nil {
+		fmt.Println("Error during macOS shell script backup:", err)
 	}
 	if err := powershellScripts.Backup(intuneClient, config.OutputPath, config.OutputFormat, config.ExcludeAssignments, config.Prefix, config.AppendID); err != nil {
+		fmt.Println("Error during Powershell Script backup:", err)
+	}
+	if err := proactiveRemediations.Backup(intuneClient, config.OutputPath, config.OutputFormat, config.ExcludeAssignments, config.Prefix, config.AppendID); err != nil {
 		fmt.Println("Error during Proactive Remediation backup:", err)
 	}
 	// Similarly, call other backup functions as required.

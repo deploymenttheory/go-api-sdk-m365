@@ -132,8 +132,8 @@ func RemoveKeys(data map[string]interface{}) map[string]interface{} {
 	return data
 }
 
-// ToMap converts a struct to a map[string]interface{}.
-func ToMap(data interface{}) map[string]interface{} {
+// ConvertStructToMap converts a struct to a map[string]interface{}, removing "omitempty" tags from JSON field tags.
+func ConvertStructToMap(data interface{}) map[string]interface{} {
 	result := make(map[string]interface{})
 
 	val := reflect.ValueOf(data)
@@ -141,15 +141,20 @@ func ToMap(data interface{}) map[string]interface{} {
 		val = val.Elem()
 	}
 
+	typ := val.Type()
+
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
-		typeField := val.Type().Field(i)
+		typeField := typ.Field(i)
 
 		// Get the field tag value
 		tag := typeField.Tag.Get("json")
 		if tag == "" || tag == "-" {
 			continue
 		}
+
+		// Remove "omitempty" from the tag if present
+		tag = strings.Split(tag, ",")[0]
 
 		// Add the field to the map
 		result[tag] = field.Interface()
