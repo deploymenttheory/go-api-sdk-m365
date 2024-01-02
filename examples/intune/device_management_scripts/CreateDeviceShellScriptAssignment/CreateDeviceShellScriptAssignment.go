@@ -41,7 +41,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Create a request for the script assignment
-	assignmentRequest := &intune.RequestDeviceManagementScriptAssignment{
+	assignmentRequest := &intune.AssignmentDeviceManagementScript{
 		ResourceDeviceManagementScriptGroupAssignments: []intune.ResourceDeviceManagementScriptGroupAssignment{
 			{
 				OdataType:     "#microsoft.graph.deviceManagementScriptGroupAssignment", // Use the correct type
@@ -50,19 +50,21 @@ func main() {
 			},
 			// Add more assignments as needed
 		},
-		ResourceDeviceManagementScriptAssignments: []intune.ResourceDeviceManagementScriptAssignment{
-			{
-				OdataType: "#microsoft.graph.deviceManagementScriptAssignment", // Use the correct type
-				ID:        "assignment2",
-				Target: intune.ResponseDeviceShellScriptListTarget{
-					ODataType:                                  "#microsoft.graph.configurationManagerCollectionAssignmentTarget", // Use the correct type
-					DeviceAndAppManagementAssignmentFilterID:   "filter_id",
-					DeviceAndAppManagementAssignmentFilterType: "include",
-					CollectionID:                               "collection_id",
+		/*
+			ResourceDeviceManagementScriptAssignments: []intune.ResourceDeviceManagementScriptAssignment{
+				{
+					OdataType: "#microsoft.graph.deviceManagementScriptAssignment", // Use the correct type
+					ID:        "assignment2",
+					Target: intune.ResponseDeviceShellScriptListTarget{
+						ODataType:                                  "#microsoft.graph.configurationManagerCollectionAssignmentTarget", // Use the correct type
+						DeviceAndAppManagementAssignmentFilterID:   "filter_id",
+						DeviceAndAppManagementAssignmentFilterType: "include",
+						CollectionID:                               "collection_id",
+					},
 				},
+				// Add more assignments as needed
 			},
-			// Add more assignments as needed
-		},
+		*/
 	}
 
 	// Replace with the actual script ID you want to assign

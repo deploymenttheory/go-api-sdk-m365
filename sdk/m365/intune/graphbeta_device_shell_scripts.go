@@ -108,31 +108,6 @@ type ResourceDeviceShellScript struct {
 	RoleScopeTagIds             []string `json:"roleScopeTagIds,omitempty"`
 }
 
-// RequestDeviceManagementScriptAssignment represents the request of a script assignment
-type RequestDeviceManagementScriptAssignment struct {
-	ResourceDeviceManagementScriptGroupAssignments []ResourceDeviceManagementScriptGroupAssignment `json:"deviceManagementScriptGroupAssignments,omitempty"`
-	ResourceDeviceManagementScriptAssignments      []ResourceDeviceManagementScriptAssignment      `json:"deviceManagementScriptAssignments,omitempty"`
-}
-
-// ResourceDeviceManagementScriptGroupAssignment represents a group assignment of a device management script
-type ResourceDeviceManagementScriptGroupAssignment struct {
-	OdataType     string `json:"@odata.type,omitempty"`
-	ID            string `json:"id,omitempty"`
-	TargetGroupID string `json:"targetGroupId,omitempty"`
-}
-
-// ResourceDeviceManagementScriptAssignment represents an assignment of a device management script
-type ResourceDeviceManagementScriptAssignment struct {
-	OdataType string `json:"@odata.type,omitempty"`
-	ID        string `json:"id,omitempty"`
-	Target    struct {
-		OdataType                                  string `json:"@odata.type,omitempty"`
-		DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId,omitempty"`
-		DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType,omitempty"`
-		CollectionID                               string `json:"collectionId,omitempty"`
-	} `json:"target,omitempty"`
-}
-
 // GetDeviceShellScripts gets a list of all Intune Device Shell Scripts
 // with expanded information on assignments.
 func (c *Client) GetDeviceShellScripts() (*ResponseDeviceShellScriptsList, error) {
@@ -211,7 +186,7 @@ func (c *Client) CreateDeviceShellScript(request *ResourceDeviceShellScript) (*R
 }
 
 // CreateDeviceShellScriptAssignment creates a new device management script assignment.
-func (c *Client) CreateDeviceShellScriptAssignment(scriptID string, assignment *RequestDeviceManagementScriptAssignment) (*ResourceDeviceManagementScriptGroupAssignment, error) {
+func (c *Client) CreateDeviceShellScriptAssignment(scriptID string, assignment *AssignmentDeviceManagementScript) (*ResourceDeviceManagementScriptGroupAssignment, error) {
 	// Set graph metadata values
 	for i := range assignment.ResourceDeviceManagementScriptAssignments {
 		assignment.ResourceDeviceManagementScriptAssignments[i].OdataType = odataTypeCreateDeviceShellScriptAssign
@@ -238,7 +213,7 @@ func (c *Client) CreateDeviceShellScriptAssignment(scriptID string, assignment *
 }
 
 // CreateDeviceShellScriptWithAssignment creates a new device management script and assigns it.
-func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceShellScript, assignment *RequestDeviceManagementScriptAssignment) (*ResponseDeviceShellScript, error) {
+func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceShellScript, assignment *AssignmentDeviceManagementScript) (*ResponseDeviceShellScript, error) {
 	// Create the device management script
 	createdScript, err := c.CreateDeviceShellScript(request)
 	if err != nil {
