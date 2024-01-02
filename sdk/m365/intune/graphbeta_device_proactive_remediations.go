@@ -19,9 +19,7 @@ const (
 	uriBetaProactiveRemediations                  = "/beta/deviceManagement/deviceHealthScripts"
 	ODataTypeDeviceHealthScript                   = "#microsoft.graph.deviceHealthScript"
 	ODataTypeDeviceHealthScriptStringParameter    = "microsoft.graph.deviceHealthScriptStringParameter"
-	ODataTypeDeviceHealthScriptAssignment         = "#microsoft.graph.deviceHealthScriptAssignment"
 	ODataTypeConfigurationManagerCollectionTarget = "microsoft.graph.configurationManagerCollectionAssignmentTarget"
-	ODataTypeDeviceHealthScriptDailySchedule      = "microsoft.graph.deviceHealthScriptDailySchedule"
 	ODataTypeGroupAssignmentTarget                = "microsoft.graph.groupAssignmentTarget"
 )
 

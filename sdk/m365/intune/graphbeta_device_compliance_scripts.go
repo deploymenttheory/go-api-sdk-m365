@@ -16,12 +16,9 @@ import (
 )
 
 const (
-	uriBetaDeviceComplianceScripts                  = "/beta/deviceManagement/deviceComplianceScripts"
-	ODataTypeDeviceComplianceScript                 = "#microsoft.graph.deviceComplianceScript"
-	ODataTypeDeviceComplianceScriptStringParameter  = "microsoft.graph.deviceHealthScriptStringParameter"
-	ODataTypeDeviceComplianceScriptAssignment       = "#microsoft.graph.deviceHealthScriptAssignment"
-	ODataTypeDeviceComplianceScriptDailySchedule    = "microsoft.graph.deviceHealthScriptDailySchedule"
-	ODataTypeDeviceComplianceScriptAssignmentTarget = "microsoft.graph.groupAssignmentTarget"
+	uriBetaDeviceComplianceScripts                 = "/beta/deviceManagement/deviceComplianceScripts"
+	ODataTypeDeviceComplianceScript                = "#microsoft.graph.deviceComplianceScript"
+	ODataTypeDeviceComplianceScriptStringParameter = "microsoft.graph.deviceHealthScriptStringParameter"
 )
 
 // ResponseDeviceComplianceScripts represents a response containing a list of Device Compliance Scripts.
@@ -93,6 +90,7 @@ type ResponseDeviceComplianceScript struct {
 
 // DeviceComplianceAssignment represents an assignment for a Device Compliance Script.
 type DeviceComplianceAssignment struct {
+	ODataType            string                            `json:"@odata.type"`
 	ID                   string                            `json:"id"`
 	RunRemediationScript bool                              `json:"runRemediationScript"`
 	Target               DeviceComplianceAssignmentTarget  `json:"target"`
@@ -126,6 +124,36 @@ type ResourceDeviceComplianceScript struct {
 	EnforceSignatureCheck  bool     `json:"enforceSignatureCheck,omitempty"`
 	RunAs32Bit             bool     `json:"runAs32Bit,omitempty"`
 	RoleScopeTagIds        []string `json:"roleScopeTagIds,omitempty"`
+}
+
+// AssignDeviceComplianceScript represents the request structure for assigning a device compliance script.
+type AssignDeviceComplianceScript struct {
+	DeviceComplianceScriptAssignments []DeviceComplianceAssignmentItem `json:"deviceComplianceScriptAssignments"`
+}
+
+// DeviceComplianceAssignmentItem represents an assignment for a Device Compliance Script.
+type DeviceComplianceAssignmentItem struct {
+	ODataType            string                                    `json:"@odata.type"`
+	ID                   string                                    `json:"id"`
+	RunRemediationScript bool                                      `json:"runRemediationScript"`
+	Target               DeviceComplianceAssignmentItemTarget      `json:"target"`
+	RunSchedule          DeviceComplianceAssignmentItemRunSchedule `json:"runSchedule"`
+}
+
+// DeviceComplianceAssignmentItemTarget represents the target of a compliance script assignment.
+type DeviceComplianceAssignmentItemTarget struct {
+	ODataType                                  string `json:"@odata.type"`
+	DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	CollectionID                               string `json:"collectionId"`
+}
+
+// DeviceComplianceAssignmentItemRunSchedule represents the schedule for running a compliance script.
+type DeviceComplianceAssignmentItemRunSchedule struct {
+	ODataType string `json:"@odata.type"`
+	Interval  int    `json:"interval"`
+	UseUTC    bool   `json:"useUtc"`
+	Time      string `json:"time"`
 }
 
 // GetDeviceComplianceScripts retrieves a list of device compliance scripts from Microsoft Graph API.
