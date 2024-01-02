@@ -42,7 +42,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Specify the ID of the Proactive Remediation you want to retrieve
-	remediationDisplayName := "Remediate Toast Notifications"
+	remediationDisplayName := "intuneSDK - proactive remediation created from JSON"
 
 	// Call GetProactiveRemediationByID to fetch the details of the specified remediation
 	remediation, err := intune.GetProactiveRemediationByDisplayName(remediationDisplayName)
