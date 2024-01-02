@@ -17,7 +17,7 @@ import (
 const (
 	uriBetaDeviceShellScripts                   = "/beta/deviceManagement/deviceShellScripts"
 	uriBetaDeviceShellScriptAssignment          = "/beta/deviceManagement/deviceManagementScripts"
-	odataTypeCreateDeviceShellScript            = "#microsoft.graph.deviceShellScript"
+	odataTypeDeviceShellScript                  = "#microsoft.graph.deviceShellScript"
 	odataTypeCreateDeviceShellScriptAssign      = "#microsoft.graph.deviceManagementScriptAssignment"
 	odataTypeCreateDeviceShellScriptGroupAssign = "#microsoft.graph.deviceManagementScriptGroupAssignment"
 )
@@ -52,21 +52,21 @@ type ResponseDeviceShellScriptsList struct {
 
 // ResourceDeviceShellScript represents a Device Shell Script resource
 type ResourceDeviceShellScript struct {
-	OdataContext                string                                `json:"@odata.context"`
-	OdataType                   string                                `json:"@odata.type"`
+	OdataContext                string                                `json:"@odata.context,omitempty"`
+	OdataType                   string                                `json:"@odata.type,omitempty"`
 	ExecutionFrequency          string                                `json:"executionFrequency"`
 	RetryCount                  int                                   `json:"retryCount"`
 	BlockExecutionNotifications bool                                  `json:"blockExecutionNotifications"`
-	ID                          string                                `json:"id"`
+	ID                          string                                `json:"id,omitempty"`
 	DisplayName                 string                                `json:"displayName"`
 	Description                 string                                `json:"description"`
 	ScriptContent               string                                `json:"scriptContent"`
-	CreatedDateTime             time.Time                             `json:"createdDateTime"`
-	LastModifiedDateTime        time.Time                             `json:"lastModifiedDateTime"`
+	CreatedDateTime             time.Time                             `json:"createdDateTime,omitempty"`
+	LastModifiedDateTime        time.Time                             `json:"lastModifiedDateTime,omitempty"`
 	RunAsAccount                string                                `json:"runAsAccount"`
 	FileName                    string                                `json:"fileName"`
 	RoleScopeTagIds             []string                              `json:"roleScopeTagIds"`
-	Assignments                 []ResponseDeviceShellScriptAssignment `json:"assignments"`
+	Assignments                 []ResponseDeviceShellScriptAssignment `json:"assignments,omitempty"`
 }
 
 // ResponseDeviceShellScriptAssignment represents an assignment of a Device Shell Script
@@ -169,7 +169,7 @@ func (c *Client) GetDeviceShellScriptByDisplayName(displayName string) (*Resourc
 
 // CreateDeviceShellScript creates a new device management script.
 func (c *Client) CreateDeviceShellScript(request *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
-	request.OdataType = odataTypeCreateDeviceShellScript
+	request.OdataType = odataTypeDeviceShellScript
 	endpoint := uriBetaDeviceShellScripts
 
 	var createdScript ResourceDeviceShellScript
@@ -227,4 +227,77 @@ func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceSh
 	}
 
 	return createdScript, nil
+}
+
+// UpdateDeviceShellScriptByID updates a Device Shell Script by its ID using the PATCH method.
+func (c *Client) UpdateDeviceShellScriptByID(scriptID string, request *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
+	// Construct the endpoint URL
+	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceShellScripts, scriptID)
+
+	// Set the request OData type
+	request.OdataType = odataTypeDeviceShellScript
+
+	var updatedScript ResourceDeviceShellScript
+	resp, err := c.HTTP.DoRequest("PATCH", endpoint, request, &updatedScript)
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedUpdateByID, "device shell script", scriptID, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &updatedScript, nil
+}
+
+// UpdateDeviceShellScriptByDisplayName updates an existing Device Shell script by its display name.
+// Since there is no dedicated endpoint for this, it first retrieves the script by name to get its ID,
+// then updates it using the UpdateDeviceShellScriptByID function.
+func (c *Client) UpdateDeviceShellScriptByDisplayName(displayName string, updateRequest *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
+	// Retrieve the script by display name to get its ID
+	scripts, err := c.GetDeviceShellScripts()
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device Shell scripts", err)
+	}
+
+	var scriptID string
+	for _, script := range scripts.Value {
+		if script.DisplayName == displayName {
+			scriptID = script.ID
+			break
+		}
+	}
+
+	if scriptID == "" {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByName, "device Shell script", displayName, "script not found")
+	}
+
+	// Update the script by its ID using the provided updateRequest
+	return c.UpdateDeviceShellScriptByID(scriptID, updateRequest)
+}
+
+// DeleteDeviceShellScriptByID deletes an existing device shell script by its ID.
+func (c *Client) DeleteDeviceShellScriptByID(scriptID string) error {
+	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceShellScripts, scriptID)
+
+	resp, err := c.HTTP.DoRequest("DELETE", endpoint, nil, nil)
+	if err != nil {
+		return fmt.Errorf(shared.ErrorMsgFailedDeleteByID, "device shell script", scriptID, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return nil
+}
+
+// DeleteDeviceShellScriptByDisplayName deletes an existing device Shell script by its display name.
+func (c *Client) DeleteDeviceShellScriptByDisplayName(displayName string) error {
+	script, err := c.GetDeviceShellScriptByDisplayName(displayName)
+	if err != nil {
+		return fmt.Errorf(shared.ErrorMsgFailedGetByName, "device shell script", displayName, err)
+	}
+
+	return c.DeleteDeviceShellScriptByID(script.ID)
 }
