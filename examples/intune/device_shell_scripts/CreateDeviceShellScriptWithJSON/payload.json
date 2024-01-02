@@ -1,0 +1,30 @@
+{
+    "@microsoft.graph.tips": "",
+    "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceShellScripts(assignments())/$entity",
+    "assignments": [
+        {
+            "id": "c0a92030-70da-4355-843c-ad177eb8cd9c:ea8e2fb8-e909-44e6-bae7-56757cf6f347",
+            "target": {
+                "@odata.type": "#microsoft.graph.groupAssignmentTarget",
+                "deviceAndAppManagementAssignmentFilterId": "",
+                "deviceAndAppManagementAssignmentFilterType": "none",
+                "groupId": "ea8e2fb8-e909-44e6-bae7-56757cf6f347"
+            }
+        }
+    ],
+    "assignments@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceShellScripts('c0a92030-70da-4355-843c-ad177eb8cd9c')/assignments",
+    "blockExecutionNotifications": true,
+    "createdDateTime": "2024-01-01T11:57:34.9566464Z",
+    "description": "Adds new SSH public key to specified user account for remote access, replacing any existing keys. - from jamf. using for testing",
+    "displayName": "macOS-shell_script-created_with_intuneSDK_withJSON",
+    "executionFrequency": "PT15M",
+    "fileName": "Update SSH Public Key.sh",
+    "id": "c0a92030-70da-4355-843c-ad177eb8cd9c",
+    "lastModifiedDateTime": "2024-01-02T09:27:51.9459264Z",
+    "retryCount": 3,
+    "roleScopeTagIds": [
+        "0"
+    ],
+    "runAsAccount": "user",
+    "scriptContent": "IyEvYmluL2Jhc2gKCiMjIwojCiMgICAgICAgICAgICBOYW1lOiAgVXBkYXRlIFNTSCBQdWJsaWMgS2V5LnNoCiMgICAgIERlc2NyaXB0aW9uOiAgQWRkcyBuZXcgU1NIIHB1YmxpYyBrZXkgdG8gc3BlY2lmaWVkIHVzZXIgYWNjb3VudCBmb3IKIyAgICAgICAgICAgICAgICAgICByZW1vdGUgYWNjZXNzLCByZXBsYWNpbmcgYW55IGV4aXN0aW5nIGtleXMuCiMgICAgICAgICBDcmVhdGVkOiAgMjAxNy0wMi0xNAojICAgTGFzdCBNb2RpZmllZDogIDIwMjAtMDctMDgKIyAgICAgICAgIFZlcnNpb246ICAxLjIuMwojCiMKIyBDb3B5cmlnaHQgMjAxNyBQYWxhbnRpciBUZWNobm9sb2dpZXMsIEluYy4KIwojIExpY2Vuc2VkIHVuZGVyIHRoZSBBcGFjaGUgTGljZW5zZSwgVmVyc2lvbiAyLjAgKHRoZSAiTGljZW5zZSIpOwojIHlvdSBtYXkgbm90IHVzZSB0aGlzIGZpbGUgZXhjZXB0IGluIGNvbXBsaWFuY2Ugd2l0aCB0aGUgTGljZW5zZS4KIyBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIExpY2Vuc2UgYXQKIwojIGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMAojCiMgVW5sZXNzIHJlcXVpcmVkIGJ5IGFwcGxpY2FibGUgbGF3IG9yIGFncmVlZCB0byBpbiB3cml0aW5nLCBzb2Z0d2FyZQojIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSBMaWNlbnNlIGlzIGRpc3RyaWJ1dGVkIG9uIGFuICJBUyBJUyIgQkFTSVMsCiMgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuCiMgU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZAojIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLgojCiMKIyMjCgoKCiMjIyMjIyMjIyMgdmFyaWFibGUtaW5nICMjIyMjIyMjIyMKCgoKIyBKYW1mIFBybyBzY3JpcHQgcGFyYW1ldGVyICJUYXJnZXQgVXNlciIKdGFyZ2V0VXNlcj0iJDQiCiMgSmFtZiBQcm8gc2NyaXB0IHBhcmFtZXRlciAiUHVibGljIFNTSCBLZXkgUGF0aCIKcHVibGljU1NIS2V5UGF0aD0iJDYiCnRhcmdldFVzZXJIb21lPSQoL3Vzci9iaW4vZHNjbCAuIC1yZWFkICIvVXNlcnMvJHRhcmdldFVzZXIiIE5GU0hvbWVEaXJlY3RvcnkgfCAvdXNyL2Jpbi9hd2sgJ3twcmludCAkTkZ9JykKdGFyZ2V0VXNlclNTSFNldHRpbmdzPSIkdGFyZ2V0VXNlckhvbWUvLnNzaCIKdGFyZ2V0VXNlclNTSEF1dGhvcml6ZWRLZXlzUGF0aD0iJHRhcmdldFVzZXJTU0hTZXR0aW5ncy9hdXRob3JpemVkX2tleXMiCgoKCiMjIyMjIyMjIyMgZnVuY3Rpb24taW5nICMjIyMjIyMjIyMKCgoKIyBFeGl0cyBpZiBhbnkgcmVxdWlyZWQgSmFtZiBQcm8gYXJndW1lbnRzIGFyZSB1bmRlZmluZWQuCmZ1bmN0aW9uIGNoZWNrX2phbWZfcHJvX2FyZ3VtZW50cyB7CiAgamFtZlByb0FyZ3VtZW50cz0oCiAgICAiJHRhcmdldFVzZXIiCiAgICAiJHB1YmxpY1NTSEtleVBhdGgiCiAgKQogIGZvciBhcmd1bWVudCBpbiAiJHtqYW1mUHJvQXJndW1lbnRzW0BdfSI7IGRvCiAgICBpZiBbWyAiJGFyZ3VtZW50IiA9ICIiIF1dOyB0aGVuCiAgICAgIGVjaG8gIuKdjCBFUlJPUjogVW5kZWZpbmVkIEphbWYgUHJvIGFyZ3VtZW50LCB1bmFibGUgdG8gcHJvY2VlZC4iCiAgICAgIGV4aXQgNzQKICAgIGZpCiAgZG9uZQp9CgoKIyBFeGl0cyBpZiBwdWJsaWMgU1NIIGtleSBkb2VzIG5vdCBleGlzdC4KZnVuY3Rpb24gcHVibGljX3NzaF9rZXlfY2hlY2sgewogIGlmIFsgISAtZSAiJHB1YmxpY1NTSEtleVBhdGgiIF07IHRoZW4KICAgIGVjaG8gIuKdjCBFUlJPUjogUHVibGljIFNTSCBLZXkgbm90IGZvdW5kIGF0IHNwZWNpZmllZCBwYXRoLCB1bmFibGUgdG8gcHJvY2VlZC4gUGxlYXNlIGNoZWNrIFB1YmxpYyBTU0ggS2V5IFBhdGggcGFyYW1ldGVyIGluIEphbWYgUHJvIHBvbGljeS4iCiAgICBleGl0IDc0CiAgZmkKfQoKCgojIyMjIyMjIyMjIG1haW4gcHJvY2VzcyAjIyMjIyMjIyMjCgoKCiMgRXhpdCBpZiBhbnkgcmVxdWlyZWQgSmFtZiBQcm8gYXJndW1lbnRzIGFyZSB1bmRlZmluZWQuCmNoZWNrX2phbWZfcHJvX2FyZ3VtZW50cwpwdWJsaWNfc3NoX2tleV9jaGVjawoKCgoKCiMgUmVtb3ZlIGV4aXN0aW5nIFNTSCBrZXlzIGlmIHByZXNlbnQuCmlmIFsgLWUgIiR0YXJnZXRVc2VyU1NIQXV0aG9yaXplZEtleXNQYXRoIiBdOyB0aGVuCiAgL2Jpbi9ybSAiJHRhcmdldFVzZXJTU0hBdXRob3JpemVkS2V5c1BhdGgiCmZpCgoKIyBBZGQgLnNzaC9hdXRob3JpemVkX2tleXMgYW5kIHBvcHVsYXRlIHdpdGggdXNlcidzIHB1YmxpYyBrZXkuCi9iaW4vbWtkaXIgLXAgIiR0YXJnZXRVc2VyU1NIU2V0dGluZ3MiCi91c3IvYmluL3RvdWNoICIkdGFyZ2V0VXNlclNTSEF1dGhvcml6ZWRLZXlzUGF0aCIKL2Jpbi9jYXQgIiRwdWJsaWNTU0hLZXlQYXRoIiA+PiAiJHRhcmdldFVzZXJTU0hBdXRob3JpemVkS2V5c1BhdGgiCi91c3Ivc2Jpbi9jaG93biAtUiAiJHRhcmdldFVzZXIiICIkdGFyZ2V0VXNlclNTSFNldHRpbmdzLyIKL2Jpbi9jaG1vZCA3MDAgIiR0YXJnZXRVc2VyU1NIU2V0dGluZ3MiCi9iaW4vY2htb2QgNjAwICIkdGFyZ2V0VXNlclNTSEF1dGhvcml6ZWRLZXlzUGF0aCIKCgoKZXhpdCAwCg=="
+}

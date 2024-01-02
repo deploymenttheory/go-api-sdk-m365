@@ -41,7 +41,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Example script ID to delete
-	scriptID := "14f2427c-6669-47d4-9156-3145d8f4a311"
+	scriptID := "61966ecb-29f1-469f-9cbc-8b3e664f8d96"
 
 	// Call the function to delete the device management script by ID
 	err = intune.DeleteDeviceManagementScriptByID(scriptID)

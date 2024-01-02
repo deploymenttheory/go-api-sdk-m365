@@ -1,3 +1,5 @@
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 package main
 
 import (
@@ -6,14 +8,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
 	configFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/clientauth.json"
-	proactiveRemediationConfigFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_proactive_remediations/CreateProactiveRemediationFromJSON/proactiveRemediation.json" // Path to JSON payload
 
 	// Load the client OAuth credentials from the configuration file
 	clientAuthConfig, err := http_client.LoadClientAuthConfig(configFilePath)
@@ -23,7 +24,7 @@ func main() {
 
 	// Instantiate the default logger and set the desired log level
 	logger := http_client.NewDefaultLogger()
-	logger.SetLevel(http_client.LogLevelDebug)
+	logger.SetLevel(http_client.LogLevelDebug) // Adjust the log level as needed
 
 	// Configuration for the HTTP client
 	httpClientconfig := http_client.Config{
@@ -34,7 +35,7 @@ func main() {
 		MaxConcurrentRequests:     5,
 	}
 
-	// Initialize HTTP client instance
+	// initialize HTTP client instance
 	httpClient, err := http_client.NewClient(httpClientconfig, clientAuthConfig, logger)
 	if err != nil {
 		log.Fatalf("Failed to create HTTP client: %v", err)
@@ -43,22 +44,27 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Load proactive remediation configuration from JSON file
-	jsonData, err := os.ReadFile(proactiveRemediationConfigFilePath)
+	// Read the JSON file
+	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_shell_scripts/CreateDeviceShellScriptWithJSON/payload.json") // Replace with your JSON file path
 	if err != nil {
-		log.Fatalf("Failed to read proactive remediation config file: %v", err)
+		fmt.Println("Error reading JSON file:", err)
+		return
 	}
 
-	var remediationData intuneSDK.ResourceProactiveRemediation
-	if err := json.Unmarshal(jsonData, &remediationData); err != nil {
-		log.Fatalf("Failed to unmarshal proactive remediation config: %v", err)
-	}
-
-	createdRemediation, err := intune.CreateProactiveRemediation(&remediationData) // Assuming no assignment for now
+	// Unmarshal the JSON data into the struct
+	var shellScriptRequest intuneSDK.ResourceDeviceShellScript
+	err = json.Unmarshal(byteValue, &shellScriptRequest)
 	if err != nil {
-		fmt.Printf("Error creating proactive remediation: %v\n", err)
-		os.Exit(1)
+		fmt.Println("Error unmarshaling JSON:", err)
+		return
 	}
 
-	fmt.Printf("Created proactive remediation: %+v\n", createdRemediation)
+	// Create the new policy
+	createdPolicy, err := intune.CreateDeviceShellScript(&shellScriptRequest)
+	if err != nil {
+		fmt.Printf("Error creating policy: %s\n", err)
+		return
+	}
+
+	fmt.Printf("Created Policy: %+v\n", createdPolicy)
 }

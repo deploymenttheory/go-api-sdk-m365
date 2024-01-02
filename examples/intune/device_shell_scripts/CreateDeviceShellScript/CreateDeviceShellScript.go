@@ -46,13 +46,12 @@ func main() {
 		ExecutionFrequency:          "PT15M",
 		RetryCount:                  3,
 		BlockExecutionNotifications: true,
-		DisplayName:                 "Display Name value",
+		DisplayName:                 "intune SDK macOS shell script creation test",
 		Description:                 "Description value",
 		ScriptContent:               "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
 		RunAsAccount:                "user",
 		FileName:                    "NewScript.sh",
 		RoleScopeTagIds:             []string{"0"},
-		Assignments:                 []intuneSDK.ResponseDeviceShellScriptAssignment{}, // Empty assignments array
 	}
 
 	// Create the new device shell script

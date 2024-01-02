@@ -1,24 +1,43 @@
 {
-  "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceHealthScripts/$entity",
-  "@microsoft.graph.tips": "Use $select to choose only the properties your app needs, as this can lead to performance improvements. For example: GET deviceManagement/deviceHealthScripts('<9a25df0c-2268-48a9-95ac-45de11f82e2c>')?$select=createdDateTime,description",
-  "id": "9a25df0c-2268-48a9-95ac-45de11f82e2c",
-  "publisher": "Deployment Theory",
-  "version": "1",
-  "displayName": "Remediate Toast Notifications",
-  "description": "",
-  "detectionScriptContent": "JFRvYXN0RW5hYmxlZCA9IEdldC1JdGVtUHJvcGVydHkgLVBhdGggIkhLQ1U6XFNPRlRXQVJFXE1pY3Jvc29mdFxXaW5kb3dzXEN1cnJlbnRWZXJzaW9uXFB1c2hOb3RpZmljYXRpb25zIiAtTmFtZSBUb2FzdEVuYWJsZWQgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUgfCBTZWxlY3QgLUV4cGFuZFByb3BlcnR5IFRvYXN0RW5hYmxlZA0KSWYgKCRUb2FzdEVuYWJsZWQgLWVxIDApDQp7DQogICAgV3JpdGUtaG9zdCAiTm90IGNvbXBsaWFudCINCn0NCkVsc2UNCnsNCiAgICBXcml0ZS1ob3N0ICJDb21wbGlhbnQiDQp9",
-  "remediationScriptContent": "U2V0LUl0ZW1Qcm9wZXJ0eSAtUGF0aCAiSEtDVTpcU09GVFdBUkVcTWljcm9zb2Z0XFdpbmRvd3NcQ3VycmVudFZlcnNpb25cUHVzaE5vdGlmaWNhdGlvbnMiIC1OYW1lIFRvYXN0RW5hYmxlZCAtVmFsdWUgMSAtRm9yY2UNCkdldC1TZXJ2aWNlIC1OYW1lIFdwblVzZXJTZXJ2aWNlKiB8IFJlc3RhcnQtU2VydmljZSAtRm9yY2U=",
-  "createdDateTime": "2020-12-14T14:39:38.567336Z",
-  "lastModifiedDateTime": "2020-12-14T14:39:38.567336Z",
-  "runAsAccount": "system",
-  "enforceSignatureCheck": true,
-  "runAs32Bit": false,
-  "roleScopeTagIds": [
-      "0"
-  ],
-  "isGlobalScript": false,
-  "highestAvailableVersion": null,
-  "deviceHealthScriptType": "deviceHealthScript",
-  "detectionScriptParameters": [],
-  "remediationScriptParameters": []
+    "@microsoft.graph.tips": "",
+    "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceHealthScripts(assignments())/$entity",
+    "assignments": [
+        {
+            "id": "9a25df0c-2268-48a9-95ac-45de11f82e2c:1c4f3adf-ebe8-422c-97b1-f174632d7538",
+            "runRemediationScript": false,
+            "target": {
+                "@odata.type": "#microsoft.graph.groupAssignmentTarget",
+                "deviceAndAppManagementAssignmentFilterId": "00000000-0000-0000-0000-000000000000",
+                "deviceAndAppManagementAssignmentFilterType": "none",
+                "groupId": "1c4f3adf-ebe8-422c-97b1-f174632d7538"
+            },
+            "runSchedule": {
+                "@odata.type": "#microsoft.graph.deviceHealthScriptDailySchedule",
+                "interval": 1,
+                "useUtc": true,
+                "time": "13:00:00.0000000"
+            }
+        }
+    ],
+    "assignments@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceHealthScripts('9a25df0c-2268-48a9-95ac-45de11f82e2c')/assignments",
+    "createdDateTime": "2020-12-14T14:39:38.567336Z",
+    "description": "",
+    "detectionScriptContent": "JFRvYXN0RW5hYmxlZCA9IEdldC1JdGVtUHJvcGVydHkgLVBhdGggIkhLQ1U6XFNPRlRXQVJFXE1pY3Jvc29mdFxXaW5kb3dzXEN1cnJlbnRWZXJzaW9uXFB1c2hOb3RpZmljYXRpb25zIiAtTmFtZSBUb2FzdEVuYWJsZWQgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUgfCBTZWxlY3QgLUV4cGFuZFByb3BlcnR5IFRvYXN0RW5hYmxlZA0KSWYgKCRUb2FzdEVuYWJsZWQgLWVxIDApDQp7DQogICAgV3JpdGUtaG9zdCAiTm90IGNvbXBsaWFudCINCn0NCkVsc2UNCnsNCiAgICBXcml0ZS1ob3N0ICJDb21wbGlhbnQiDQp9",
+    "detectionScriptParameters": [],
+    "deviceHealthScriptType": "deviceHealthScript",
+    "displayName": "intuneSDK - proactive remediation created from JSON",
+    "enforceSignatureCheck": true,
+    "highestAvailableVersion": null,
+    "id": "9a25df0c-2268-48a9-95ac-45de11f82e2c",
+    "isGlobalScript": false,
+    "lastModifiedDateTime": "2020-12-14T14:39:38.567336Z",
+    "publisher": "Dafydd Watkins",
+    "remediationScriptContent": "U2V0LUl0ZW1Qcm9wZXJ0eSAtUGF0aCAiSEtDVTpcU09GVFdBUkVcTWljcm9zb2Z0XFdpbmRvd3NcQ3VycmVudFZlcnNpb25cUHVzaE5vdGlmaWNhdGlvbnMiIC1OYW1lIFRvYXN0RW5hYmxlZCAtVmFsdWUgMSAtRm9yY2UNCkdldC1TZXJ2aWNlIC1OYW1lIFdwblVzZXJTZXJ2aWNlKiB8IFJlc3RhcnQtU2VydmljZSAtRm9yY2U=",
+    "remediationScriptParameters": [],
+    "roleScopeTagIds": [
+        "0"
+    ],
+    "runAs32Bit": false,
+    "runAsAccount": "system",
+    "version": "1"
 }

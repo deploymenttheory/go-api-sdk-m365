@@ -1,4 +1,4 @@
-package powershell_scripts
+package device_shell_scripts
 
 import (
 	"fmt"
@@ -9,17 +9,19 @@ import (
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
-func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAssignments bool, prefix string, appendID bool) error {
-	log.Println("Starting device management script backup...")
+// Define your structs here in the device_shell_scripts package
 
-	// Retrieve all Device Management Scripts
-	scripts, err := client.GetDeviceManagementScripts()
+func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAssignments bool, prefix string, appendID bool) error {
+	log.Println("Starting device shell script backup...")
+
+	// Retrieve all Device Shell Scripts
+	scripts, err := client.GetDeviceShellScripts()
 	if err != nil {
-		log.Println("Error getting powershell scripts:", err)
+		log.Println("Error getting device shell scripts:", err)
 		return err
 	}
 
-	log.Printf("Found %d powershell scripts\n", len(scripts.Value))
+	log.Printf("Found %d device shell scripts\n", len(scripts.Value))
 
 	// Process each script
 	for _, script := range scripts.Value {
@@ -32,19 +34,18 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 		}
 
 		// Get detailed information for each script
-		detailedScript, err := client.GetDeviceManagementScriptByID(script.ID)
+		detailedScript, err := client.GetDeviceShellScriptByID(script.ID)
 		if err != nil {
 			log.Println("Error getting script details:", err)
 			continue
 		}
 
-		// Convert script details to a map
-		scriptMap := shared.ToMap(detailedScript)
+		// Convert script details to a map and exclude fields with "omitempty" tags
+		scriptMap := shared.ConvertStructToMap(detailedScript)
 		if scriptMap == nil {
 			log.Println("Error converting script details to map")
 			continue
 		}
-
 		// Construct filename
 		filename, ok := scriptMap["displayName"].(string)
 		if !ok {
@@ -53,7 +54,7 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 		}
 		filename = fmt.Sprintf("%s__%s", filename, script.ID)
 
-		// Save Device Management Script
+		// Save Device Shell Script
 		log.Printf("Saving script to '%s' in format '%s'\n", filename, outputFormat)
 		err = shared.SaveOutput(outputFormat, outputPath, filename, scriptMap)
 		if err != nil {
@@ -70,6 +71,6 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 		}
 	}
 
-	log.Println("Device management script backup completed.")
+	log.Println("Device shell script backup completed.")
 	return nil
 }

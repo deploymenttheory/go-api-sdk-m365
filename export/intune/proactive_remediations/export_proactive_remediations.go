@@ -43,7 +43,7 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 		}
 
 		// Convert remediation details to a map
-		remediationMap := shared.ToMap(remediationDetails)
+		remediationMap := shared.ConvertStructToMap(remediationDetails)
 		if remediationMap == nil {
 			log.Println("Error converting remediation details to map")
 			continue

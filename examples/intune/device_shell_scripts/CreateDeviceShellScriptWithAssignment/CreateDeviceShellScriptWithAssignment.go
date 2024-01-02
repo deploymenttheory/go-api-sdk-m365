@@ -52,7 +52,6 @@ func main() {
 		RunAsAccount:                "user",
 		FileName:                    "NewScript.sh",
 		RoleScopeTagIds:             []string{"0"},
-		Assignments:                 []intuneSDK.ResponseDeviceShellScriptAssignment{}, // Empty assignments array
 	}
 
 	// Define the assignment details

@@ -75,10 +75,10 @@ func main() {
 	}
 
 	// Example data for the Proactive Remediation Script
-	remediationData := &intuneSDK.ResourceDeviceHealthScript{
+	remediationData := &intuneSDK.ResourceProactiveRemediation{
 		Publisher:                   "Example Publisher",
 		Version:                     "1.0",
-		DisplayName:                 "Example Proactive Remediation Script",
+		DisplayName:                 "intuneSDK - Example Proactive Remediation Script",
 		Description:                 "This is a test script",
 		DetectionScriptContent:      detectionScriptBase64Encoded,
 		RemediationScriptContent:    remediationScriptBase64Encoded,
