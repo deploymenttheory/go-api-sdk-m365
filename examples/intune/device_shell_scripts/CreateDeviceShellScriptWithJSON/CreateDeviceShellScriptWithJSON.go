@@ -45,7 +45,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Read the JSON file
-	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_management_scripts/CreateDeviceShellScriptWithJSON/payload.json") // Replace with your JSON file path
+	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_shell_scripts/CreateDeviceShellScriptWithJSON/payload.json") // Replace with your JSON file path
 	if err != nil {
 		fmt.Println("Error reading JSON file:", err)
 		return

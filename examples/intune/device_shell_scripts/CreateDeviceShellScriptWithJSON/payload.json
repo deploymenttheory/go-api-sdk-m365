@@ -16,7 +16,7 @@
     "blockExecutionNotifications": true,
     "createdDateTime": "2024-01-01T11:57:34.9566464Z",
     "description": "Adds new SSH public key to specified user account for remote access, replacing any existing keys. - from jamf. using for testing",
-    "displayName": "macOS-shell_script-update_SSH_public_key",
+    "displayName": "macOS-shell_script-created_with_intuneSDK_withJSON",
     "executionFrequency": "PT15M",
     "fileName": "Update SSH Public Key.sh",
     "id": "c0a92030-70da-4355-843c-ad177eb8cd9c",
