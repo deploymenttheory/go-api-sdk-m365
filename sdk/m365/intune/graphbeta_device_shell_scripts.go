@@ -4,6 +4,7 @@
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMacOsMenu/~/shellScripts
 // API reference: https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-deviceshellscript?view=graph-rest-beta
 // Microsoft Graph requires the structs to support a JSON data structure.
+// device shell scripts utilises 3 distinct sets of structs. A list object strucutre, a individual object structure and a resource object structure.
 
 package intune
 
@@ -22,28 +23,6 @@ const (
 	odataTypeCreateDeviceShellScriptGroupAssign = "#microsoft.graph.deviceManagementScriptGroupAssignment"
 )
 
-/* Struct hierarchy using embedded anonymous structs for reference
-
-type RequestDeviceManagementScriptAssignment struct {
-	ResourceDeviceManagementScriptGroupAssignments []struct {
-		OdataType     string `json:"@odata.type"`
-		ID            string `json:"id"`
-		TargetGroupID string `json:"targetGroupId"`
-	} `json:"deviceManagementScriptGroupAssignments"`
-	ResourceDeviceManagementScriptAssignments []struct {
-		OdataType string `json:"@odata.type"`
-		ID        string `json:"id"`
-		Target    struct {
-			OdataType                                  string `json:"@odata.type"`
-			DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId"`
-			DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
-			CollectionID                               string `json:"collectionId"`
-		} `json:"target"`
-	} `json:"deviceManagementScriptAssignments"`
-}
-
-*/
-
 // ResponseDeviceShellScriptsList represents a list of Device Shell Scripts.
 type ResponseDeviceShellScriptsList struct {
 	ODataContext string                              `json:"@odata.context"`
@@ -52,23 +31,23 @@ type ResponseDeviceShellScriptsList struct {
 
 // ResponseDeviceShellScript represents a Device Shell Script resource.
 type ResponseDeviceShellScriptListItem struct {
-	ExecutionFrequency          string                                `json:"executionFrequency"`
-	RetryCount                  int                                   `json:"retryCount"`
-	BlockExecutionNotifications bool                                  `json:"blockExecutionNotifications"`
-	ID                          string                                `json:"id"`
-	DisplayName                 string                                `json:"displayName"`
-	Description                 string                                `json:"description"`
-	ScriptContent               string                                `json:"scriptContent"`
-	CreatedDateTime             time.Time                             `json:"createdDateTime"`
-	LastModifiedDateTime        time.Time                             `json:"lastModifiedDateTime"`
-	RunAsAccount                string                                `json:"runAsAccount"`
-	FileName                    string                                `json:"fileName"`
-	RoleScopeTagIds             []string                              `json:"roleScopeTagIds"`
-	Assignments                 []ResponseDeviceShellScriptAssignment `json:"assignments,omitempty"`
+	ExecutionFrequency          string                                    `json:"executionFrequency"`
+	RetryCount                  int                                       `json:"retryCount"`
+	BlockExecutionNotifications bool                                      `json:"blockExecutionNotifications"`
+	ID                          string                                    `json:"id"`
+	DisplayName                 string                                    `json:"displayName"`
+	Description                 string                                    `json:"description"`
+	ScriptContent               string                                    `json:"scriptContent"`
+	CreatedDateTime             time.Time                                 `json:"createdDateTime"`
+	LastModifiedDateTime        time.Time                                 `json:"lastModifiedDateTime"`
+	RunAsAccount                string                                    `json:"runAsAccount"`
+	FileName                    string                                    `json:"fileName"`
+	RoleScopeTagIds             []string                                  `json:"roleScopeTagIds"`
+	Assignments                 []ResponseDeviceShellScriptListAssignment `json:"assignments,omitempty"`
 }
 
-// ResponseDeviceShellScriptAssignment represents an assignment of a Device Shell Script.
-type ResponseDeviceShellScriptAssignment struct {
+// ResponseDeviceShellScriptListAssignment represents an assignment of a Device Shell Script.
+type ResponseDeviceShellScriptListAssignment struct {
 	ID     string                              `json:"id"`
 	Target ResponseDeviceShellScriptListTarget `json:"target"`
 }
@@ -83,26 +62,26 @@ type ResponseDeviceShellScriptListTarget struct {
 
 // ResponseDeviceShellScript represents a Device Shell Script by its ID.
 type ResponseDeviceShellScript struct {
-	ODataContext                string                                    `json:"@odata.context"`
-	Tips                        string                                    `json:"@microsoft.graph.tips"`
-	ExecutionFrequency          string                                    `json:"executionFrequency"`
-	RetryCount                  int                                       `json:"retryCount"`
-	BlockExecutionNotifications bool                                      `json:"blockExecutionNotifications"`
-	ID                          string                                    `json:"id"`
-	DisplayName                 string                                    `json:"displayName"`
-	Description                 string                                    `json:"description"`
-	ScriptContent               string                                    `json:"scriptContent"`
-	CreatedDateTime             string                                    `json:"createdDateTime"`
-	LastModifiedDateTime        string                                    `json:"lastModifiedDateTime"`
-	RunAsAccount                string                                    `json:"runAsAccount"`
-	FileName                    string                                    `json:"fileName"`
-	RoleScopeTagIds             []string                                  `json:"roleScopeTagIds"`
-	AssignmentsContext          string                                    `json:"assignments@odata.context"`
-	Assignments                 []ResponseDeviceShellScriptAssignmentByID `json:"assignments"`
+	ODataContext                string                                `json:"@odata.context"`
+	Tips                        string                                `json:"@microsoft.graph.tips"`
+	ExecutionFrequency          string                                `json:"executionFrequency"`
+	RetryCount                  int                                   `json:"retryCount"`
+	BlockExecutionNotifications bool                                  `json:"blockExecutionNotifications"`
+	ID                          string                                `json:"id"`
+	DisplayName                 string                                `json:"displayName"`
+	Description                 string                                `json:"description"`
+	ScriptContent               string                                `json:"scriptContent"`
+	CreatedDateTime             string                                `json:"createdDateTime"`
+	LastModifiedDateTime        string                                `json:"lastModifiedDateTime"`
+	RunAsAccount                string                                `json:"runAsAccount"`
+	FileName                    string                                `json:"fileName"`
+	RoleScopeTagIds             []string                              `json:"roleScopeTagIds"`
+	AssignmentsContext          string                                `json:"assignments@odata.context"`
+	Assignments                 []ResponseDeviceShellScriptAssignment `json:"assignments"`
 }
 
-// ResponseDeviceShellScriptAssignmentByID represents an assignment of a Device Shell Script by its ID.
-type ResponseDeviceShellScriptAssignmentByID struct {
+// ResponseDeviceShellScriptAssignment represents an assignment of a Device Shell Script by its ID.
+type ResponseDeviceShellScriptAssignment struct {
 	ID     string                          `json:"id"`
 	Target ResponseDeviceShellScriptTarget `json:"target"`
 }
@@ -115,7 +94,7 @@ type ResponseDeviceShellScriptTarget struct {
 	GroupId                                    string `json:"groupId"`
 }
 
-// ResourceDeviceShellScript represents the request payload for creating a new Device Shell Script.
+// ResourceDeviceShellScript represents the request payload for creating and updating a new Device Shell Script.
 type ResourceDeviceShellScript struct {
 	ODataType                   string   `json:"@odata.type,omitempty"`
 	ExecutionFrequency          string   `json:"executionFrequency,omitempty"`
