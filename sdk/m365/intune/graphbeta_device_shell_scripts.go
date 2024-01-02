@@ -46,41 +46,87 @@ type RequestDeviceManagementScriptAssignment struct {
 
 // ResponseDeviceShellScriptsList represents a list of Device Shell Scripts.
 type ResponseDeviceShellScriptsList struct {
-	ODataContext string                      `json:"@odata.context"`
-	Value        []ResourceDeviceShellScript `json:"value"`
+	ODataContext string                              `json:"@odata.context"`
+	Value        []ResponseDeviceShellScriptListItem `json:"value"`
 }
 
-// ResourceDeviceShellScript represents a Device Shell Script resource
-type ResourceDeviceShellScript struct {
-	OdataContext                string                                `json:"@odata.context,omitempty"`
-	OdataType                   string                                `json:"@odata.type,omitempty"`
+// ResponseDeviceShellScript represents a Device Shell Script resource.
+type ResponseDeviceShellScriptListItem struct {
 	ExecutionFrequency          string                                `json:"executionFrequency"`
 	RetryCount                  int                                   `json:"retryCount"`
 	BlockExecutionNotifications bool                                  `json:"blockExecutionNotifications"`
-	ID                          string                                `json:"id,omitempty"`
+	ID                          string                                `json:"id"`
 	DisplayName                 string                                `json:"displayName"`
 	Description                 string                                `json:"description"`
 	ScriptContent               string                                `json:"scriptContent"`
-	CreatedDateTime             time.Time                             `json:"createdDateTime,omitempty"`
-	LastModifiedDateTime        time.Time                             `json:"lastModifiedDateTime,omitempty"`
+	CreatedDateTime             time.Time                             `json:"createdDateTime"`
+	LastModifiedDateTime        time.Time                             `json:"lastModifiedDateTime"`
 	RunAsAccount                string                                `json:"runAsAccount"`
 	FileName                    string                                `json:"fileName"`
 	RoleScopeTagIds             []string                              `json:"roleScopeTagIds"`
 	Assignments                 []ResponseDeviceShellScriptAssignment `json:"assignments,omitempty"`
 }
 
-// ResponseDeviceShellScriptAssignment represents an assignment of a Device Shell Script
+// ResponseDeviceShellScriptAssignment represents an assignment of a Device Shell Script.
 type ResponseDeviceShellScriptAssignment struct {
-	ID      string                            `json:"id"`
-	Targets []ResponseDeviceShellScriptTarget `json:"deviceManagementScriptGroupAssignments"`
+	ID     string                              `json:"id"`
+	Target ResponseDeviceShellScriptListTarget `json:"target"`
 }
 
-// ResponseDeviceShellScriptTarget represents the target of a script assignment
+// ResponseDeviceShellScriptTarget represents the target of a script assignment.
+type ResponseDeviceShellScriptListTarget struct {
+	ODataType                                  string `json:"@odata.type"`
+	DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	CollectionId                               string `json:"collectionId"`
+}
+
+// ResponseDeviceShellScript represents a Device Shell Script by its ID.
+type ResponseDeviceShellScript struct {
+	ODataContext                string                                    `json:"@odata.context"`
+	Tips                        string                                    `json:"@microsoft.graph.tips"`
+	ExecutionFrequency          string                                    `json:"executionFrequency"`
+	RetryCount                  int                                       `json:"retryCount"`
+	BlockExecutionNotifications bool                                      `json:"blockExecutionNotifications"`
+	ID                          string                                    `json:"id"`
+	DisplayName                 string                                    `json:"displayName"`
+	Description                 string                                    `json:"description"`
+	ScriptContent               string                                    `json:"scriptContent"`
+	CreatedDateTime             string                                    `json:"createdDateTime"`
+	LastModifiedDateTime        string                                    `json:"lastModifiedDateTime"`
+	RunAsAccount                string                                    `json:"runAsAccount"`
+	FileName                    string                                    `json:"fileName"`
+	RoleScopeTagIds             []string                                  `json:"roleScopeTagIds"`
+	AssignmentsContext          string                                    `json:"assignments@odata.context"`
+	Assignments                 []ResponseDeviceShellScriptAssignmentByID `json:"assignments"`
+}
+
+// ResponseDeviceShellScriptAssignmentByID represents an assignment of a Device Shell Script by its ID.
+type ResponseDeviceShellScriptAssignmentByID struct {
+	ID     string                          `json:"id"`
+	Target ResponseDeviceShellScriptTarget `json:"target"`
+}
+
+// ResponseDeviceShellScriptTarget represents the target of a script assignment.
 type ResponseDeviceShellScriptTarget struct {
 	ODataType                                  string `json:"@odata.type"`
 	DeviceAndAppManagementAssignmentFilterId   string `json:"deviceAndAppManagementAssignmentFilterId"`
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
-	CollectionId                               string `json:"collectionId"`
+	GroupId                                    string `json:"groupId"`
+}
+
+// ResourceDeviceShellScript represents the request payload for creating a new Device Shell Script.
+type ResourceDeviceShellScript struct {
+	ODataType                   string   `json:"@odata.type,omitempty"`
+	ExecutionFrequency          string   `json:"executionFrequency,omitempty"`
+	RetryCount                  int      `json:"retryCount,omitempty"`
+	BlockExecutionNotifications bool     `json:"blockExecutionNotifications,omitempty"`
+	DisplayName                 string   `json:"displayName,omitempty"`
+	Description                 string   `json:"description,omitempty"`
+	ScriptContent               string   `json:"scriptContent,omitempty"`
+	RunAsAccount                string   `json:"runAsAccount,omitempty"`
+	FileName                    string   `json:"fileName,omitempty"`
+	RoleScopeTagIds             []string `json:"roleScopeTagIds,omitempty"`
 }
 
 // RequestDeviceManagementScriptAssignment represents the request of a script assignment
@@ -129,10 +175,10 @@ func (c *Client) GetDeviceShellScripts() (*ResponseDeviceShellScriptsList, error
 }
 
 // GetDeviceShellScriptByID retrieves a Device Shell Script by its ID.
-func (c *Client) GetDeviceShellScriptByID(id string) (*ResourceDeviceShellScript, error) {
+func (c *Client) GetDeviceShellScriptByID(id string) (*ResponseDeviceShellScript, error) {
 	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaDeviceShellScripts, id)
 
-	var deviceShellScript ResourceDeviceShellScript
+	var deviceShellScript ResponseDeviceShellScript
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceShellScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device shell script", id, err)
@@ -146,7 +192,7 @@ func (c *Client) GetDeviceShellScriptByID(id string) (*ResourceDeviceShellScript
 }
 
 // GetDeviceShellScriptByDisplayName retrieves a device shell script by its display name.
-func (c *Client) GetDeviceShellScriptByDisplayName(displayName string) (*ResourceDeviceShellScript, error) {
+func (c *Client) GetDeviceShellScriptByDisplayName(displayName string) (*ResponseDeviceShellScript, error) {
 	scripts, err := c.GetDeviceShellScripts()
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device shell scripts", err)
@@ -168,11 +214,11 @@ func (c *Client) GetDeviceShellScriptByDisplayName(displayName string) (*Resourc
 }
 
 // CreateDeviceShellScript creates a new device management script.
-func (c *Client) CreateDeviceShellScript(request *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
-	request.OdataType = odataTypeDeviceShellScript
+func (c *Client) CreateDeviceShellScript(request *ResourceDeviceShellScript) (*ResponseDeviceShellScript, error) {
+	request.ODataType = odataTypeDeviceShellScript
 	endpoint := uriBetaDeviceShellScripts
 
-	var createdScript ResourceDeviceShellScript
+	var createdScript ResponseDeviceShellScript
 	resp, err := c.HTTP.DoRequest("POST", endpoint, request, &createdScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device management script", err)
@@ -213,7 +259,7 @@ func (c *Client) CreateDeviceShellScriptAssignment(scriptID string, assignment *
 }
 
 // CreateDeviceShellScriptWithAssignment creates a new device management script and assigns it.
-func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceShellScript, assignment *RequestDeviceManagementScriptAssignment) (*ResourceDeviceShellScript, error) {
+func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceShellScript, assignment *RequestDeviceManagementScriptAssignment) (*ResponseDeviceShellScript, error) {
 	// Create the device management script
 	createdScript, err := c.CreateDeviceShellScript(request)
 	if err != nil {
@@ -230,14 +276,14 @@ func (c *Client) CreateDeviceShellScriptWithAssignment(request *ResourceDeviceSh
 }
 
 // UpdateDeviceShellScriptByID updates a Device Shell Script by its ID using the PATCH method.
-func (c *Client) UpdateDeviceShellScriptByID(scriptID string, request *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
+func (c *Client) UpdateDeviceShellScriptByID(scriptID string, request *ResourceDeviceShellScript) (*ResponseDeviceShellScript, error) {
 	// Construct the endpoint URL
 	endpoint := fmt.Sprintf("%s/%s", uriBetaDeviceShellScripts, scriptID)
 
 	// Set the request OData type
-	request.OdataType = odataTypeDeviceShellScript
+	request.ODataType = odataTypeDeviceShellScript
 
-	var updatedScript ResourceDeviceShellScript
+	var updatedScript ResponseDeviceShellScript
 	resp, err := c.HTTP.DoRequest("PATCH", endpoint, request, &updatedScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedUpdateByID, "device shell script", scriptID, err)
@@ -253,7 +299,7 @@ func (c *Client) UpdateDeviceShellScriptByID(scriptID string, request *ResourceD
 // UpdateDeviceShellScriptByDisplayName updates an existing Device Shell script by its display name.
 // Since there is no dedicated endpoint for this, it first retrieves the script by name to get its ID,
 // then updates it using the UpdateDeviceShellScriptByID function.
-func (c *Client) UpdateDeviceShellScriptByDisplayName(displayName string, updateRequest *ResourceDeviceShellScript) (*ResourceDeviceShellScript, error) {
+func (c *Client) UpdateDeviceShellScriptByDisplayName(displayName string, updateRequest *ResourceDeviceShellScript) (*ResponseDeviceShellScript, error) {
 	// Retrieve the script by display name to get its ID
 	scripts, err := c.GetDeviceShellScripts()
 	if err != nil {
@@ -273,7 +319,12 @@ func (c *Client) UpdateDeviceShellScriptByDisplayName(displayName string, update
 	}
 
 	// Update the script by its ID using the provided updateRequest
-	return c.UpdateDeviceShellScriptByID(scriptID, updateRequest)
+	updatedScript, err := c.UpdateDeviceShellScriptByID(scriptID, updateRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedScript, nil
 }
 
 // DeleteDeviceShellScriptByID deletes an existing device shell script by its ID.

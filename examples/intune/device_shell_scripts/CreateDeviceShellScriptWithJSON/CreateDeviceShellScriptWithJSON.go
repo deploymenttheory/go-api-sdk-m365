@@ -1,9 +1,12 @@
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
@@ -41,29 +44,27 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Define the new script details
-	newScriptDetails := intuneSDK.ResourceDeviceShellScript{
-		ExecutionFrequency:          "PT15M",
-		RetryCount:                  3,
-		BlockExecutionNotifications: true,
-		DisplayName:                 "intune SDK macOS shell script creation test",
-		Description:                 "Description value",
-		ScriptContent:               "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
-		RunAsAccount:                "user",
-		FileName:                    "NewScript.sh",
-		RoleScopeTagIds:             []string{"0"},
+	// Read the JSON file
+	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_management_scripts/CreateDeviceShellScriptWithJSON/payload.json") // Replace with your JSON file path
+	if err != nil {
+		fmt.Println("Error reading JSON file:", err)
+		return
 	}
 
-	// Create the new device shell script
-	newScript, err := intune.CreateDeviceShellScript(&newScriptDetails)
+	// Unmarshal the JSON data into the struct
+	var shellScriptRequest intuneSDK.ResourceDeviceShellScript
+	err = json.Unmarshal(byteValue, &shellScriptRequest)
 	if err != nil {
-		log.Fatalf("Failed to create device shell script: %v", err)
+		fmt.Println("Error unmarshaling JSON:", err)
+		return
 	}
 
-	// Pretty print the created device shell script
-	jsonData, err := json.MarshalIndent(newScript, "", "  ")
+	// Create the new policy
+	createdPolicy, err := intune.CreateDeviceShellScript(&shellScriptRequest)
 	if err != nil {
-		log.Fatalf("Failed to marshal created device shell script: %v", err)
+		fmt.Printf("Error creating policy: %s\n", err)
+		return
 	}
-	fmt.Println(string(jsonData))
+
+	fmt.Printf("Created Policy: %+v\n", createdPolicy)
 }
