@@ -37,8 +37,8 @@ type ResourceDeviceManagementScriptAssignment struct {
 	} `json:"target,omitempty"`
 }
 
-// GetResourceGroupAssignmentsByResourceID retrieves all group assignments for a specified resource.
-func (c *Client) GetResourceGroupAssignmentsByResourceID(resourceTypeURI, resourceID string) (*AssignmentDeviceManagementScript, error) {
+// GetDeviceManagementScriptAssignmentByID retrieves all group assignments for a specified resource.
+func (c *Client) GetDeviceManagementScriptAssignmentByID(resourceTypeURI, resourceID string) (*AssignmentDeviceManagementScript, error) {
 	endpoint := fmt.Sprintf("%s/%s/assignments", resourceTypeURI, resourceID)
 
 	var assignments AssignmentDeviceManagementScript
