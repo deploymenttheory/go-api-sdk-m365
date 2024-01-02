@@ -42,9 +42,8 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Define the new script details
-	updatedScriptDetails := intuneSDK.ResourceDeviceManagementScriptRequest{
-		OdataType:             "#microsoft.graph.deviceManagementScript", // Update this according to the Intune API requirements
-		DisplayName:           "New name of Script",
+	updatedScriptDetails := intuneSDK.ResourceDeviceManagementScript{
+		DisplayName:           "intuneSDK - Updated Script",
 		Description:           "This is a new script created for demonstration purposes.",
 		ScriptContent:         "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
 		RunAsAccount:          "system",               // or "user"
@@ -54,7 +53,7 @@ func main() {
 		RunAs32Bit:            false,
 	}
 
-	deviceManagementScriptID := "0542155b-6f91-49d0-b32c-033fd290cfdc"
+	deviceManagementScriptID := "c84c40bb-e58c-4a1a-9ee4-f677ed3a8b89"
 
 	// Create the new device management script
 	newScript, err := intune.UpdateDeviceManagementScriptByID(deviceManagementScriptID, &updatedScriptDetails)

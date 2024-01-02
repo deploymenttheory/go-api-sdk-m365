@@ -1,9 +1,12 @@
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicy",
+// "@odata.type": "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
@@ -41,28 +44,27 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Define the new script details
-	newScriptDetails := intuneSDK.ResourceDeviceManagementScript{
-		DisplayName:           "New Script",
-		Description:           "This is a new script created for demonstration purposes.",
-		ScriptContent:         "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
-		RunAsAccount:          "system",               // or "user"
-		EnforceSignatureCheck: false,
-		FileName:              "NewScript.ps1",
-		RoleScopeTagIds:       []string{"0"},
-		RunAs32Bit:            false,
+	// Read the JSON file
+	byteValue, err := os.ReadFile("/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_management_scripts/CreateDeviceManagementScriptWithJSON/payload.json") // Replace with your JSON file path
+	if err != nil {
+		fmt.Println("Error reading JSON file:", err)
+		return
 	}
 
-	// Create the new device management script
-	newScript, err := intune.CreateDeviceManagementScript(&newScriptDetails)
+	// Unmarshal the JSON data into the struct
+	var powershellScriptRequest intuneSDK.ResourceDeviceManagementScript
+	err = json.Unmarshal(byteValue, &powershellScriptRequest)
 	if err != nil {
-		log.Fatalf("Failed to create device management script: %v", err)
+		fmt.Println("Error unmarshaling JSON:", err)
+		return
 	}
 
-	// Pretty print the created device management script
-	jsonData, err := json.MarshalIndent(newScript, "", "  ")
+	// Create the new policy
+	createdPolicy, err := intune.CreateDeviceManagementScript(&powershellScriptRequest)
 	if err != nil {
-		log.Fatalf("Failed to marshal created device management script: %v", err)
+		fmt.Printf("Error creating policy: %s\n", err)
+		return
 	}
-	fmt.Println(string(jsonData))
+
+	fmt.Printf("Created Policy: %+v\n", createdPolicy)
 }

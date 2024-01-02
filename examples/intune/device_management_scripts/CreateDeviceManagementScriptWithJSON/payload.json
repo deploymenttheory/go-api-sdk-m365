@@ -1,0 +1,19 @@
+{
+    "@microsoft.graph.tips": "",
+    "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceManagementScripts(assignments())/$entity",
+    "assignments": [],
+    "assignments@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/deviceManagementScripts('c84c40bb-e58c-4a1a-9ee4-f677ed3a8b89')/assignments",
+    "createdDateTime": "2024-01-02T11:06:23.0337355Z",
+    "description": "This is a new script created for demonstration purposes.",
+    "displayName": "intuneSDK - powershell script creation with JSON",
+    "enforceSignatureCheck": false,
+    "fileName": "NewScript.ps1",
+    "id": "c84c40bb-e58c-4a1a-9ee4-f677ed3a8b89",
+    "lastModifiedDateTime": "2024-01-02T11:10:38.0727165Z",
+    "roleScopeTagIds": [
+        "0"
+    ],
+    "runAs32Bit": false,
+    "runAsAccount": "system",
+    "scriptContent": "c2NyaXB0Q29udGVudA=="
+}
