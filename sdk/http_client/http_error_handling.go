@@ -160,6 +160,7 @@ func extractErrorMessageFromHTML(htmlContent string) string {
 	return strings.Join(messages, " | ")
 }
 
+/*
 // parseJSONErrorResponse parses the JSON error message from the response body.
 func parseJSONErrorResponse(body []byte) (string, error) {
 	var errorResponse struct {
@@ -183,3 +184,4 @@ func parseJSONErrorResponse(body []byte) (string, error) {
 
 	return "No error description available", nil
 }
+*/
