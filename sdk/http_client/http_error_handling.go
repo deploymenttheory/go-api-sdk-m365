@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 
@@ -18,6 +19,7 @@ type APIError struct {
 	Message    string
 }
 
+/*
 // handleAPIError handles error responses from the API, converting them into a structured error if possible.
 func (c *Client) handleAPIError(resp *http.Response) error {
 	var structuredErr StructuredError
@@ -38,6 +40,40 @@ func (c *Client) handleAPIError(resp *http.Response) error {
 	} else {
 		c.logger.Warn("API returned non-structured error", "status", resp.Status, "error_message", errMsg)
 	}
+
+	return &APIError{
+		StatusCode: resp.StatusCode,
+		Message:    errMsg,
+	}
+}
+*/
+
+// handleAPIError handles error responses from the API, converting them into a structured error if possible.
+func (c *Client) handleAPIError(resp *http.Response) error {
+	// Read the entire response body
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.logger.Warn("Failed to read response body", "error", err)
+		return &APIError{
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("Failed to read response body: %v", err),
+		}
+	}
+
+	// Attempt to unmarshal into StructuredError
+	var structuredErr StructuredError
+	if err := json.Unmarshal(bodyBytes, &structuredErr); err == nil && structuredErr.Error.Message != "" {
+		c.logger.Warn("API returned structured error", "status", resp.Status, "error_code", structuredErr.Error.Code, "error_message", structuredErr.Error.Message)
+		return &APIError{
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("%s: %s", structuredErr.Error.Code, structuredErr.Error.Message),
+		}
+	}
+
+	// Handle case when response body does not match StructuredError format
+	// This could be a fallback to a generic error message
+	errMsg := fmt.Sprintf("Unexpected error with status code: %d", resp.StatusCode)
+	c.logger.Warn("Failed to decode API error message, using default error message", "status", resp.Status, "response", string(bodyBytes))
 
 	return &APIError{
 		StatusCode: resp.StatusCode,

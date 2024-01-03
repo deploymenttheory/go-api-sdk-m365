@@ -41,35 +41,20 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Replace with the actual script ID
-	scriptID := "ffd8de7a-e0aa-4f14-b917-f644f781c1fc"
+	// Define scriptID and assignmentID for the device compliance script
+	scriptID := "your-device-compliance-script-id"
+	assignmentID := "your-assignment-id"
 
-	// Prepare the assignment data
-	assignment := intuneSDK.ResourceDeviceHealthScriptAssignment{
-		// Fill in the necessary fields...
-		Target: intuneSDK.ResourceDeviceHealthScriptAssignmentTarget{
-			DeviceAndAppManagementAssignmentFilterID:   "99b2823d-a05c-4316-9a82-3efa40ff482d",
-			DeviceAndAppManagementAssignmentFilterType: "include", // include / exclude
-			CollectionID: "", // used for Config Mgr only
-		},
-		RunRemediationScript: false,
-		RunSchedule: intuneSDK.ResourceDeviceHealthScriptAssignmentSchedule{
-			Interval: 1,
-			UseUTC:   false,
-			Time:     "01:00:00.0000000",
-		},
+	// Call the GetDeviceComplianceScriptAssignmentByID function
+	assignment, err := intune.GetDeviceComplianceScriptAssignmentByID(scriptID, assignmentID)
+	if err != nil {
+		log.Fatalf("Failed to get device compliance script assignment by ID: %v", err)
 	}
 
-	// Create the proactive remediation script assignment
-	response, err := intune.CreateProactiveRemediationScriptAssignment(scriptID, assignment)
+	// Pretty print the assignment
+	jsonData, err := json.MarshalIndent(assignment, "", "  ")
 	if err != nil {
-		log.Fatalf("Failed to create proactive remediation script assignment: %v", err)
-	}
-
-	// Pretty print the response
-	jsonData, err := json.MarshalIndent(response, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal response: %v", err)
+		log.Fatalf("Failed to marshal assignment: %v", err)
 	}
 	fmt.Println(string(jsonData))
 }

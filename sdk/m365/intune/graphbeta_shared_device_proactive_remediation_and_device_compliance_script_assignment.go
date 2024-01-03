@@ -49,22 +49,6 @@ type DeviceHealthScriptAssignmentSchedule struct {
 	Time      string `json:"time"`
 }
 
-// ResourceDeviceHealthScriptAssignment represents the request structure for creating a device health script assignment.
-type ResourceDeviceHealthScriptAssignment struct {
-	ODataType            string                               `json:"@odata.type"`
-	Target               DeviceHealthScriptAssignmentTarget   `json:"target"`
-	RunRemediationScript bool                                 `json:"runRemediationScript"`
-	RunSchedule          DeviceHealthScriptAssignmentSchedule `json:"runSchedule"`
-}
-
-// DeviceHealthScriptAssignmentTarget represents the target for the device health script assignment.
-type DeviceHealthScriptAssignmentTarget struct {
-	ODataType                                  string `json:"@odata.type"`
-	DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId"`
-	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
-	CollectionID                               string `json:"collectionId"`
-}
-
 // ResponseDeviceHealthScriptAssignment represents the response structure for a device health script assignment.
 type ResponseDeviceHealthScriptAssignment struct {
 	ODataType            string                               `json:"@odata.type"`
@@ -74,8 +58,32 @@ type ResponseDeviceHealthScriptAssignment struct {
 	RunSchedule          DeviceHealthScriptAssignmentSchedule `json:"runSchedule"`
 }
 
-// GetProactiveRemediationAssignments retrieves a list of Device Health Script Assignments from Microsoft Graph API.
-func (c *Client) GetProactiveRemediationAssignments(scriptID string) (*ResponseDeviceHealthScriptAssignmentList, error) {
+// ResourceDeviceHealthScriptAssignment represents the request structure for creating a device health script assignment.
+type ResourceDeviceHealthScriptAssignment struct {
+	ODataType            string                                       `json:"@odata.type"`
+	Target               ResourceDeviceHealthScriptAssignmentTarget   `json:"target"`
+	RunRemediationScript bool                                         `json:"runRemediationScript"`
+	RunSchedule          ResourceDeviceHealthScriptAssignmentSchedule `json:"runSchedule"`
+}
+
+// ResourceDeviceHealthScriptAssignmentTarget represents the target for the device health script assignment.
+type ResourceDeviceHealthScriptAssignmentTarget struct {
+	ODataType                                  string `json:"@odata.type"`
+	DeviceAndAppManagementAssignmentFilterID   string `json:"deviceAndAppManagementAssignmentFilterId"`
+	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType"`
+	CollectionID                               string `json:"collectionId"`
+}
+
+// ResourceDeviceHealthScriptAssignmentSchedule represents the schedule for a device health script assignment.
+type ResourceDeviceHealthScriptAssignmentSchedule struct {
+	ODataType string `json:"@odata.type"`
+	Interval  int    `json:"interval"`
+	UseUTC    bool   `json:"useUtc"`
+	Time      string `json:"time"`
+}
+
+// GetProactiveRemediationScriptAssignments retrieves a list of assignments for a intune proactive remediation script.
+func (c *Client) GetProactiveRemediationScriptAssignments(scriptID string) (*ResponseDeviceHealthScriptAssignmentList, error) {
 	endpoint := fmt.Sprintf("%s/%s/assignments", uriBetaProactiveRemediations, scriptID)
 
 	var response ResponseDeviceHealthScriptAssignmentList
@@ -92,7 +100,7 @@ func (c *Client) GetProactiveRemediationAssignments(scriptID string) (*ResponseD
 	return &response, nil
 }
 
-// GetDeviceComplianceScriptAssignment retrieves a list of Device Compliance Script Assignments from Microsoft Graph API.
+// GetDeviceComplianceScriptAssignments retrieves a list of assignments for a intune device compliance script.
 func (c *Client) GetDeviceComplianceScriptAssignments(scriptID string) (*ResponseDeviceHealthScriptAssignmentList, error) {
 	endpoint := fmt.Sprintf("%s/%s/assignments", uriBetaDeviceComplianceScripts, scriptID)
 
@@ -101,6 +109,88 @@ func (c *Client) GetDeviceComplianceScriptAssignments(scriptID string) (*Respons
 
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device compliance script assignment", err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &response, nil
+}
+
+// GetProactiveRemediationScriptAssignmentByID retrieves a specific assignment for a proactive remediation script by ID.
+func (c *Client) GetProactiveRemediationScriptAssignmentByID(scriptID string, assignmentID string) (*ResponseDeviceHealthScriptAssignment, error) {
+	endpoint := fmt.Sprintf("%s/%s/assignments/%s", uriBetaProactiveRemediations, scriptID, assignmentID)
+
+	var response ResponseDeviceHealthScriptAssignment
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &response)
+
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "proactive remediation script assignment", scriptID, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &response, nil
+}
+
+// GetDeviceComplianceScriptAssignmentByID retrieves a specific assignment for a device compliance script by ID.
+func (c *Client) GetDeviceComplianceScriptAssignmentByID(scriptID string, assignmentID string) (*ResponseDeviceHealthScriptAssignment, error) {
+	endpoint := fmt.Sprintf("%s/%s/assignments/%s", uriBetaDeviceComplianceScripts, scriptID, assignmentID)
+
+	var response ResponseDeviceHealthScriptAssignment
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &response)
+
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device compliance script assignment", scriptID, err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &response, nil
+}
+
+// CreateDeviceComplianceScriptAssignment creates a new assignment for a device compliance script.
+func (c *Client) CreateDeviceComplianceScriptAssignment(scriptID string, assignment ResourceDeviceHealthScriptAssignment) (*ResponseDeviceHealthScriptAssignment, error) {
+	endpoint := fmt.Sprintf("%s/%s/assignments", uriBetaDeviceComplianceScripts, scriptID)
+
+	// Set default @odata.type values
+	assignment.ODataType = ODataTypeDeviceHealthScriptAssignment
+	assignment.Target.ODataType = ODataTypeConfigurationManagerCollectionAssignmentTarget
+	assignment.RunSchedule.ODataType = ODataTypeDeviceHealthScriptDailySchedule
+
+	var response ResponseDeviceHealthScriptAssignment
+	resp, err := c.HTTP.DoRequest("POST", endpoint, assignment, &response)
+
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device compliance script assignment", err)
+	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	return &response, nil
+}
+
+// CreateProactiveRemediationScriptAssignment creates a new assignment for a proactive remediation script.
+func (c *Client) CreateProactiveRemediationScriptAssignment(scriptID string, assignment ResourceDeviceHealthScriptAssignment) (*ResponseDeviceHealthScriptAssignment, error) {
+	endpoint := fmt.Sprintf("%s/%s/assignments", uriBetaProactiveRemediations, scriptID)
+
+	// Set default @odata.type values
+	assignment.ODataType = ODataTypeDeviceHealthScriptAssignment
+	assignment.Target.ODataType = ODataTypeConfigurationManagerCollectionAssignmentTarget
+	assignment.RunSchedule.ODataType = ODataTypeDeviceHealthScriptDailySchedule
+
+	var response ResponseDeviceHealthScriptAssignment
+	resp, err := c.HTTP.DoRequest("POST", endpoint, assignment, &response)
+
+	if err != nil {
+		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "proactive remediation script assignment", err)
 	}
 
 	if resp != nil && resp.Body != nil {

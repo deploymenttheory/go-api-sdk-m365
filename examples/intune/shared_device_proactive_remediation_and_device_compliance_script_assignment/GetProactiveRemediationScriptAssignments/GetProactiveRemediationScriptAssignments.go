@@ -42,10 +42,10 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Replace 'scriptID' with the actual ID of the Device Health Script
-	scriptID := "9a25df0c-2268-48a9-95ac-45de11f82e2c"
+	scriptID := "ffd8de7a-e0aa-4f14-b917-f644f781c1fc"
 
 	// Retrieve the Device Health Script Assignments
-	assignments, err := intune.GetProactiveRemediationAssignments(scriptID)
+	assignments, err := intune.GetProactiveRemediationScriptAssignments(scriptID)
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediation assignments: %v", err)
 	}
