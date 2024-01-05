@@ -1,4 +1,4 @@
-// graphbeta_device_management_windows_group_policy_configuration_profiles.go
+// graphbeta_device_management_windows_group_policy_configuration_profile_templates.go
 // Graph Beta Api - Intune: Group Policy (Administrative templates) Configuration Profiles
 // Documentation: https://learn.microsoft.com/en-us/mem/intune/configuration/administrative-templates-windows
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/configProfiles
