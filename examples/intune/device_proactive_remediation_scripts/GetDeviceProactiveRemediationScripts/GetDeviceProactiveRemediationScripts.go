@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -40,14 +41,16 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Example script ID to delete
-	scriptName := "intuneSDK - proactive remediation created from JSON"
-
-	// Call the function to delete the device management script by tName
-	err = intune.DeleteProactiveRemediationByDisplayName(scriptName)
+	// Call GetDeviceProactiveRemediationScripts to fetch the list of device health scripts
+	remediations, err := intune.GetDeviceProactiveRemediationScripts()
 	if err != nil {
-		log.Fatalf("Error deleting device management script: %v", err)
+		log.Fatalf("Failed to get proactive remediations: %v", err)
 	}
 
-	fmt.Println("Device management script deleted successfully")
+	// Pretty print the list of device health scripts
+	jsonData, err := json.MarshalIndent(remediations, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal proactive remediations: %v", err)
+	}
+	fmt.Println(string(jsonData))
 }

@@ -93,7 +93,7 @@ func main() {
 	}
 
 	// Create the Device Health Script
-	createdRemediation, err := intune.CreateProactiveRemediation(remediationData)
+	createdRemediation, err := intune.CreateDeviceProactiveRemediationScript(remediationData)
 	if err != nil {
 		log.Fatalf("Error creating device health script: %v", err)
 	}

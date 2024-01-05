@@ -13,7 +13,7 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 	log.Println("Starting proactive remediation backup...")
 
 	// Retrieve all Proactive Remediations
-	remediations, err := client.GetProactiveRemediations()
+	remediations, err := client.GetDeviceProactiveRemediationScripts()
 	if err != nil {
 		log.Println("Error getting proactive remediations:", err)
 		return err
@@ -35,7 +35,7 @@ func Backup(client *intuneSDK.Client, outputPath, outputFormat string, excludeAs
 		if !excludeAssignments {
 			log.Printf("Getting details for remediation '%s'\n", remediation.DisplayName)
 			var err error
-			remediationDetails, err = client.GetProactiveRemediationByID(remediation.ID)
+			remediationDetails, err = client.GetDeviceProactiveRemediationScriptByID(remediation.ID)
 			if err != nil {
 				log.Println("Error getting remediation details:", err)
 				continue

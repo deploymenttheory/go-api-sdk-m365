@@ -4,14 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client"
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
 	configFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/clientauth.json"
+	proactiveRemediationConfigFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/examples/intune/device_proactive_remediations/CreateProactiveRemediationFromJSON/proactiveRemediation.json" // Path to JSON payload
 
 	// Load the client OAuth credentials from the configuration file
 	clientAuthConfig, err := http_client.LoadClientAuthConfig(configFilePath)
@@ -21,7 +23,7 @@ func main() {
 
 	// Instantiate the default logger and set the desired log level
 	logger := http_client.NewDefaultLogger()
-	logger.SetLevel(http_client.LogLevelDebug) // Adjust the log level as needed
+	logger.SetLevel(http_client.LogLevelDebug)
 
 	// Configuration for the HTTP client
 	httpClientconfig := http_client.Config{
@@ -32,7 +34,7 @@ func main() {
 		MaxConcurrentRequests:     5,
 	}
 
-	// initialize HTTP client instance
+	// Initialize HTTP client instance
 	httpClient, err := http_client.NewClient(httpClientconfig, clientAuthConfig, logger)
 	if err != nil {
 		log.Fatalf("Failed to create HTTP client: %v", err)
@@ -41,19 +43,22 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Specify the ID of the Proactive Remediation you want to retrieve
-	remediationID := "9a25df0c-2268-48a9-95ac-45de11f82e2c"
-
-	// Call GetProactiveRemediationByID to fetch the details of the specified remediation
-	remediation, err := intune.GetProactiveRemediationByID(remediationID)
+	// Load proactive remediation configuration from JSON file
+	jsonData, err := os.ReadFile(proactiveRemediationConfigFilePath)
 	if err != nil {
-		log.Fatalf("Failed to get proactive remediation by ID: %v", err)
+		log.Fatalf("Failed to read proactive remediation config file: %v", err)
 	}
 
-	// Pretty print the details of the proactive remediation
-	jsonData, err := json.MarshalIndent(remediation, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal proactive remediation: %v", err)
+	var remediationData intuneSDK.ResourceProactiveRemediation
+	if err := json.Unmarshal(jsonData, &remediationData); err != nil {
+		log.Fatalf("Failed to unmarshal proactive remediation config: %v", err)
 	}
-	fmt.Println(string(jsonData))
+
+	createdRemediation, err := intune.CreateDeviceProactiveRemediationScript(&remediationData) // Assuming no assignment for now
+	if err != nil {
+		fmt.Printf("Error creating proactive remediation: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("Created proactive remediation: %+v\n", createdRemediation)
 }

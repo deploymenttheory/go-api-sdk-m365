@@ -42,7 +42,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Example: Updating a Proactive Remediation script with a given ID
-	scriptID := "fcb4e658-f2e4-440b-95a8-80e9430717fe" // Replace with the actual ID of the script you want to update
+	scriptName := "fcb4e658-f2e4-440b-95a8-80e9430717fe" // Replace with the actual ID of the script you want to update
 
 	// Prepare the updated data for the Proactive Remediation script
 	updateRequest := &intuneSDK.ResourceProactiveRemediation{
@@ -63,8 +63,8 @@ func main() {
 		RemediationScriptParameters: []intuneSDK.DeviceHealthScriptParameter{}, // Empty slice as per JSON
 	}
 
-	// Call the UpdateProactiveRemediationByID function
-	updatedScript, err := intune.UpdateProactiveRemediationByID(scriptID, updateRequest)
+	// Call the UpdateDeviceProactiveRemediationScriptByDisplayName function
+	updatedScript, err := intune.UpdateDeviceProactiveRemediationScriptByDisplayName(scriptName, updateRequest)
 	if err != nil {
 		fmt.Printf("Error updating Proactive Remediation: %v\n", err)
 		return
