@@ -78,10 +78,24 @@ type ClientAuthConfig struct {
 }
 
 // StructuredError represents a structured error response from the API.
+/*
 type StructuredError struct {
 	Error struct {
 		Code    string `json:"code"`
 		Message string `json:"message"`
+	} `json:"error"`
+}
+*/
+// StructuredError represents a detailed API error response.
+type StructuredError struct {
+	Error struct {
+		Code       string `json:"code"`
+		Message    string `json:"message"`
+		InnerError struct {
+			Date            string `json:"date"`
+			RequestID       string `json:"request-id"`
+			ClientRequestID string `json:"client-request-id"`
+		} `json:"innerError"`
 	} `json:"error"`
 }
 

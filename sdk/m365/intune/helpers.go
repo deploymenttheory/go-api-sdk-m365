@@ -1,6 +1,10 @@
 package intune
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
 
 // UnmarshalJSON is a custom unmarshaler for DynamicValue, allowing it to
 // dynamically handle different data types in JSON. When unmarshaling JSON data,
@@ -39,4 +43,27 @@ func (dv *DynamicValue) UnmarshalJSON(data []byte) error {
 	// If none of the simple types match, treat as a raw JSON message
 	dv.Value = json.RawMessage(data)
 	return nil
+}
+
+// GetDecryptedOmaSetting makes a request to Microsoft Graph API to retrieve the plain text value of an encrypted OMA setting.
+// It constructs the endpoint URL using the provided base URL, profile ID, and secret reference value ID.
+// The function returns the decrypted value of the OMA setting or an error if the retrieval is unsuccessful.
+func (c *Client) GetDecryptedOmaSetting(baseURL, profileId, secretReferenceValueId string) (string, error) {
+	endpoint := fmt.Sprintf("%s/%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", baseURL, profileId, secretReferenceValueId)
+
+	var decryptedValue struct {
+		Value string `json:"value"`
+	}
+
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &decryptedValue)
+	if err != nil {
+		return "", fmt.Errorf("failed to get decrypted OMA setting: %v", err)
+	}
+
+	// Check if the HTTP request was successful
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("HTTP request failed with status code: %d", resp.StatusCode)
+	}
+
+	return decryptedValue.Value, nil
 }

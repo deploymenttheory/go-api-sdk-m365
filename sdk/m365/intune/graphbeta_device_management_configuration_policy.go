@@ -17,7 +17,6 @@ import (
 )
 
 const uriBetaDeviceManagementConfigurationPolicies = "/beta/deviceManagement/configurationPolicies"
-const uriDeviceManagementConfigurationPolicies = "/deviceManagement/configurationPolicies"
 
 // ResourceDeviceManagementConfigurationPoliciesList represents the response structure for configuration policies.
 type ResponseDeviceManagementConfigurationPoliciesList struct {

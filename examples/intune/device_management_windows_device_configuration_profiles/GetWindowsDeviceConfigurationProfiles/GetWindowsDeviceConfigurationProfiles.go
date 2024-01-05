@@ -41,16 +41,16 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Call GetProactiveRemediations to fetch the list of device health scripts
-	remediations, err := intune.GetProactiveRemediations()
+	// Use the Intune client to perform operations
+	deviceConfigurationProfiles, err := intune.GetWindowsDeviceConfigurationProfiles()
 	if err != nil {
-		log.Fatalf("Failed to get proactive remediations: %v", err)
+		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
 
-	// Pretty print the list of device health scripts
-	jsonData, err := json.MarshalIndent(remediations, "", "  ")
+	// Pretty print the device management scripts
+	jsonData, err := json.MarshalIndent(deviceConfigurationProfiles, "", "  ")
 	if err != nil {
-		log.Fatalf("Failed to marshal proactive remediations: %v", err)
+		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}
 	fmt.Println(string(jsonData))
 }

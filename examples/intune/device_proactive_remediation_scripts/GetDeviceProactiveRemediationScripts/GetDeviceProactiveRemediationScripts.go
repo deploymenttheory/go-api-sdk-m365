@@ -41,19 +41,16 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	// Specify the ID of the Proactive Remediation you want to retrieve
-	remediationID := "9a25df0c-2268-48a9-95ac-45de11f82e2c"
-
-	// Call GetProactiveRemediationByID to fetch the details of the specified remediation
-	remediation, err := intune.GetProactiveRemediationByID(remediationID)
+	// Call GetDeviceProactiveRemediationScripts to fetch the list of device health scripts
+	remediations, err := intune.GetDeviceProactiveRemediationScripts()
 	if err != nil {
-		log.Fatalf("Failed to get proactive remediation by ID: %v", err)
+		log.Fatalf("Failed to get proactive remediations: %v", err)
 	}
 
-	// Pretty print the details of the proactive remediation
-	jsonData, err := json.MarshalIndent(remediation, "", "  ")
+	// Pretty print the list of device health scripts
+	jsonData, err := json.MarshalIndent(remediations, "", "  ")
 	if err != nil {
-		log.Fatalf("Failed to marshal proactive remediation: %v", err)
+		log.Fatalf("Failed to marshal proactive remediations: %v", err)
 	}
 	fmt.Println(string(jsonData))
 }

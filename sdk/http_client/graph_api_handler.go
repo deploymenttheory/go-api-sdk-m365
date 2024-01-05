@@ -1,7 +1,7 @@
 // graph_api_handler.go
 /* ------------------------------Summary----------------------------------------
 This is a api handler module for the http_client to accommodate specifics of
-jamf's api(s). It handles the encoding (marshalling) and decoding (unmarshalling)
+microsoft's graph api(s). It handles the encoding (marshalling) and decoding (unmarshalling)
 of data. It also sets the correct content headers for the various http methods.
 
 This module integrates with the http_client logger for wrapped error handling
@@ -9,19 +9,7 @@ for human readable return codes. It also supports the http_client tiered logging
 functionality for logging support.
 
 The logic of this module is defined as follows:
-Classic API:
-
-For requests (GET, POST, PUT, DELETE):
-- Encoding (Marshalling): Use XML format.
-For responses (GET, POST, PUT):
-- Decoding (Unmarshalling): Use XML format.
-For responses (DELETE):
-- Handle response codes as response body lacks anything useful.
-Headers
-- Sets accept headers based on weighting. XML out weighs JSON to ensure XML is returned
-- Sets content header as application/xml with edge case exceptions based on need.
-
-JamfPro API:
+Graph API & Graph Beta API:
 
 For requests (GET, POST, PUT, DELETE):
 - Encoding (Marshalling): Use JSON format.
@@ -30,8 +18,9 @@ For responses (GET, POST, PUT):
 For responses (DELETE):
 - Handle response codes as response body lacks anything useful.
 Headers
-- Sets accept headers based on weighting. Jamf Pro API doesn't support XML, so MIME type is skipped and returns JSON
+- Sets accept headers based on weighting.Graph API doesn't support XML, so MIME type is skipped and returns JSON
 - Set content header as application/json with edge case exceptions based on need.
+
 */
 package http_client
 
@@ -50,7 +39,7 @@ import (
 	_ "embed"
 )
 
-// Endpoint constants represent the URL suffixes used for Jamf API token interactions.
+// Endpoint constants represent the URL suffixes used for Graph API token interactions.
 const (
 	DefaultBaseDomain       = "graph.microsoft.com"           // DefaultBaseDomain: represents the base domain for graph.
 	TokenInvalidateEndpoint = "/api/v1/auth/invalidate-token" // TokenInvalidateEndpoint: The endpoint to invalidate an active token.
@@ -118,29 +107,12 @@ type EndpointConfig struct {
 // This handler is responsible for encoding and decoding request and response data,
 // determining content types, and other API interactions as defined by the APIHandler interface.
 type UnifiedGraphAPIHandler struct {
-	logger Logger // logger is used to output logs for the API handling processes.
+	logger                       Logger // logger is used to output logs for the API handling processes.
+	endpointAcceptedFormatsCache map[string][]string
 }
 
 // Functions
-/*
-// GetBaseDomain returns the appropriate base domain for URL construction.
-// It uses OverrideBaseDomain if set, otherwise falls back to DefaultBaseDomain.
-func (c *Client) GetBaseDomain() string {
-	if c.OverrideBaseDomain != "" {
-		return c.OverrideBaseDomain
-	}
-	return DefaultBaseDomain
-}
-*/
-/*
-// ConstructAPIResourceEndpoint returns the full URL for a Jamf API resource endpoint path.
-func (c *Client) ConstructAPIResourceEndpoint(endpointPath string) string {
-	baseDomain := c.GetBaseDomain()
-	url := fmt.Sprintf("https://%s%s%s", c.TenantName, baseDomain, endpointPath)
-	c.logger.Info("Request will be made to API Resource URL:", "URL", url)
-	return url
-}
-*/
+
 // ConstructMSGraphAPIEndpoint constructs the full URL for an MS Graph API endpoint.
 // The function takes version (e.g., "/v1.0" or "/beta") and the specific API path.
 func (c *Client) ConstructMSGraphAPIEndpoint(endpointPath string) string {
@@ -158,6 +130,7 @@ type APIHandler interface {
 	GetContentTypeHeader(method string) string
 	GetAcceptHeader() string
 	SetLogger(logger Logger)
+	FetchSupportedRequestFormats(endpoint string) ([]string, error)
 }
 
 // GetAPIHandler initializes and returns an APIHandler with a configured logger.
@@ -176,6 +149,7 @@ func (u *UnifiedGraphAPIHandler) SetLogger(logger Logger) {
 	u.logger = logger
 }
 
+/*
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
 // It attempts to find a content type that matches the endpoint prefix in the global configMap.
 // If a match is found and the content type is defined (not nil), it returns the specified content type.
@@ -200,6 +174,129 @@ func (u *UnifiedGraphAPIHandler) GetContentTypeHeader(endpoint string) string {
 	// Fallback to JSON if no other match is found.
 	u.logger.Debug("Content-Type for endpoint not found in configMap, using default JSON for Graph API for endpoint", endpoint)
 	return "application/json"
+}
+*/
+
+// GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
+// It checks a cache of previously fetched accepted formats for the endpoint. If the cache does not
+// have the information, it makes an OPTIONS request to fetch and cache these formats. The function
+// then selects the most appropriate Content-Type based on the accepted formats, defaulting to
+// "application/json" if no specific format is found or in case of an error.
+//
+// Parameters:
+// - endpoint: The API endpoint for which to determine the Content-Type.
+//
+// Returns:
+// - The chosen Content-Type for the request, as a string.
+func (u *UnifiedGraphAPIHandler) GetContentTypeHeader(endpoint string) string {
+	// Initialize the cache if it's not already initialized
+	if u.endpointAcceptedFormatsCache == nil {
+		u.endpointAcceptedFormatsCache = make(map[string][]string)
+	}
+
+	// Check the cache first
+	if formats, found := u.endpointAcceptedFormatsCache[endpoint]; found {
+		u.logger.Debug("Using cached accepted formats", "endpoint", endpoint, "formats", formats)
+		for _, format := range formats {
+			if format == "application/json" {
+				return "application/json"
+			}
+			if format == "application/xml" {
+				return "application/xml"
+			}
+			if format == "text/html" {
+				return "text/html"
+			}
+			if format == "text/csv" {
+				return "text/csv"
+			}
+			if format == "application/x-www-form-urlencoded" {
+				return "application/x-www-form-urlencoded"
+			}
+			if format == "text/plain" {
+				return "text/plain"
+			}
+			// Additional format conditions can be added here
+		}
+	} else {
+		// Fetch the supported formats as they are not in cache
+		formats, err := u.FetchSupportedRequestFormats(endpoint)
+		if err != nil {
+			u.logger.Warn("Failed to fetch supported request formats from api query, defaulting to 'application/json'", "error", err)
+			return "application/json" // Fallback to default
+		}
+
+		// Cache the fetched formats
+		u.endpointAcceptedFormatsCache[endpoint] = formats
+		u.logger.Debug("Fetched and cached accepted formats", "endpoint", endpoint, "formats", formats)
+
+		for _, format := range formats {
+			if format == "application/json" {
+				return "application/json"
+			}
+			if format == "application/xml" {
+				return "application/xml"
+			}
+			if format == "text/html" {
+				return "text/html"
+			}
+			if format == "text/csv" {
+				return "text/csv"
+			}
+			if format == "application/x-www-form-urlencoded" {
+				return "application/x-www-form-urlencoded"
+			}
+			if format == "text/plain" {
+				return "text/plain"
+			}
+		}
+	}
+
+	return "application/json" // Default to JSON if no suitable format is found
+}
+
+// FetchSupportedRequestFormats sends an OPTIONS request to the specified API endpoint
+// and parses the response to extract the MIME types that the endpoint can accept for requests.
+// This function is useful for dynamically determining the supported formats (like JSON, XML, etc.)
+// for an endpoint, which can then be used to set the appropriate 'Content-Type' header in subsequent requests.
+//
+// Parameters:
+// - endpoint: A string representing the API endpoint for which to fetch the supported request formats.
+//
+// Returns:
+//   - A slice of strings, where each string is a MIME type that the endpoint can accept.
+//     Example: []string{"application/json", "application/xml"}
+//   - An error if the request could not be sent, the response could not be processed, or if the endpoint
+//     does not specify accepted formats in its response headers.
+//
+// Note:
+//   - The function makes an HTTP OPTIONS request to the given endpoint and reads the 'Accept' header in the response.
+//   - If the 'Accept' header is not present or the OPTIONS method is not supported by the endpoint, the function
+//     returns an error.
+//   - It is the responsibility of the caller to handle any errors and to decide on the default action
+//     if no formats are returned or in case of an error.
+func (u *UnifiedGraphAPIHandler) FetchSupportedRequestFormats(endpoint string) ([]string, error) {
+	url := fmt.Sprintf("https://%s%s", DefaultBaseDomain, endpoint)
+	req, err := http.NewRequest(http.MethodOptions, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add necessary headers, authentication etc.
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Parse the Accept header
+	acceptHeader := resp.Header.Get("Accept")
+	if acceptHeader == "" {
+		return nil, fmt.Errorf("no Accept header present in api response")
+	}
+
+	formats := strings.Split(acceptHeader, ",")
+	return formats, nil
 }
 
 // MarshalRequest encodes the request body according to the endpoint for the API.
@@ -299,19 +396,24 @@ func (u *UnifiedGraphAPIHandler) UnmarshalResponse(resp *http.Response, out inte
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		// Parse the error details from the response body for JSON content type
 		if strings.Contains(contentType, "application/json") {
-			description, err := parseJSONErrorResponse(bodyBytes)
-			if err != nil {
-				u.logger.Error("Failed to parse JSON error response", "error", err)
+			var structuredErr StructuredError
+			if jsonErr := json.Unmarshal(bodyBytes, &structuredErr); jsonErr == nil {
+				detailedMessage := fmt.Sprintf("%s: %s", structuredErr.Error.Code, structuredErr.Error.Message)
+				u.logger.Error("Received API error response", "status_code", resp.StatusCode, "error", detailedMessage)
+				return &APIError{
+					StatusCode: resp.StatusCode,
+					Message:    detailedMessage,
+				}
+			} else {
+				u.logger.Error("Failed to parse JSON error response", "error", jsonErr)
 				return fmt.Errorf("received non-success status code: %d and failed to parse error response", resp.StatusCode)
 			}
-			return fmt.Errorf("received non-success status code: %d, error: %s", resp.StatusCode, description)
 		}
 
 		// If the response is not JSON or another error occurs, return a generic error message
 		u.logger.Error("Received non-success status code", "status_code", resp.StatusCode)
 		return fmt.Errorf("received non-success status code: %d", resp.StatusCode)
 	}
-
 	// Determine whether the content type is JSON or XML and unmarshal accordingly
 	switch {
 	case strings.Contains(contentType, "application/json"):

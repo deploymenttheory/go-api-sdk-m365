@@ -1,4 +1,4 @@
-// graphbeta_device_health_Scripts.go
+// graphbeta_device_proactive_remediation_scripts.go
 // Graph Beta Api - Intune: Proactive Remediations
 // Documentation: https://learn.microsoft.com/en-us/mem/intune/fundamentals/remediations
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/powershell
@@ -19,9 +19,7 @@ const (
 	uriBetaProactiveRemediations                  = "/beta/deviceManagement/deviceHealthScripts"
 	ODataTypeDeviceHealthScript                   = "#microsoft.graph.deviceHealthScript"
 	ODataTypeDeviceHealthScriptStringParameter    = "microsoft.graph.deviceHealthScriptStringParameter"
-	ODataTypeDeviceHealthScriptAssignment         = "#microsoft.graph.deviceHealthScriptAssignment"
 	ODataTypeConfigurationManagerCollectionTarget = "microsoft.graph.configurationManagerCollectionAssignmentTarget"
-	ODataTypeDeviceHealthScriptDailySchedule      = "microsoft.graph.deviceHealthScriptDailySchedule"
 	ODataTypeGroupAssignmentTarget                = "microsoft.graph.groupAssignmentTarget"
 )
 
@@ -162,8 +160,8 @@ type DeviceHealthScriptParameter struct {
 	DefaultValue                     string `json:"defaultValue,omitempty"`
 }
 
-// GetProactiveRemediations retrieves a list of Proactive Remediations (Device Health Scripts) from Microsoft Graph API.
-func (c *Client) GetProactiveRemediations() (*ResponseProactiveRemediationsList, error) {
+// GetDeviceProactiveRemediationScripts retrieves a list of Proactive Remediations (Device Health Scripts) from Microsoft Graph API.
+func (c *Client) GetDeviceProactiveRemediationScripts() (*ResponseProactiveRemediationsList, error) {
 	endpoint := uriBetaProactiveRemediations + "?$expand=assignments"
 
 	var responseProactiveRemediations ResponseProactiveRemediationsList
@@ -179,8 +177,8 @@ func (c *Client) GetProactiveRemediations() (*ResponseProactiveRemediationsList,
 	return &responseProactiveRemediations, nil
 }
 
-// GetProactiveRemediationByID retrieves a Device Shell Script by its ID.
-func (c *Client) GetProactiveRemediationByID(id string) (*ResponseProactiveRemediation, error) {
+// GetDeviceProactiveRemediationScriptByID retrieves a Device Shell Script by its ID.
+func (c *Client) GetDeviceProactiveRemediationScriptByID(id string) (*ResponseProactiveRemediation, error) {
 	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaProactiveRemediations, id)
 
 	var proactiveRemediationScript ResponseProactiveRemediation
@@ -197,8 +195,8 @@ func (c *Client) GetProactiveRemediationByID(id string) (*ResponseProactiveRemed
 }
 
 // GetProactiveRemediationByDisplayName retrieves a specific Proactive Remediation by its name along with its assignments.
-func (c *Client) GetProactiveRemediationByDisplayName(displayName string) (*ResponseProactiveRemediation, error) {
-	remediations, err := c.GetProactiveRemediations()
+func (c *Client) GetDeviceProactiveRemediationScriptByDisplayName(displayName string) (*ResponseProactiveRemediation, error) {
+	remediations, err := c.GetDeviceProactiveRemediationScripts()
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve proactive remediations: %v", err)
 	}
@@ -216,11 +214,11 @@ func (c *Client) GetProactiveRemediationByDisplayName(displayName string) (*Resp
 	}
 
 	// Get full details of the remediation using its ID
-	return c.GetProactiveRemediationByID(remediationID)
+	return c.GetDeviceProactiveRemediationScriptByID(remediationID)
 }
 
-// CreateProactiveRemediation creates a new Device Health Script in Microsoft Graph API.
-func (c *Client) CreateProactiveRemediation(request *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
+// CreateDeviceProactiveRemediationScript creates a new Device Health Script in Microsoft Graph API.
+func (c *Client) CreateDeviceProactiveRemediationScript(request *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
 	// Endpoint to create the device health script
 	endpoint := uriBetaProactiveRemediations
 
@@ -245,8 +243,8 @@ func (c *Client) CreateProactiveRemediation(request *ResourceProactiveRemediatio
 	return &createdRemediation, nil
 }
 
-// UpdateProactiveRemediationByID updates a Device Shell Script by its ID using the PATCH method.
-func (c *Client) UpdateProactiveRemediationByID(scriptID string, request *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
+// UpdateDeviceProactiveRemediationScriptByID updates a Device Shell Script by its ID using the PATCH method.
+func (c *Client) UpdateDeviceProactiveRemediationScriptByID(scriptID string, request *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
 	// Construct the endpoint URL
 	endpoint := fmt.Sprintf("%s/%s", uriBetaProactiveRemediations, scriptID)
 
@@ -272,12 +270,12 @@ func (c *Client) UpdateProactiveRemediationByID(scriptID string, request *Resour
 	return &updatedScript, nil
 }
 
-// UpdateProactiveRemediationByDisplayName updates an existing Device Shell script by its display name.
+// UpdateDeviceProactiveRemediationScriptByDisplayName updates an existing Device Shell script by its display name.
 // Since there is no dedicated endpoint for this, it first retrieves the script by name to get its ID,
 // then updates it using the UpdateProactiveRemediationByID function.
-func (c *Client) UpdateProactiveRemediationByDisplayName(displayName string, updateRequest *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
+func (c *Client) UpdateDeviceProactiveRemediationScriptByDisplayName(displayName string, updateRequest *ResourceProactiveRemediation) (*ResponseProactiveRemediation, error) {
 	// Retrieve the script by display name to get its ID
-	scripts, err := c.GetProactiveRemediations()
+	scripts, err := c.GetDeviceProactiveRemediationScripts()
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device Shell scripts", err)
 	}
@@ -295,7 +293,7 @@ func (c *Client) UpdateProactiveRemediationByDisplayName(displayName string, upd
 	}
 
 	// Update the script by its ID using the provided updateRequest
-	updatedScript, err := c.UpdateProactiveRemediationByID(scriptID, updateRequest)
+	updatedScript, err := c.UpdateDeviceProactiveRemediationScriptByID(scriptID, updateRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -303,8 +301,8 @@ func (c *Client) UpdateProactiveRemediationByDisplayName(displayName string, upd
 	return updatedScript, nil
 }
 
-// DeleteDeviceShellScriptByID deletes an existing proactive remediation by its ID.
-func (c *Client) DeleteProactiveRemediationByID(scriptID string) error {
+// DeleteDeviceProactiveRemediationScriptByID deletes an existing proactive remediation by its ID.
+func (c *Client) DeleteDeviceProactiveRemediationScriptByID(scriptID string) error {
 	endpoint := fmt.Sprintf("%s/%s", uriBetaProactiveRemediations, scriptID)
 
 	resp, err := c.HTTP.DoRequest("DELETE", endpoint, nil, nil)
@@ -319,12 +317,12 @@ func (c *Client) DeleteProactiveRemediationByID(scriptID string) error {
 	return nil
 }
 
-// DeleteProactiveRemediationByDisplayName deletes an existing device Shell script by its display name.
-func (c *Client) DeleteProactiveRemediationByDisplayName(displayName string) error {
-	script, err := c.GetProactiveRemediationByDisplayName(displayName)
+// DeleteDeviceProactiveRemediationScriptByDisplayName deletes an existing device Shell script by its display name.
+func (c *Client) DeleteDeviceProactiveRemediationScriptByDisplayName(displayName string) error {
+	script, err := c.GetDeviceProactiveRemediationScriptByDisplayName(displayName)
 	if err != nil {
 		return fmt.Errorf(shared.ErrorMsgFailedGetByName, "proactive remediation", displayName, err)
 	}
 
-	return c.DeleteProactiveRemediationByID(script.ID)
+	return c.DeleteDeviceProactiveRemediationScriptByID(script.ID)
 }
