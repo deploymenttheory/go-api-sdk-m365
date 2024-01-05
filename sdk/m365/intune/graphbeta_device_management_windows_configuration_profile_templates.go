@@ -34,8 +34,8 @@ type ResourceWindowsConfigurationProfileTemplate struct {
 	ID                                          string                                       `json:"id"`
 	CreatedDateTime                             string                                       `json:"createdDateTime"`
 	LastModifiedDateTime                        string                                       `json:"lastModifiedDateTime"`
-	Description                                 string                                       `json:"description`
-	DisplayName                                 string                                       `json:"displayName`
+	Description                                 string                                       `json:"description"`
+	DisplayName                                 string                                       `json:"displayName"`
 	Version                                     int                                          `json:"version"`
 	RoleScopeTagIds                             []string                                     `json:"roleScopeTagIds"`
 	SupportsScopeTags                           bool                                         `json:"supportsScopeTags"`
