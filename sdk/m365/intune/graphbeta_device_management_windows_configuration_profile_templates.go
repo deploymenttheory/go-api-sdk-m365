@@ -11,6 +11,7 @@ package intune
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
@@ -653,12 +654,22 @@ type ResourceWindowsConfigurationProfileTemplate struct {
 	UnlockWithBiometricsEnabled                  bool   `json:"unlockWithBiometricsEnabled,omitempty"`
 	UseCertificatesForOnPremisesAuthEnabled      bool   `json:"useCertificatesForOnPremisesAuthEnabled,omitempty"`
 	WindowsHelloForBusinessBlocked               bool   `json:"windowsHelloForBusinessBlocked,omitempty"`
-	AssignmentsODataContext                      string `json:"assignments@odata.context,omitempty"`
 	// Fields for Template - Imported Administrative Templates
 	// TODO
 	// Fields for Template - Kiosk
+	KioskBrowserDefaultUrl                 string                                     `json:"kioskBrowserDefaultUrl"`
+	KioskBrowserEnableHomeButton           bool                                       `json:"kioskBrowserEnableHomeButton"`
+	KioskBrowserEnableNavigationButtons    bool                                       `json:"kioskBrowserEnableNavigationButtons"`
+	KioskBrowserEnableEndSessionButton     bool                                       `json:"kioskBrowserEnableEndSessionButton"`
+	KioskBrowserRestartOnIdleTimeInMinutes *interface{}                               `json:"kioskBrowserRestartOnIdleTimeInMinutes"`
+	KioskBrowserBlockedURLs                []string                                   `json:"kioskBrowserBlockedURLs"`
+	KioskBrowserBlockedUrlExceptions       []string                                   `json:"kioskBrowserBlockedUrlExceptions"`
+	EdgeKioskEnablePublicBrowsing          bool                                       `json:"edgeKioskEnablePublicBrowsing"`
+	KioskProfiles                          []KioskSubsetKioskProfile                  `json:"kioskProfiles"`
+	WindowsKioskForceUpdateSchedule        KioskSubsetWindowsKioskForceUpdateSchedule `json:"windowsKioskForceUpdateSchedule"`
 	// configuration profile assignments
-	Assignments []DeviceConfigurationProfileAssignment `json:"assignments"`
+	AssignmentsODataContext string                                 `json:"assignments@odata.context,omitempty"`
+	Assignments             []DeviceConfigurationProfileAssignment `json:"assignments"`
 }
 
 // Subsets
@@ -835,6 +846,47 @@ type BitLockerRecoveryOptions struct {
 	EnableRecoveryInformationSaveToStore           bool   `json:"enableRecoveryInformationSaveToStore,omitempty"`
 	RecoveryInformationToStore                     string `json:"recoveryInformationToStore,omitempty"`
 	EnableBitLockerAfterRecoveryInformationToStore bool   `json:"enableBitLockerAfterRecoveryInformationToStore,omitempty"`
+}
+
+// KioskProfile represents the 'kioskProfiles' JSON object.
+type KioskSubsetKioskProfile struct {
+	ProfileID                 string                     `json:"profileId"`
+	ProfileName               string                     `json:"profileName"`
+	AppConfiguration          WindowsKioskSingleWin32App `json:"appConfiguration"`
+	UserAccountsConfiguration []WindowsKioskAutologon    `json:"userAccountsConfiguration"`
+}
+
+// WindowsKioskSingleWin32App represents the 'appConfiguration' JSON object.
+type WindowsKioskSingleWin32App struct {
+	ODataType string   `json:"@odata.type"`
+	Win32App  Win32App `json:"win32App"`
+}
+
+// Win32App represents the 'win32App' JSON object.
+type Win32App struct {
+	StartLayoutTileSize         string       `json:"startLayoutTileSize"`
+	Name                        *interface{} `json:"name"`
+	AppType                     string       `json:"appType"`
+	AutoLaunch                  bool         `json:"autoLaunch"`
+	ClassicAppPath              string       `json:"classicAppPath"`
+	EdgeNoFirstRun              bool         `json:"edgeNoFirstRun"`
+	EdgeKioskIdleTimeoutMinutes *interface{} `json:"edgeKioskIdleTimeoutMinutes"`
+	EdgeKioskType               string       `json:"edgeKioskType"`
+	EdgeKiosk                   string       `json:"edgeKiosk"`
+}
+
+// WindowsKioskAutologon represents the 'userAccountsConfiguration' JSON object.
+type WindowsKioskAutologon struct {
+	ODataType string `json:"@odata.type"`
+}
+
+// KioskSubsetWindowsKioskForceUpdateSchedule represents the 'windowsKioskForceUpdateSchedule' JSON object.
+type KioskSubsetWindowsKioskForceUpdateSchedule struct {
+	StartDateTime                      time.Time `json:"startDateTime"`
+	Recurrence                         string    `json:"recurrence"`
+	DayOfWeek                          string    `json:"dayofWeek"`
+	DayOfMonth                         int       `json:"dayofMonth"`
+	RunImmediatelyIfAfterStartDateTime bool      `json:"runImmediatelyIfAfterStartDateTime"`
 }
 
 // DeviceConfigurationProfileAssignment represents an assignment for a Device Configuration Profile.
