@@ -9,7 +9,6 @@ package intune
 
 import (
 	"fmt"
-	"time"
 
 	shared "github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
@@ -37,8 +36,8 @@ type ResponseDeviceManagementScriptListItem struct {
 	DisplayName                 string                                         `json:"displayName"`
 	Description                 string                                         `json:"description"`
 	ScriptContent               string                                         `json:"scriptContent"`
-	CreatedDateTime             time.Time                                      `json:"createdDateTime"`
-	LastModifiedDateTime        time.Time                                      `json:"lastModifiedDateTime"`
+	CreatedDateTime             string                                         `json:"createdDateTime"`
+	LastModifiedDateTime        string                                         `json:"lastModifiedDateTime"`
 	RunAsAccount                string                                         `json:"runAsAccount"`
 	FileName                    string                                         `json:"fileName"`
 	RoleScopeTagIds             []string                                       `json:"roleScopeTagIds"`
@@ -110,8 +109,8 @@ type ResourceDeviceManagementScript struct {
 func (c *Client) GetDeviceManagementScripts() (*ResponseDeviceManagementScriptsList, error) {
 	endpoint := uriBetaDeviceManagementScripts + "?$expand=assignments"
 
-	var deviceManagementScripts ResponseDeviceManagementScriptsList
-	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScripts)
+	var responseDeviceManagementScripts ResponseDeviceManagementScriptsList
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceManagementScripts)
 
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGet, "device management scripts", err)
@@ -121,15 +120,15 @@ func (c *Client) GetDeviceManagementScripts() (*ResponseDeviceManagementScriptsL
 		defer resp.Body.Close()
 	}
 
-	return &deviceManagementScripts, nil
+	return &responseDeviceManagementScripts, nil
 }
 
 // GetDeviceManagementScriptByID retrieves a Device Management Script by its ID.
 func (c *Client) GetDeviceManagementScriptByID(id string) (*ResponseDeviceManagementScript, error) {
 	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaDeviceManagementScripts, id)
 
-	var deviceManagementScript ResponseDeviceManagementScript
-	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &deviceManagementScript)
+	var responseDeviceManagementScript ResponseDeviceManagementScript
+	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceManagementScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedGetByID, "device management script", id, err)
 	}
@@ -138,7 +137,7 @@ func (c *Client) GetDeviceManagementScriptByID(id string) (*ResponseDeviceManage
 		defer resp.Body.Close()
 	}
 
-	return &deviceManagementScript, nil
+	return &responseDeviceManagementScript, nil
 }
 
 // GetDeviceManagementScriptByDisplayName retrieves a device management script by its display name.
@@ -168,8 +167,8 @@ func (c *Client) CreateDeviceManagementScript(request *ResourceDeviceManagementS
 	request.ODataType = odataTypeDeviceManagementScript
 	endpoint := uriBetaDeviceManagementScripts
 
-	var createdScript ResponseDeviceManagementScript
-	resp, err := c.HTTP.DoRequest("POST", endpoint, request, &createdScript)
+	var responseCreatedScript ResponseDeviceManagementScript
+	resp, err := c.HTTP.DoRequest("POST", endpoint, request, &responseCreatedScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device management script", err)
 	}
@@ -178,7 +177,7 @@ func (c *Client) CreateDeviceManagementScript(request *ResourceDeviceManagementS
 		defer resp.Body.Close()
 	}
 
-	return &createdScript, nil
+	return &responseCreatedScript, nil
 }
 
 // CreateDeviceManagementScriptAssignment creates a new device management script assignment.
@@ -195,8 +194,8 @@ func (c *Client) CreateDeviceManagementScriptAssignment(scriptID string, assignm
 	// Construct endpoint
 	endpoint := fmt.Sprintf("%s/%s/assign", uriBetaDeviceManagementScripts, scriptID)
 
-	var createdAssignment ResourceDeviceManagementScriptGroupAssignment
-	resp, err := c.HTTP.DoRequest("POST", endpoint, assignment, &createdAssignment)
+	var responseCreatedAssignment ResourceDeviceManagementScriptGroupAssignment
+	resp, err := c.HTTP.DoRequest("POST", endpoint, assignment, &responseCreatedAssignment)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedCreate, "device management script assignment", err)
 	}
@@ -205,7 +204,7 @@ func (c *Client) CreateDeviceManagementScriptAssignment(scriptID string, assignm
 		defer resp.Body.Close()
 	}
 
-	return &createdAssignment, nil
+	return &responseCreatedAssignment, nil
 }
 
 // CreateDeviceManagementScriptWithAssignment creates a new device management script and assigns it.
@@ -233,8 +232,8 @@ func (c *Client) UpdateDeviceManagementScriptByID(scriptID string, request *Reso
 	// Set the request OData type
 	request.ODataType = odataTypeDeviceManagementScript
 
-	var updatedScript ResponseDeviceManagementScript
-	resp, err := c.HTTP.DoRequest("PATCH", endpoint, request, &updatedScript)
+	var responseUpdatedScript ResponseDeviceManagementScript
+	resp, err := c.HTTP.DoRequest("PATCH", endpoint, request, &responseUpdatedScript)
 	if err != nil {
 		return nil, fmt.Errorf(shared.ErrorMsgFailedUpdateByID, "device shell script", scriptID, err)
 	}
@@ -243,7 +242,7 @@ func (c *Client) UpdateDeviceManagementScriptByID(scriptID string, request *Reso
 		defer resp.Body.Close()
 	}
 
-	return &updatedScript, nil
+	return &responseUpdatedScript, nil
 }
 
 // UpdateDeviceManagementScriptByDisplayName updates an existing device management script by its display name.

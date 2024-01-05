@@ -1,6 +1,6 @@
-// graphbeta_device_management_group_policy_configurations.go
-// Graph Beta Api - Intune: Group Policy Configuration Profiles
-// Documentation: https://learn.microsoft.com/en-us/mem/intune/configuration/group-policy-analytics
+// graphbeta_device_management_windows_group_policy_configuration_profiles.go
+// Graph Beta Api - Intune: Group Policy (Administrative templates) Configuration Profiles
+// Documentation: https://learn.microsoft.com/en-us/mem/intune/configuration/administrative-templates-windows
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/configProfiles
 // API reference: https://learn.microsoft.com/en-us/graph/api/resources/intune-grouppolicy-grouppolicyconfiguration?view=graph-rest-beta
 // ODATA query options reference: https://learn.microsoft.com/en-us/graph/query-parameters?tabs=http
