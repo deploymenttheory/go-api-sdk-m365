@@ -17,8 +17,8 @@ import (
 )
 
 const (
-	uriBetaGraphDeviceManagementWindowsDeviceConfiguration = "/beta/deviceManagement/deviceConfigurations"
-	odataTypeWindowsCustomConfigurationProfile             = "#microsoft.graph.windows10CustomConfiguration"
+	uriBetaGraphDeviceManagementWindowsTemplateDeviceConfiguration = "/beta/deviceManagement/deviceConfigurations"
+	odataTypeWindowsCustomConfigurationProfile                     = "#microsoft.graph.windows10CustomConfiguration"
 )
 
 // ResourceWindowsConfigurationProfileTemplatesList represents a response containing a list of Device Configuration Profiles.
@@ -667,6 +667,102 @@ type ResourceWindowsConfigurationProfileTemplate struct {
 	EdgeKioskEnablePublicBrowsing          bool                                       `json:"edgeKioskEnablePublicBrowsing"`
 	KioskProfiles                          []KioskSubsetKioskProfile                  `json:"kioskProfiles"`
 	WindowsKioskForceUpdateSchedule        KioskSubsetWindowsKioskForceUpdateSchedule `json:"windowsKioskForceUpdateSchedule"`
+	// Fields for Template - Microsoft Defender for Endpoint (desktop devices running Windows 10 or later)
+	AdvancedThreatProtectionOnboardingBlob             string `json:"advancedThreatProtectionOnboardingBlob"`
+	AdvancedThreatProtectionOnboardingFilename         string `json:"advancedThreatProtectionOnboardingFilename"`
+	AdvancedThreatProtectionAutoPopulateOnboardingBlob bool   `json:"advancedThreatProtectionAutoPopulateOnboardingBlob"`
+	AllowSampleSharing                                 bool   `json:"allowSampleSharing"`
+	EnableExpeditedTelemetryReporting                  bool   `json:"enableExpeditedTelemetryReporting"`
+	AdvancedThreatProtectionOffboardingBlob            string `json:"advancedThreatProtectionOffboardingBlob"`
+	AdvancedThreatProtectionOffboardingFilename        string `json:"advancedThreatProtectionOffboardingFilename"`
+	// Fields for Template - Network boundary
+	WindowsNetworkIsolationPolicy NetworkBoundarySubsetWindowsNetworkIsolationPolicy `json:"windowsNetworkIsolationPolicy"`
+	// Fields for Template - PKCS certificate & PKCS imported certificate
+	RenewalThresholdPercentage         int                                                 `json:"renewalThresholdPercentage"`
+	KeyStorageProvider                 string                                              `json:"keyStorageProvider"`
+	SubjectNameFormat                  string                                              `json:"subjectNameFormat"`
+	SubjectAlternativeNameType         string                                              `json:"subjectAlternativeNameType"`
+	CertificateValidityPeriodValue     int                                                 `json:"certificateValidityPeriodValue"`
+	CertificateValidityPeriodScale     string                                              `json:"certificateValidityPeriodScale"`
+	CertificationAuthority             string                                              `json:"certificationAuthority"`
+	CertificationAuthorityName         string                                              `json:"certificationAuthorityName"`
+	CertificateTemplateName            string                                              `json:"certificateTemplateName"`
+	SubjectAlternativeNameFormatString string                                              `json:"subjectAlternativeNameFormatString"`
+	SubjectNameFormatString            string                                              `json:"subjectNameFormatString"`
+	CertificateStore                   string                                              `json:"certificateStore"`
+	ExtendedKeyUsages                  []PKCSCertificateSubsetExtendedKeyUsage             `json:"extendedKeyUsages"`
+	CustomSubjectAlternativeNames      []PKCSCertificateSubsetCustomSubjectAlternativeName `json:"customSubjectAlternativeNames"`
+	// Fields for Template - PKCS imported certificate
+	IntendedPurpose string `json:"intendedPurpose"`
+	// TODO (need root CA first to test) - Fields for Template - SCEP certificate
+	// Fields for Template - Secure assessment (Education)
+	LaunchURI                string `json:"launchUri"`
+	ConfigurationAccount     string `json:"configurationAccount"`
+	ConfigurationAccountType string `json:"configurationAccountType"`
+	AllowPrinting            bool   `json:"allowPrinting"`
+	AllowScreenCapture       bool   `json:"allowScreenCapture"`
+	AllowTextSuggestion      bool   `json:"allowTextSuggestion"`
+	LocalGuestAccountName    string `json:"localGuestAccountName"`
+	AssessmentAppUserModelID string `json:"assessmentAppUserModelId"`
+	// Fields for Template - Shared multi-user device
+	AllowedAccounts              string                                          `json:"allowedAccounts"`
+	LocalStorage                 string                                          `json:"localStorage"`
+	AllowLocalStorage            bool                                            `json:"allowLocalStorage"`
+	SetAccountManager            string                                          `json:"setAccountManager"`
+	DisableAccountManager        bool                                            `json:"disableAccountManager"`
+	SetEduPolicies               string                                          `json:"setEduPolicies"`
+	DisableEduPolicies           bool                                            `json:"disableEduPolicies"`
+	SetPowerPolicies             string                                          `json:"setPowerPolicies"`
+	DisablePowerPolicies         bool                                            `json:"disablePowerPolicies"`
+	SignInOnResume               string                                          `json:"signInOnResume"`
+	DisableSignInOnResume        bool                                            `json:"disableSignInOnResume"`
+	Enabled                      bool                                            `json:"enabled"`
+	IdleTimeBeforeSleepInSeconds int                                             `json:"idleTimeBeforeSleepInSeconds"`
+	KioskAppDisplayName          string                                          `json:"kioskAppDisplayName"`
+	KioskAppUserModelID          string                                          `json:"kioskAppUserModelId"`
+	MaintenanceStartTime         string                                          `json:"maintenanceStartTime"`
+	FastFirstSignIn              string                                          `json:"fastFirstSignIn"`
+	AccountManagerPolicy         SharedMultiUserDeviceSubsetAccountManagerPolicy `json:"accountManagerPolicy"`
+	// TODO Fields for Template - Trusted certificate
+	// Fields for Template - VPN
+	ConnectionName                             string                   `json:"connectionName"`
+	CustomXml                                  string                   `json:"customXml"`
+	ProfileTarget                              string                   `json:"profileTarget"`
+	ConnectionType                             string                   `json:"connectionType"`
+	EnableSplitTunneling                       bool                     `json:"enableSplitTunneling"`
+	EnableAlwaysOn                             bool                     `json:"enableAlwaysOn"`
+	EnableDeviceTunnel                         interface{}              `json:"enableDeviceTunnel"`
+	EnableDnsRegistration                      bool                     `json:"enableDnsRegistration"`
+	DnsSuffixes                                []string                 `json:"dnsSuffixes"`
+	MicrosoftTunnelSiteId                      interface{}              `json:"microsoftTunnelSiteId"`
+	AuthenticationMethod                       string                   `json:"authenticationMethod"`
+	RememberUserCredentials                    bool                     `json:"rememberUserCredentials"`
+	EnableConditionalAccess                    bool                     `json:"enableConditionalAccess"`
+	EnableSingleSignOnWithAlternateCertificate bool                     `json:"enableSingleSignOnWithAlternateCertificate"`
+	SingleSignOnIssuerHash                     string                   `json:"singleSignOnIssuerHash"`
+	EapXml                                     interface{}              `json:"eapXml"`
+	OnlyAssociatedAppsCanUseConnection         interface{}              `json:"onlyAssociatedAppsCanUseConnection"`
+	WindowsInformationProtectionDomain         string                   `json:"windowsInformationProtectionDomain"`
+	TrustedNetworkDomains                      []string                 `json:"trustedNetworkDomains"`
+	CryptographySuite                          interface{}              `json:"cryptographySuite"`
+	Servers                                    []VPNSubsetServer        `json:"servers"`
+	SingleSignOnEku                            VPNSubsetSingleSignOnEku `json:"singleSignOnEku"`
+	ProxyServer                                VPNSubsetProxyServer     `json:"proxyServer"`
+	AssociatedApps                             []interface{}            `json:"associatedApps"`
+	TrafficRules                               []VPNSubsetTrafficRule   `json:"trafficRules"`
+	Routes                                     []VPNSubsetRoute         `json:"routes"`
+	DnsRules                                   []VPNSubsetDnsRule       `json:"dnsRules"`
+	// Fields for Template - WiFi
+	PreSharedKey                   interface{}            `json:"preSharedKey"`
+	WifiSecurityType               interface{}            `json:"wifiSecurityType"`
+	MeteredConnectionLimit         string                 `json:"meteredConnectionLimit"`
+	Ssid                           string                 `json:"ssid"`
+	NetworkName                    string                 `json:"networkName"`
+	ConnectAutomatically           bool                   `json:"connectAutomatically"`
+	ConnectToPreferredNetwork      bool                   `json:"connectToPreferredNetwork"`
+	ConnectWhenNetworkNameIsHidden bool                   `json:"connectWhenNetworkNameIsHidden"`
+	ProxySettings                  ProxySettings          `json:"proxySettings"`
+	AuthenticationSettings         AuthenticationSettings `json:"authenticationSettings"`
 	// configuration profile assignments
 	AssignmentsODataContext string                                 `json:"assignments@odata.context,omitempty"`
 	Assignments             []DeviceConfigurationProfileAssignment `json:"assignments"`
@@ -906,11 +1002,148 @@ type DeviceConfigurationProfileAssignmentTarget struct {
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType,omitempty"`
 }
 
+// NetworkBoundarySubsetWindowsNetworkIsolationPolicy defines the policy for network isolation in Windows.
+type NetworkBoundarySubsetWindowsNetworkIsolationPolicy struct {
+	EnterpriseNetworkDomainNames           []string                  `json:"enterpriseNetworkDomainNames"`
+	EnterpriseInternalProxyServers         []string                  `json:"enterpriseInternalProxyServers"`
+	EnterpriseIPRangesAreAuthoritative     bool                      `json:"enterpriseIPRangesAreAuthoritative"`
+	EnterpriseProxyServers                 []string                  `json:"enterpriseProxyServers"`
+	EnterpriseProxyServersAreAuthoritative bool                      `json:"enterpriseProxyServersAreAuthoritative"`
+	NeutralDomainResources                 []string                  `json:"neutralDomainResources"`
+	EnterpriseCloudResources               []EnterpriseCloudResource `json:"enterpriseCloudResources"`
+	EnterpriseIPRanges                     []EnterpriseIPRange       `json:"enterpriseIPRanges"`
+}
+
+// EnterpriseCloudResource represents each enterprise cloud resource.
+type EnterpriseCloudResource struct {
+	IPAddressOrFQDN string      `json:"ipAddressOrFQDN"`
+	Proxy           interface{} `json:"proxy"`
+}
+
+// EnterpriseIPRange represents the IP range for enterprise.
+type EnterpriseIPRange struct {
+	OdataType    string `json:"@odata.type"`
+	LowerAddress string `json:"lowerAddress"`
+	UpperAddress string `json:"upperAddress"`
+}
+
+// PKCSCertificateSubsetExtendedKeyUsage represents the extended key usage information.
+type PKCSCertificateSubsetExtendedKeyUsage struct {
+	Name             string `json:"name"`
+	ObjectIdentifier string `json:"objectIdentifier"`
+}
+
+// PKCSCertificateSubsetCustomSubjectAlternativeName represents custom subject alternative names.
+type PKCSCertificateSubsetCustomSubjectAlternativeName struct {
+	SanType string `json:"sanType"`
+	Name    string `json:"name"`
+}
+
+// SharedMultiUserDeviceSubsetAccountManagerPolicy represents the policy for account management.
+type SharedMultiUserDeviceSubsetAccountManagerPolicy struct {
+	AccountDeletionPolicy                 string `json:"accountDeletionPolicy"`
+	CacheAccountsAboveDiskFreePercentage  int    `json:"cacheAccountsAboveDiskFreePercentage"`
+	InactiveThresholdDays                 int    `json:"inactiveThresholdDays"`
+	RemoveAccountsBelowDiskFreePercentage int    `json:"removeAccountsBelowDiskFreePercentage"`
+}
+
+type VPNSubsetServer struct {
+	Description     string `json:"description"`
+	Address         string `json:"address"`
+	IsDefaultServer bool   `json:"isDefaultServer"`
+}
+
+type VPNSubsetSingleSignOnEku struct {
+	Name             string `json:"name"`
+	ObjectIdentifier string `json:"objectIdentifier"`
+}
+
+type VPNSubsetProxyServer struct {
+	AutomaticConfigurationScriptUrl  string `json:"automaticConfigurationScriptUrl"`
+	Address                          string `json:"address"`
+	Port                             int    `json:"port"`
+	BypassProxyServerForLocalAddress bool   `json:"bypassProxyServerForLocalAddress"`
+}
+
+type VPNSubsetTrafficRule struct {
+	Name                string         `json:"name"`
+	Protocols           int            `json:"protocols"`
+	AppId               interface{}    `json:"appId"`
+	AppType             string         `json:"appType"`
+	RoutingPolicyType   string         `json:"routingPolicyType"`
+	Claims              interface{}    `json:"claims"`
+	VpnTrafficDirection string         `json:"vpnTrafficDirection"`
+	LocalPortRanges     []PortRange    `json:"localPortRanges"`
+	RemotePortRanges    []PortRange    `json:"remotePortRanges"`
+	LocalAddressRanges  []AddressRange `json:"localAddressRanges"`
+	RemoteAddressRanges []AddressRange `json:"remoteAddressRanges"`
+}
+
+type PortRange struct {
+	LowerNumber int `json:"lowerNumber"`
+	UpperNumber int `json:"upperNumber"`
+}
+
+type AddressRange struct {
+	LowerAddress string `json:"lowerAddress"`
+	UpperAddress string `json:"upperAddress"`
+}
+
+type VPNSubsetRoute struct {
+	DestinationPrefix string `json:"destinationPrefix"`
+	PrefixSize        int    `json:"prefixSize"`
+}
+
+type VPNSubsetDnsRule struct {
+	Name           string   `json:"name"`
+	Servers        []string `json:"servers"`
+	ProxyServerUri string   `json:"proxyServerUri"`
+	AutoTrigger    bool     `json:"autoTrigger"`
+	Persistent     bool     `json:"persistent"`
+}
+
+// ProxySettings represents the proxy configuration for a network.
+type ProxySettings struct {
+	ProxySetting                   string      `json:"proxySetting"`
+	ProxyManualAddress             string      `json:"proxyManualAddress"`
+	ProxyManualPort                int         `json:"proxyManualPort"`
+	ProxyAutomaticConfigurationURL interface{} `json:"proxyAutomaticConfigurationUrl"`
+}
+
+// AuthenticationSettings represents the authentication configuration.
+type AuthenticationSettings struct {
+	ForceFIPSCompliance                          bool          `json:"forceFIPSCompliance"`
+	NetworkSingleSignOn                          string        `json:"networkSingleSignOn"`
+	MaximumAuthenticationTimeoutInSeconds        int           `json:"maximumAuthenticationTimeoutInSeconds"`
+	UserBasedVirtualLan                          bool          `json:"userBasedVirtualLan"`
+	PromptForAdditionalAuthenticationCredentials bool          `json:"promptForAdditionalAuthenticationCredentials"`
+	EnablePairwiseMasterKeyCaching               bool          `json:"enablePairwiseMasterKeyCaching"`
+	MaximumPairwiseMasterKeyCacheTimeInMinutes   int           `json:"maximumPairwiseMasterKeyCacheTimeInMinutes"`
+	MaximumNumberOfPairwiseMasterKeysInCache     int           `json:"maximumNumberOfPairwiseMasterKeysInCache"`
+	EnablePreAuthentication                      bool          `json:"enablePreAuthentication"`
+	MaximumPreAuthenticationAttempts             int           `json:"maximumPreAuthenticationAttempts"`
+	EapType                                      string        `json:"eapType"`
+	TrustedServerCertificateNames                []interface{} `json:"trustedServerCertificateNames"`
+	AuthenticationMethod                         string        `json:"authenticationMethod"`
+	InnerAuthenticationProtocolForEAPTTLS        interface{}   `json:"innerAuthenticationProtocolForEAPTTLS"`
+	OuterIdentityPrivacyTemporaryValue           interface{}   `json:"outerIdentityPrivacyTemporaryValue"`
+	RequireCryptographicBinding                  interface{}   `json:"requireCryptographicBinding"`
+	PerformServerValidation                      interface{}   `json:"performServerValidation"`
+	DisableUserPromptForServerValidation         interface{}   `json:"disableUserPromptForServerValidation"`
+	AuthenticationPeriodInSeconds                int           `json:"authenticationPeriodInSeconds"`
+	AuthenticationRetryDelayPeriodInSeconds      int           `json:"authenticationRetryDelayPeriodInSeconds"`
+	EapolStartPeriodInSeconds                    int           `json:"eapolStartPeriodInSeconds"`
+	MaximumEAPOLStartMessages                    int           `json:"maximumEAPOLStartMessages"`
+	MaximumAuthenticationFailures                int           `json:"maximumAuthenticationFailures"`
+	CacheCredentials                             bool          `json:"cacheCredentials"`
+	AuthenticationType                           string        `json:"authenticationType"`
+}
+
 // GetWindowsDeviceTemplateConfigurationProfiles retrieves a list of Windows device configuration profiles from Microsoft Graph API.
 // Because this is a shared endpoint, an OdataType match is used to filter the response so that only windows configuration
 // profiles are returned.
 func (c *Client) GetWindowsDeviceTemplateConfigurationProfiles() (*ResourceWindowsConfigurationProfileTemplatesList, error) {
-	endpoint := uriBetaGraphDeviceManagementWindowsDeviceConfiguration + "?$expand=assignments"
+	endpoint := uriBetaGraphDeviceManagementWindowsTemplateDeviceConfiguration + "?$expand=assignments"
 
 	var responseDeviceConfigurationProfiles ResourceWindowsConfigurationProfileTemplatesList
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceConfigurationProfiles)
@@ -938,7 +1171,7 @@ func (c *Client) GetWindowsDeviceTemplateConfigurationProfiles() (*ResourceWindo
 // This function verifies that the called profile ID corresponds to a Windows configuration profile.
 // It also decrypts any encrypted OMA settings within the profile if present.
 func (c *Client) GetWindowsDeviceTemplateConfigurationProfileByID(id string) (*ResourceWindowsConfigurationProfileTemplate, error) {
-	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaGraphDeviceManagementWindowsDeviceConfiguration, id)
+	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaGraphDeviceManagementWindowsTemplateDeviceConfiguration, id)
 
 	var responseDeviceConfigurationProfile ResourceWindowsConfigurationProfileTemplate
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceConfigurationProfile)
@@ -958,7 +1191,7 @@ func (c *Client) GetWindowsDeviceTemplateConfigurationProfileByID(id string) (*R
 	// Check and decrypt any encrypted OMA settings
 	for i, setting := range responseDeviceConfigurationProfile.OmaSettings {
 		if setting.IsEncrypted {
-			decryptedValue, err := c.GetDecryptedOmaSetting(uriBetaGraphDeviceManagementWindowsDeviceConfiguration, id, setting.SecretReferenceValueId)
+			decryptedValue, err := c.GetDecryptedOmaSetting(uriBetaGraphDeviceManagementWindowsTemplateDeviceConfiguration, id, setting.SecretReferenceValueId)
 			if err != nil {
 				return nil, fmt.Errorf("failed to decrypt OMA setting: %v", err)
 			}
