@@ -1,4 +1,4 @@
-// graphbeta_device_management_windows_configuration_profile_templates.go
+// graphbeta_device_management_windows_template_configuration_profiles.go
 // Graph Beta Api - Intune: Windows configuration profiles (Templates and Custom)
 // Documentation: https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/configProfiles
@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	uriGraphBetaDeviceManagementWindowsDeviceConfiguration = "/beta/deviceManagement/deviceConfigurations"
+	uriBetaGraphDeviceManagementWindowsDeviceConfiguration = "/beta/deviceManagement/deviceConfigurations"
 	odataTypeWindowsCustomConfigurationProfile             = "#microsoft.graph.windows10CustomConfiguration"
 )
 
@@ -674,6 +674,19 @@ type ResourceWindowsConfigurationProfileTemplate struct {
 
 // Subsets
 
+// DeviceConfigurationProfileOmaSetting represents the OMAuri used for custom windows configuration profiles.
+type DeviceConfigurationProfileOmaSetting struct {
+	ODataType              string      `json:"@odata.type,omitempty"`
+	DisplayName            string      `json:"displayName,omitempty"`
+	Description            string      `json:"description,omitempty"`
+	OmaUri                 string      `json:"omaUri,omitempty"`
+	SecretReferenceValueId string      `json:"secretReferenceValueId,omitempty"`
+	IsEncrypted            bool        `json:"isEncrypted,omitempty"`
+	Value                  interface{} `json:"value,omitempty"`
+	IsReadOnly             bool        `json:"isReadOnly,omitempty"`
+	FileName               string      `json:"fileName,omitempty"`
+}
+
 // DeliveryOptimizationSubsetBandwidthMode represents the bandwidth mode configuration in Delivery Optimization.
 type DeliveryOptimizationSubsetBandwidthMode struct {
 	MaximumDownloadBandwidthInKilobytesPerSecond int `json:"maximumDownloadBandwidthInKilobytesPerSecond,omitempty"`
@@ -732,19 +745,6 @@ type DeviceManagementApplicabilityRuleDeviceMode struct {
 	DeviceMode string `json:"deviceMode,omitempty"`
 	Name       string `json:"name,omitempty"`
 	RuleType   string `json:"ruleType,omitempty"`
-}
-
-// Modify the DeviceConfigurationProfileOmaSetting struct to handle additional fields.
-type DeviceConfigurationProfileOmaSetting struct {
-	ODataType              string      `json:"@odata.type,omitempty"`
-	DisplayName            string      `json:"displayName,omitempty"`
-	Description            string      `json:"description,omitempty"`
-	OmaUri                 string      `json:"omaUri,omitempty"`
-	SecretReferenceValueId string      `json:"secretReferenceValueId,omitempty"`
-	IsEncrypted            bool        `json:"isEncrypted,omitempty"`
-	Value                  interface{} `json:"value,omitempty"`
-	IsReadOnly             bool        `json:"isReadOnly,omitempty"`
-	FileName               string      `json:"fileName,omitempty"`
 }
 
 // EndpointProtectionSubsetFirewallProfile
@@ -906,11 +906,11 @@ type DeviceConfigurationProfileAssignmentTarget struct {
 	DeviceAndAppManagementAssignmentFilterType string `json:"deviceAndAppManagementAssignmentFilterType,omitempty"`
 }
 
-// GetWindowsDeviceConfigurationProfiles retrieves a list of Windows device configuration profiles from Microsoft Graph API.
+// GetWindowsDeviceTemplateConfigurationProfiles retrieves a list of Windows device configuration profiles from Microsoft Graph API.
 // Because this is a shared endpoint, an OdataType match is used to filter the response so that only windows configuration
 // profiles are returned.
-func (c *Client) GetWindowsDeviceConfigurationProfiles() (*ResourceWindowsConfigurationProfileTemplatesList, error) {
-	endpoint := uriGraphBetaDeviceManagementWindowsDeviceConfiguration + "?$expand=assignments"
+func (c *Client) GetWindowsDeviceTemplateConfigurationProfiles() (*ResourceWindowsConfigurationProfileTemplatesList, error) {
+	endpoint := uriBetaGraphDeviceManagementWindowsDeviceConfiguration + "?$expand=assignments"
 
 	var responseDeviceConfigurationProfiles ResourceWindowsConfigurationProfileTemplatesList
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceConfigurationProfiles)
@@ -934,11 +934,11 @@ func (c *Client) GetWindowsDeviceConfigurationProfiles() (*ResourceWindowsConfig
 	return &responseDeviceConfigurationProfiles, nil
 }
 
-// GetWindowsDeviceConfigurationProfileByID retrieves a Windows device configuration profile by ID from Microsoft Graph API.
+// GetWindowsDeviceTemplateConfigurationProfileByID retrieves a Windows device configuration profile by ID from Microsoft Graph API.
 // This function verifies that the called profile ID corresponds to a Windows configuration profile.
 // It also decrypts any encrypted OMA settings within the profile if present.
-func (c *Client) GetWindowsDeviceConfigurationProfileByID(id string) (*ResourceWindowsConfigurationProfileTemplate, error) {
-	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriGraphBetaDeviceManagementWindowsDeviceConfiguration, id)
+func (c *Client) GetWindowsDeviceTemplateConfigurationProfileByID(id string) (*ResourceWindowsConfigurationProfileTemplate, error) {
+	endpoint := fmt.Sprintf("%s/%s?$expand=assignments", uriBetaGraphDeviceManagementWindowsDeviceConfiguration, id)
 
 	var responseDeviceConfigurationProfile ResourceWindowsConfigurationProfileTemplate
 	resp, err := c.HTTP.DoRequest("GET", endpoint, nil, &responseDeviceConfigurationProfile)
@@ -958,7 +958,7 @@ func (c *Client) GetWindowsDeviceConfigurationProfileByID(id string) (*ResourceW
 	// Check and decrypt any encrypted OMA settings
 	for i, setting := range responseDeviceConfigurationProfile.OmaSettings {
 		if setting.IsEncrypted {
-			decryptedValue, err := c.GetDecryptedOmaSetting(uriGraphBetaDeviceManagementWindowsDeviceConfiguration, id, setting.SecretReferenceValueId)
+			decryptedValue, err := c.GetDecryptedOmaSetting(uriBetaGraphDeviceManagementWindowsDeviceConfiguration, id, setting.SecretReferenceValueId)
 			if err != nil {
 				return nil, fmt.Errorf("failed to decrypt OMA setting: %v", err)
 			}

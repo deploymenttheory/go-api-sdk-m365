@@ -42,7 +42,7 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Use the Intune client to perform operations
-	deviceConfigurationProfiles, err := intune.GetWindowsDeviceConfigurationProfiles()
+	deviceConfigurationProfiles, err := intune.GetWindowsDeviceTemplateConfigurationProfiles()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
