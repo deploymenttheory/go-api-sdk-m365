@@ -42,13 +42,13 @@ func main() {
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	// Use the Intune client to perform operations
-	deviceManagementScripts, err := intune.GetDeviceEnrollmentConfigurations()
+	deviceEnrollmentRestrictions, err := intune.GetDeviceEnrollmentRestrictions()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
 
 	// Pretty print the device management scripts
-	jsonData, err := json.MarshalIndent(deviceManagementScripts, "", "  ")
+	jsonData, err := json.MarshalIndent(deviceEnrollmentRestrictions, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}

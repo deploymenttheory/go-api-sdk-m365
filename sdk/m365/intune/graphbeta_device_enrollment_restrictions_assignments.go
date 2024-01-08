@@ -1,6 +1,6 @@
-// graphbeta_device_enrollment_configurations_assignments.go
-// Graph Beta Api - Intune: Device Enrollment Assignments
-// Documentation:
+// graphbeta_device_enrollment_restrictions_assignments.go
+// Graph Beta Api - Intune: Device Restriction Assignments
+// Documentation: https://learn.microsoft.com/en-us/mem/intune/enrollment/enrollment-restrictions-set
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/windowsEnrollment
 // API reference: https://learn.microsoft.com/en-us/graph/api/intune-onboarding-enrollmentconfigurationassignment-list?view=graph-rest-beta
 // Microsoft Graph requires the structs to support a JSON data structure.

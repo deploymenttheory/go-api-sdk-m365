@@ -41,10 +41,10 @@ func main() {
 	// Create an Intune client with the HTTP client
 	intune := &intuneSDK.Client{HTTP: httpClient}
 
-	deviceEnrollmentConfigurationID := "acdf7778-98be-4086-8a43-f5d89b305229_Windows10EnrollmentCompletionPageConfiguration"
+	deviceEnrollmentConfigurationName := "[Global] Autopilot Profile | Production Device | Standard_AAD Join ver2.0"
 
 	// Use the Intune client to perform operations
-	deviceEnrollmentConfiguration, err := intune.GetDeviceEnrollmentConfigurationByID(deviceEnrollmentConfigurationID)
+	deviceEnrollmentConfiguration, err := intune.GetDeviceEnrollmentPlatformRestrictionByDisplayName(deviceEnrollmentConfigurationName)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}
@@ -55,4 +55,5 @@ func main() {
 		log.Fatalf("Failed to marshal device management scripts: %v", err)
 	}
 	fmt.Println(string(jsonData))
+
 }
