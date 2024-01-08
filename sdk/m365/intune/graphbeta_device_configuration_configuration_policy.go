@@ -2,7 +2,7 @@
 // Graph Beta Api - Intune: Configuration Profiles
 // Documentation: https://learn.microsoft.com/en-us/mem/intune/configuration/device-profile-create
 // Intune location: https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/configProfiles
-// API reference: https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicemanagementscriptgroupassignment?view=graph-rest-beta
+// API reference:
 // ODATA query options reference: https://learn.microsoft.com/en-us/graph/query-parameters?tabs=http
 // Microsoft Graph requires the structs to support a JSON data structure.
 
