@@ -7,16 +7,17 @@ import (
 	"log"
 
 	// Import http_client for logging
-	"github.com/deploymenttheory/go-api-sdk-jamfpro/sdk/jamfpro"
+
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
-	configFilePath := "/Users/dafyddwatkins/localtesting/jamfpro/clientconfig.json"
+	configFilePath := "/Users/dafyddwatkins/localtesting/msgraph/clientconfig.json"
 
 	// Initialize the msgraph client with the HTTP client configuration
-	client, err := jamfpro.BuildClientWithConfigFile(configFilePath)
+	client, err := intune.BuildClientWithConfigFile(configFilePath)
 	if err != nil {
 		log.Fatalf("Failed to initialize Jamf Pro client: %v", err)
 	}
@@ -45,7 +46,7 @@ func main() {
 	}
 
 	// Call CreateDeviceComplianceScriptAssignment
-	err = intune.CreateDeviceComplianceScriptAssignment(scriptID, assignmentRequest)
+	err = client.CreateDeviceComplianceScriptAssignment(scriptID, assignmentRequest)
 	if err != nil {
 		log.Fatalf("Failed to create device compliance script assignment: %v", err)
 	}

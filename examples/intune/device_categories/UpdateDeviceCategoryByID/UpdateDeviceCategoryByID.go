@@ -5,22 +5,21 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/deploymenttheory/go-api-sdk-jamfpro/sdk/jamfpro"
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
-	configFilePath := "/Users/dafyddwatkins/localtesting/jamfpro/clientconfig.json"
+	configFilePath := "/Users/dafyddwatkins/localtesting/msgraph/clientconfig.json"
 
 	// Initialize the msgraph client with the HTTP client configuration
-	client, err := jamfpro.BuildClientWithConfigFile(configFilePath)
+	client, err := intune.BuildClientWithConfigFile(configFilePath)
 	if err != nil {
 		log.Fatalf("Failed to initialize Jamf Pro client: %v", err)
 	}
 
 	// Prepare the device category data
-	newCategory := intuneSDK.ResourceDeviceCategory{
+	newCategory := client.ResourceDeviceCategory{
 		DisplayName: "Updated category name 2",
 		Description: "Description of Test Category",
 	}
@@ -28,7 +27,7 @@ func main() {
 	categoryId := "acb435dc-7e6d-4eaa-a987-7ada867be594"
 
 	// Call UpdateDeviceCategoryByID to update a new category
-	updatedCategory, err := intune.UpdateDeviceCategoryByID(categoryId, &newCategory)
+	updatedCategory, err := client.UpdateDeviceCategoryByID(categoryId, &newCategory)
 	if err != nil {
 		log.Fatalf("Failed to update device category: %v", err)
 	}
