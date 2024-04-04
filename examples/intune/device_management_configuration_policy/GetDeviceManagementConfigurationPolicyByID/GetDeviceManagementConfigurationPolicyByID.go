@@ -22,7 +22,7 @@ func main() {
 	policyID := "17436f8b-a93c-45d6-a204-6a80d3d43155"
 
 	// Use the Intune client to perform operations
-	deviceManagementConfigurationPolicy, err := intune.GetDeviceManagementConfigurationPolicyByID(policyID)
+	deviceManagementConfigurationPolicy, err := client.GetDeviceManagementConfigurationPolicyByID(policyID)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}

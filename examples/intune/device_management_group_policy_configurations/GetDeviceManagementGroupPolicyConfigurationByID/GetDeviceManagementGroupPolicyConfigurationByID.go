@@ -22,7 +22,7 @@ func main() {
 	groupPolicyConfigurationID := "6f9ba788-f719-46a7-b7c5-d566963d5999" // "7f774f0f-2f2d-4dc3-a76f-6d45af51019e" / "7f774f0f-2f2d-4dc3-a76f-6d45af51019e" / "6f9ba788-f719-46a7-b7c5-d566963d5999"
 
 	// Use the Intune client to perform operations
-	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByID(groupPolicyConfigurationID)
+	deviceManagementGroupPolicyConfiguration, err := client.GetDeviceManagementGroupPolicyConfigurationByID(groupPolicyConfigurationID)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}

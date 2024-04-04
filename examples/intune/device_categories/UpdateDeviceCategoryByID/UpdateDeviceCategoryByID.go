@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Prepare the device category data
-	newCategory := client.ResourceDeviceCategory{
+	newCategory := intune.ResourceDeviceCategory{
 		DisplayName: "Updated category name 2",
 		Description: "Description of Test Category",
 	}

@@ -7,7 +7,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -21,10 +21,10 @@ func main() {
 	}
 
 	// Create an update request for the Device Shell Script
-	updateRequestBody := &intuneSDK.ResourceDeviceComplianceScript{
+	updateRequestBody := &intune.ResourceDeviceComplianceScript{
 		Publisher:              "Publisher value",
 		Version:                "Version value",
-		DisplayName:            "intuneSDK - Updated Device Compliance Script",
+		DisplayName:            "intune - Updated Device Compliance Script",
 		Description:            "Description value",
 		DetectionScriptContent: "ZGV0ZWN0aW9uU2NyaXB0Q29udGVudA==", // Base64 encoded script content
 		RunAsAccount:           "user",
@@ -37,7 +37,7 @@ func main() {
 	scriptID := "da992c34-ce76-4275-b336-56af95c14988"
 
 	// Update the Device Shell Script by its ID
-	updatedShellScript, err := intune.UpdateDeviceComplianceScriptByID(scriptID, updateRequestBody)
+	updatedShellScript, err := client.UpdateDeviceComplianceScriptByID(scriptID, updateRequestBody)
 	if err != nil {
 		log.Fatalf("Failed to update Device Shell Script by ID: %v", err)
 	}

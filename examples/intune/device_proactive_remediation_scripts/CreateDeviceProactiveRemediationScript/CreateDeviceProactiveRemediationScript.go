@@ -6,7 +6,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/utils"
 )
 
@@ -35,7 +35,7 @@ func main() {
 	log.Printf("Remediation Script Content (base64 encoded):\n%s\n", remediationScriptBase64Encoded)
 
 	// Define detection and remediation script parameters
-	detectionParams := []intuneSDK.DeviceHealthScriptParameter{
+	detectionParams := []intune.DeviceHealthScriptParameter{
 		{
 			Name:         "DetectionParam1",
 			Description:  "Description for detection parameter 1",
@@ -44,7 +44,7 @@ func main() {
 		},
 	}
 
-	remediationParams := []intuneSDK.DeviceHealthScriptParameter{
+	remediationParams := []intune.DeviceHealthScriptParameter{
 		{
 			Name:         "RemediationParam1",
 			Description:  "Description for remediation parameter 1",
@@ -54,10 +54,10 @@ func main() {
 	}
 
 	// Example data for the Proactive Remediation Script
-	remediationData := &intuneSDK.ResourceProactiveRemediation{
+	remediationData := &intune.ResourceProactiveRemediation{
 		Publisher:                   "Example Publisher",
 		Version:                     "1.0",
-		DisplayName:                 "intuneSDK - Example Proactive Remediation Script",
+		DisplayName:                 "intune - Example Proactive Remediation Script",
 		Description:                 "This is a test script",
 		DetectionScriptContent:      detectionScriptBase64Encoded,
 		RemediationScriptContent:    remediationScriptBase64Encoded,
@@ -72,7 +72,7 @@ func main() {
 	}
 
 	// Create the Device Health Script
-	createdRemediation, err := intune.CreateDeviceProactiveRemediationScript(remediationData)
+	createdRemediation, err := client.CreateDeviceProactiveRemediationScript(remediationData)
 	if err != nil {
 		log.Fatalf("Error creating device health script: %v", err)
 	}

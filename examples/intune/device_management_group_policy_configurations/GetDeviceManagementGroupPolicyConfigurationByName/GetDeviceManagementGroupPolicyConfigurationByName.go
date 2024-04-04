@@ -22,7 +22,7 @@ func main() {
 	groupPolicyConfigurationName := "[Base] Prod | Windows - AdministrativeTemplates | OneDrive ver1.0" // "[Base] Prod | Windows - AdministrativeTemplates | Microsoft Office 2016 ver1.0"
 
 	// Use the Intune client to perform operations
-	deviceManagementGroupPolicyConfiguration, err := intune.GetDeviceManagementGroupPolicyConfigurationByName(groupPolicyConfigurationName)
+	deviceManagementGroupPolicyConfiguration, err := client.GetDeviceManagementGroupPolicyConfigurationByName(groupPolicyConfigurationName)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}

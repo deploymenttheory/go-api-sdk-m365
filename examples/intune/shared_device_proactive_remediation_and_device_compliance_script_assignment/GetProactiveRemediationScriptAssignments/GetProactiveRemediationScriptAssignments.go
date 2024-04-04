@@ -22,7 +22,7 @@ func main() {
 	scriptID := "ffd8de7a-e0aa-4f14-b917-f644f781c1fc"
 
 	// Retrieve the Device Health Script Assignments
-	assignments, err := intune.GetProactiveRemediationScriptAssignments(scriptID)
+	assignments, err := client.GetProactiveRemediationScriptAssignments(scriptID)
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediation assignments: %v", err)
 	}

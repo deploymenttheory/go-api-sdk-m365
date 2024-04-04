@@ -21,7 +21,7 @@ func main() {
 	newPriority := 8
 
 	// Call ReorderDeviceManagementConfigurationPolicyByID
-	reorderedPolicy, err := intune.ReorderDeviceManagementConfigurationPolicyByID(policyID, newPriority)
+	reorderedPolicy, err := client.ReorderDeviceManagementConfigurationPolicyByID(policyID, newPriority)
 	if err != nil {
 		log.Fatalf("Error reordering policy: %v", err)
 	}

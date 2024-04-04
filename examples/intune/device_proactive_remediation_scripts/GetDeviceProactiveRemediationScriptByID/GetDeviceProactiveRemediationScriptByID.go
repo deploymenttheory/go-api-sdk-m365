@@ -22,7 +22,7 @@ func main() {
 	remediationID := "9a25df0c-2268-48a9-95ac-45de11f82e2c"
 
 	// Call GetDeviceProactiveRemediationScriptByID to fetch the details of the specified remediation
-	remediation, err := intune.GetDeviceProactiveRemediationScriptByID(remediationID)
+	remediation, err := client.GetDeviceProactiveRemediationScriptByID(remediationID)
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediation by ID: %v", err)
 	}

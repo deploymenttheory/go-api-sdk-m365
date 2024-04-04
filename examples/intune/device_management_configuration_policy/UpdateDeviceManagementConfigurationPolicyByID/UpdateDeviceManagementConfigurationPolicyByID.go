@@ -9,7 +9,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -23,30 +23,30 @@ func main() {
 	}
 
 	// Define the new settings
-	policySettings := []intuneSDK.DeviceManagementConfigurationSubsetSetting{
+	policySettings := []intune.DeviceManagementConfigurationSubsetSetting{
 		{
 			ID: "0",
-			SettingInstance: intuneSDK.DeviceManagementConfigurationSubsetSettingInstance{
+			SettingInstance: intune.DeviceManagementConfigurationSubsetSettingInstance{
 				OdataType:           "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
 				SettingDefinitionId: "user_vendor_msft_policy_config_teamsv2~policy~l_teams_teams_preventfirstlaunchafterinstall_policy",
-				ChoiceSettingValue: &intuneSDK.DeviceManagementConfigurationSubsetChoiceSettingValue{
+				ChoiceSettingValue: &intune.DeviceManagementConfigurationSubsetChoiceSettingValue{
 					Value:    "user_vendor_msft_policy_config_teamsv2~policy~l_teams_teams_preventfirstlaunchafterinstall_policy_1",
-					Children: []intuneSDK.DeviceManagementConfigurationSubsetSettingInstance{},
+					Children: []intune.DeviceManagementConfigurationSubsetSettingInstance{},
 				},
 			},
 		},
 		{
 			ID: "1",
-			SettingInstance: intuneSDK.DeviceManagementConfigurationSubsetSettingInstance{
+			SettingInstance: intune.DeviceManagementConfigurationSubsetSettingInstance{
 				OdataType:           "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
 				SettingDefinitionId: "user_vendor_msft_policy_config_teamsv3~policy~l_teams_string_teams_signinrestriction_policy",
-				ChoiceSettingValue: &intuneSDK.DeviceManagementConfigurationSubsetChoiceSettingValue{
+				ChoiceSettingValue: &intune.DeviceManagementConfigurationSubsetChoiceSettingValue{
 					Value: "user_vendor_msft_policy_config_teamsv3~policy~l_teams_string_teams_signinrestriction_policy_1",
-					Children: []intuneSDK.DeviceManagementConfigurationSubsetSettingInstance{
+					Children: []intune.DeviceManagementConfigurationSubsetSettingInstance{
 						{
 							OdataType:           "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
 							SettingDefinitionId: "user_vendor_msft_policy_config_teamsv3~policy~l_teams_string_teams_signinrestriction_policy_restrictteamssignintoaccountsfromtenantlist",
-							SimpleSettingValue: &intuneSDK.DeviceManagementConfigurationSubsetSimpleSettingValue{
+							SimpleSettingValue: &intune.DeviceManagementConfigurationSubsetSimpleSettingValue{
 								OdataType: "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
 								Value:     "2fd6bb84-ad40-4ec5-9369-a215b25c9952",
 							},
@@ -58,10 +58,10 @@ func main() {
 	}
 
 	// Create the policy request based on the new payload
-	policyRequest := intuneSDK.ResourceDeviceManagementConfigurationPolicy{
+	policyRequest := intune.ResourceDeviceManagementConfigurationPolicy{
 		OdataType:            "#microsoft.graph.deviceManagementConfigurationPolicy",
 		ID:                   "24b18871-d50f-43fb-b0dc-8c88b7901cdf",
-		Name:                 "intuneSDK | Windows - Settings Catalog | Microsoft Teams ver0.1",
+		Name:                 "intune | Windows - Settings Catalog | Microsoft Teams ver0.1",
 		Description:          "09.06.2022\nContext: User",
 		Platforms:            "windows10",
 		Technologies:         "mdm",
@@ -71,7 +71,7 @@ func main() {
 		CreationSource:       "",
 		RoleScopeTagIds:      []string{"0"},
 		IsAssigned:           false,
-		TemplateReference: intuneSDK.DeviceManagementConfigurationPolicySubsetTemplateReference{
+		TemplateReference: intune.DeviceManagementConfigurationPolicySubsetTemplateReference{
 			OdataType:      "#microsoft.graph.deviceManagementConfigurationPolicyTemplateReference",
 			TemplateId:     "",
 			TemplateFamily: "none",
@@ -83,7 +83,7 @@ func main() {
 	policyID := "8077bf4b-2677-4521-b839-549396b052b1"
 
 	// Create the new policy
-	createdPolicy, err := intune.UpdateDeviceManagementConfigurationPolicyByID(policyID, &policyRequest)
+	createdPolicy, err := client.UpdateDeviceManagementConfigurationPolicyByID(policyID, &policyRequest)
 	if err != nil {
 		fmt.Printf("Error creating policy: %s\n", err)
 		return

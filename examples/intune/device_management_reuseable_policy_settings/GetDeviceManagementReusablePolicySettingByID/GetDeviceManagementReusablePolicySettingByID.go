@@ -22,7 +22,7 @@ func main() {
 	reuseablePolicyID := "d6ba32e4-f7e1-4d66-914e-3de3767fe631"
 
 	// Use the Intune client to perform operations
-	deviceManagementReuseablePolicy, err := intune.GetDeviceManagementReusablePolicySettingByID(reuseablePolicyID)
+	deviceManagementReuseablePolicy, err := client.GetDeviceManagementReusablePolicySettingByID(reuseablePolicyID)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}

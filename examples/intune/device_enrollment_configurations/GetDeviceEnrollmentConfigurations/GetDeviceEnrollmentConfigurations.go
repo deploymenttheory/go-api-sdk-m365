@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Use the Intune client to perform operations
-	deviceManagementScripts, err := intune.GetDeviceEnrollmentConfigurations()
+	deviceManagementScripts, err := client.GetDeviceEnrollmentConfigurations()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

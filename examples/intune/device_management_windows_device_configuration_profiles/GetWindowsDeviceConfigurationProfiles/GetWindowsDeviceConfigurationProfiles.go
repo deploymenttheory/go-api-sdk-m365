@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Use the Intune client to perform operations
-	deviceConfigurationProfiles, err := intune.GetWindowsDeviceConfigurationProfiles()
+	deviceConfigurationProfiles, err := client.GetWindowsDeviceConfigurationProfiles()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

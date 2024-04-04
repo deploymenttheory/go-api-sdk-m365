@@ -10,7 +10,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// Unmarshal the JSON data into the struct
-	var policyRequest intuneSDK.ResourceDeviceManagementConfigurationPolicy
+	var policyRequest intune.ResourceDeviceManagementConfigurationPolicy
 	err = json.Unmarshal(byteValue, &policyRequest)
 	if err != nil {
 		fmt.Println("Error unmarshaling JSON:", err)
@@ -39,7 +39,7 @@ func main() {
 	}
 
 	// Create the new policy
-	createdPolicy, err := intune.CreateDeviceManagementConfigurationPolicy(&policyRequest)
+	createdPolicy, err := client.CreateDeviceManagementConfigurationPolicy(&policyRequest)
 	if err != nil {
 		fmt.Printf("Error creating policy: %s\n", err)
 		return

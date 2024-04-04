@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 	// Import http_client for logging
-
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -24,15 +23,15 @@ func main() {
 	scriptID := "ffd8de7a-e0aa-4f14-b917-f644f781c1fc"
 
 	// Prepare the assignment data
-	assignment := intuneSDK.ResourceDeviceHealthScriptAssignment{
+	assignment := intune.ResourceDeviceHealthScriptAssignment{
 		// Fill in the necessary fields...
-		Target: intuneSDK.ResourceDeviceHealthScriptAssignmentTarget{
+		Target: intune.ResourceDeviceHealthScriptAssignmentTarget{
 			DeviceAndAppManagementAssignmentFilterID:   "99b2823d-a05c-4316-9a82-3efa40ff482d",
 			DeviceAndAppManagementAssignmentFilterType: "include", // include / exclude
 			CollectionID: "", // used for Config Mgr only
 		},
 		RunRemediationScript: false,
-		RunSchedule: intuneSDK.ResourceDeviceHealthScriptAssignmentSchedule{
+		RunSchedule: intune.ResourceDeviceHealthScriptAssignmentSchedule{
 			Interval: 1,
 			UseUTC:   false,
 			Time:     "01:00:00.0000000",
@@ -40,7 +39,7 @@ func main() {
 	}
 
 	// Create the proactive remediation script assignment
-	response, err := intune.CreateProactiveRemediationScriptAssignment(scriptID, assignment)
+	response, err := client.CreateProactiveRemediationScriptAssignment(scriptID, assignment)
 	if err != nil {
 		log.Fatalf("Failed to create proactive remediation script assignment: %v", err)
 	}

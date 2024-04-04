@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("Failed to initialize Jamf Pro client: %v", err)
 	}
 	// Example policy name to get
-	policyName := "intuneSDK | [Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1"
+	policyName := "intune | [Base] Dev | Windows - Settings Catalog | Delivery Optimization ver0.1"
 
 	// Delete the policy
 	err = client.DeleteDeviceManagementConfigurationPolicyByName(policyName)

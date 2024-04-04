@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Call GetDeviceProactiveRemediationScripts to fetch the list of device health scripts
-	remediations, err := intune.GetDeviceProactiveRemediationScripts()
+	remediations, err := client.GetDeviceProactiveRemediationScripts()
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediations: %v", err)
 	}

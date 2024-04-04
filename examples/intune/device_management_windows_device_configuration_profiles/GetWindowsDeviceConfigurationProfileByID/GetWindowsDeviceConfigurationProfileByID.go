@@ -22,7 +22,7 @@ func main() {
 	deviceConfigurationProfileID := "12035cf9-156f-46f0-9b80-47749d5e9c16" // 6f511f91-33ba-471a-a2da-6c467c0874cd // 18900079-f55a-4c0d-bc36-bfa292231714
 
 	// Use the Intune client to perform operations
-	deviceConfigurationProfile, err := intune.GetWindowsDeviceConfigurationProfileByID(deviceConfigurationProfileID)
+	deviceConfigurationProfile, err := client.GetWindowsDeviceConfigurationProfileByID(deviceConfigurationProfileID)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration profile: %v", err)
 	}

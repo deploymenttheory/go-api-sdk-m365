@@ -19,10 +19,10 @@ func main() {
 	}
 
 	// Specify the ID of the Proactive Remediation you want to retrieve
-	remediationDisplayName := "intuneSDK - proactive remediation created from JSON"
+	remediationDisplayName := "intune - proactive remediation created from JSON"
 
 	// Call GetDeviceProactiveRemediationScriptByDisplayName to fetch the details of the specified remediation
-	remediation, err := intune.GetDeviceProactiveRemediationScriptByDisplayName(remediationDisplayName)
+	remediation, err := client.GetDeviceProactiveRemediationScriptByDisplayName(remediationDisplayName)
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediation by Name: %v", err)
 	}

@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("Failed to initialize Jamf Pro client: %v", err)
 	}
 	// Example script ID to delete
-	scriptName := "intuneSDK - Updated Script by display name"
+	scriptName := "intune - Updated Script by display name"
 
 	// Call the function to delete the device management script by tName
 	err = client.DeleteDeviceManagementScriptByDisplayName(scriptName)

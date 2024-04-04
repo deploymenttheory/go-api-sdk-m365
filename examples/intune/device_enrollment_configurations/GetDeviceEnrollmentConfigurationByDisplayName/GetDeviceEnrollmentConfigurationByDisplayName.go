@@ -21,7 +21,7 @@ func main() {
 	deviceEnrollmentConfigurationName := "[Global] Autopilot Profile | Production Device | Standard_AAD Join ver2.0"
 
 	// Use the Intune client to perform operations
-	deviceEnrollmentConfiguration, err := intune.GetDeviceEnrollmentConfigurationByDisplayName(deviceEnrollmentConfigurationName)
+	deviceEnrollmentConfiguration, err := client.GetDeviceEnrollmentConfigurationByDisplayName(deviceEnrollmentConfigurationName)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

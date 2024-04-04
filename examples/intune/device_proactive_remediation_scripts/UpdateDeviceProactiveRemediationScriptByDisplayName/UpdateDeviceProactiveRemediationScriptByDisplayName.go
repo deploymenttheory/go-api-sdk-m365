@@ -7,7 +7,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	scriptName := "fcb4e658-f2e4-440b-95a8-80e9430717fe" // Replace with the actual ID of the script you want to update
 
 	// Prepare the updated data for the Proactive Remediation script
-	updateRequest := &intuneSDK.ResourceProactiveRemediation{
+	updateRequest := &intune.ResourceProactiveRemediation{
 		Publisher:                   "admin_d.watkins@deploymenttheory.com ",
 		Version:                     "1",
 		DisplayName:                 "Remediate Office Click-to-Run updater tool if not Run in 3 Days",
@@ -38,12 +38,12 @@ func main() {
 		IsGlobalScript:              false,
 		HighestAvailableVersion:     "null", // null if not set.
 		DeviceHealthScriptType:      "deviceHealthScript",
-		DetectionScriptParameters:   []intuneSDK.DeviceHealthScriptParameter{}, // Empty slice as per JSON
-		RemediationScriptParameters: []intuneSDK.DeviceHealthScriptParameter{}, // Empty slice as per JSON
+		DetectionScriptParameters:   []intune.DeviceHealthScriptParameter{}, // Empty slice as per JSON
+		RemediationScriptParameters: []intune.DeviceHealthScriptParameter{}, // Empty slice as per JSON
 	}
 
 	// Call the UpdateDeviceProactiveRemediationScriptByDisplayName function
-	updatedScript, err := intune.UpdateDeviceProactiveRemediationScriptByDisplayName(scriptName, updateRequest)
+	updatedScript, err := client.UpdateDeviceProactiveRemediationScriptByDisplayName(scriptName, updateRequest)
 	if err != nil {
 		fmt.Printf("Error updating Proactive Remediation: %v\n", err)
 		return

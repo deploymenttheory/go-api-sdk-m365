@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Use the Intune client to perform operations
-	deviceManagementPolicies, err := intune.GetResourceDeviceManagementReusablePolicySettings()
+	deviceManagementPolicies, err := client.GetResourceDeviceManagementReusablePolicySettings()
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

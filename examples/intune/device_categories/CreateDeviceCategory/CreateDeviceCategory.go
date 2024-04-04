@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -20,7 +19,7 @@ func main() {
 	}
 
 	// Prepare the device category data
-	newCategory := intuneSDK.ResourceDeviceCategory{
+	newCategory := intune.ResourceDeviceCategory{
 		DisplayName: "Test Category",
 		Description: "Description of Test Category",
 	}

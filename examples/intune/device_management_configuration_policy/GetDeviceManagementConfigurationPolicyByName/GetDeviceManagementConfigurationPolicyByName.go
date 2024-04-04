@@ -22,7 +22,7 @@ func main() {
 	policyName := "[Base] Dev | Windows - Settings Catalog | Microsoft Teams ver0.1"
 
 	// Use the Intune client to perform operations
-	deviceManagementPolicy, err := intune.GetDeviceManagementConfigurationPolicyByName(policyName)
+	deviceManagementPolicy, err := client.GetDeviceManagementConfigurationPolicyByName(policyName)
 	if err != nil {
 		log.Fatalf("Failed to get device configuration policy: %v", err)
 	}

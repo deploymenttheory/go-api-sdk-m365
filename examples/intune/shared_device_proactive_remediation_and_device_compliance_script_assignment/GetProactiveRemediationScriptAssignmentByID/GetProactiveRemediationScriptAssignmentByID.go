@@ -23,7 +23,7 @@ func main() {
 	assignmentID := "1c4f3adf-ebe8-422c-97b1-f174632d7538"
 
 	// Call the GetDeviceComplianceScriptAssignmentByID function
-	assignment, err := intune.GetProactiveRemediationScriptAssignmentByID(scriptID, assignmentID)
+	assignment, err := client.GetProactiveRemediationScriptAssignmentByID(scriptID, assignmentID)
 	if err != nil {
 		log.Fatalf("Failed to get proactive remediation script assignment by ID: %v", err)
 	}

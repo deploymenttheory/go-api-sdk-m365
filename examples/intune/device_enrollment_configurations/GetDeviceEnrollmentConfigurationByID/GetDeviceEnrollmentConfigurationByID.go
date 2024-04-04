@@ -21,7 +21,7 @@ func main() {
 	deviceEnrollmentConfigurationID := "acdf7778-98be-4086-8a43-f5d89b305229_Windows10EnrollmentCompletionPageConfiguration"
 
 	// Use the Intune client to perform operations
-	deviceEnrollmentConfiguration, err := intune.GetDeviceEnrollmentConfigurationByID(deviceEnrollmentConfigurationID)
+	deviceEnrollmentConfiguration, err := client.GetDeviceEnrollmentConfigurationByID(deviceEnrollmentConfigurationID)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

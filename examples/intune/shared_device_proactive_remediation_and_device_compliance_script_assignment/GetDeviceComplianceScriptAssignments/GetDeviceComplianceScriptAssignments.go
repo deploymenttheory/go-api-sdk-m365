@@ -22,7 +22,7 @@ func main() {
 	scriptID := "ebba8690-c32d-4073-b44b-8a00f4487ae7"
 
 	// Retrieve the Device compliance Script Assignments
-	assignments, err := intune.GetDeviceComplianceScriptAssignments(scriptID)
+	assignments, err := client.GetDeviceComplianceScriptAssignments(scriptID)
 	if err != nil {
 		log.Fatalf("Failed to get device compliance script assignments: %v", err)
 	}

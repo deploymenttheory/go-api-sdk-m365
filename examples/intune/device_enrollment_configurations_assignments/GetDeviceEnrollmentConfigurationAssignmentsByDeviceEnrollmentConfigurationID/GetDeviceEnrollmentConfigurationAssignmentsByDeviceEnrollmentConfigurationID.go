@@ -21,7 +21,7 @@ func main() {
 	deviceEnrollmentConfigurationID := "be94fc43-03c5-4787-b42e-cfe57a24a7d8_PlatformRestrictions"
 
 	// Use the Intune client to perform operations
-	deviceEnrollmentConfigurationAssignments, err := intune.GetDeviceEnrollmentConfigurationAssignmentsByDeviceEnrollmentConfigurationID(deviceEnrollmentConfigurationID)
+	deviceEnrollmentConfigurationAssignments, err := client.GetDeviceEnrollmentConfigurationAssignmentsByDeviceEnrollmentConfigurationID(deviceEnrollmentConfigurationID)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

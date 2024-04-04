@@ -22,7 +22,7 @@ func main() {
 	copyDescription := "New Policy Description"
 
 	// Create a copy of the policy
-	copiedPolicy, err := intune.CreateCopyOfDeviceManagementConfigurationPolicyByID(sourcePolicyID, copyDisplayName, copyDescription)
+	copiedPolicy, err := client.CreateCopyOfDeviceManagementConfigurationPolicyByID(sourcePolicyID, copyDisplayName, copyDescription)
 	if err != nil {
 		log.Fatalf("Failed to create a copy of the policy: %v", err)
 	}

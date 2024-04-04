@@ -7,7 +7,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -21,8 +21,8 @@ func main() {
 	}
 
 	// Define the new script details
-	updatedScriptDetails := intuneSDK.ResourceDeviceManagementScript{
-		DisplayName:           "intuneSDK - Updated Script by display name",
+	updatedScriptDetails := intune.ResourceDeviceManagementScript{
+		DisplayName:           "intune - Updated Script by display name",
 		Description:           "This is a new script created for demonstration purposes.",
 		ScriptContent:         "c2NyaXB0Q29udGVudA==", // Must be base64 encoded.
 		RunAsAccount:          "system",               // or "user"
@@ -32,10 +32,10 @@ func main() {
 		RunAs32Bit:            false,
 	}
 
-	deviceManagementScriptName := "intuneSDK - Updated Script"
+	deviceManagementScriptName := "intune - Updated Script"
 
 	// Create the new device management script
-	newScript, err := intune.UpdateDeviceManagementScriptByDisplayName(deviceManagementScriptName, &updatedScriptDetails)
+	newScript, err := client.UpdateDeviceManagementScriptByDisplayName(deviceManagementScriptName, &updatedScriptDetails)
 	if err != nil {
 		log.Fatalf("Failed to create device management script: %v", err)
 	}

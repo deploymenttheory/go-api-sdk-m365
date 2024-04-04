@@ -7,7 +7,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// Define the new script details
-	newScriptDetails := intuneSDK.ResourceDeviceShellScript{
+	newScriptDetails := intune.ResourceDeviceShellScript{
 		ExecutionFrequency:          "PT15M",
 		RetryCount:                  3,
 		BlockExecutionNotifications: true,
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Create the new device shell script
-	newScript, err := intune.CreateDeviceShellScript(&newScriptDetails)
+	newScript, err := client.CreateDeviceShellScript(&newScriptDetails)
 	if err != nil {
 		log.Fatalf("Failed to create device shell script: %v", err)
 	}

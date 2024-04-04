@@ -18,11 +18,11 @@ func main() {
 	}
 	// Example policy ID to get
 	sourcePolicyName := "[Base] Dev | Windows - Settings Catalog | Microsoft Security Baseline | MSFT Windows 11 22H2 - Computer [Device] ver1.0"
-	copyDisplayName := "intuneSDK policy copy"
+	copyDisplayName := "intune policy copy"
 	copyDescription := "New Policy Description"
 
 	// Create a copy of the policy
-	copiedPolicy, err := intune.CreateCopyOfDeviceManagementConfigurationPolicyByName(sourcePolicyName, copyDisplayName, copyDescription)
+	copiedPolicy, err := client.CreateCopyOfDeviceManagementConfigurationPolicyByName(sourcePolicyName, copyDisplayName, copyDescription)
 	if err != nil {
 		log.Fatalf("Failed to create a copy of the policy: %v", err)
 	}

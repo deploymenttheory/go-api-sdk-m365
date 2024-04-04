@@ -5,47 +5,24 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/http_client" // Import http_client for logging
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
-	utils "github.com/deploymenttheory/go-api-sdk-m365/sdk/utils"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/utils"
 )
 
 func main() {
 	// Define the path to the JSON configuration file
-	configFilePath := "/Users/dafyddwatkins/GitHub/deploymenttheory/go-api-sdk-m365/clientauth.json"
+	configFilePath := "/Users/dafyddwatkins/localtesting/msgraph/clientconfig.json"
 
-	// Load the client OAuth credentials from the configuration file
-	clientAuthConfig, err := http_client.LoadClientAuthConfig(configFilePath)
+	// Initialize the msgraph client with the HTTP client configuration
+	client, err := intune.BuildClientWithConfigFile(configFilePath)
 	if err != nil {
-		log.Fatalf("Failed to load client OAuth configuration: %v", err)
+		log.Fatalf("Failed to initialize Jamf Pro client: %v", err)
 	}
-
-	// Instantiate the default logger and set the desired log level
-	logger := http_client.NewDefaultLogger()
-	logger.SetLevel(http_client.LogLevelDebug) // Adjust the log level as needed
-
-	// Configuration for the HTTP client
-	httpClientconfig := http_client.Config{
-		LogLevel:                  http_client.LogLevelInfo,
-		MaxRetryAttempts:          3,
-		EnableDynamicRateLimiting: true,
-		Logger:                    logger,
-		MaxConcurrentRequests:     5,
-	}
-
-	// initialize HTTP client instance
-	httpClient, err := http_client.NewClient(httpClientconfig, clientAuthConfig, logger)
-	if err != nil {
-		log.Fatalf("Failed to create HTTP client: %v", err)
-	}
-
-	// Create an Intune client with the HTTP client
-	intune := &intuneSDK.Client{HTTP: httpClient}
 
 	deviceManagementScriptID := "c0a92030-70da-4355-843c-ad177eb8cd9c"
 
 	// Use the Intune client to perform operations
-	deviceManagementScript, err := intune.GetDeviceShellScriptByID(deviceManagementScriptID)
+	deviceManagementScript, err := client.GetDeviceShellScriptByID(deviceManagementScriptID)
 	if err != nil {
 		log.Fatalf("Failed to get device management scripts: %v", err)
 	}

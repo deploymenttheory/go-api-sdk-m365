@@ -9,7 +9,7 @@ import (
 
 	// Import http_client for logging
 
-	intuneSDK "github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/intune"
 )
 
 func main() {
@@ -23,11 +23,11 @@ func main() {
 	}
 
 	// Construct the request body
-	requestBody := &intuneSDK.ResourceDeviceComplianceScript{
+	requestBody := &intune.ResourceDeviceComplianceScript{
 		ODataType:              "#microsoft.graph.deviceComplianceScript",
 		Publisher:              "Publisher value",
 		Version:                "Version value",
-		DisplayName:            "intuneSDK - Device Compliance Script",
+		DisplayName:            "intune - Device Compliance Script",
 		Description:            "Description value",
 		DetectionScriptContent: "ZGV0ZWN0aW9uU2NyaXB0Q29udGVudA==", // Base64 encoded script content
 		RunAsAccount:           "user",
@@ -37,7 +37,7 @@ func main() {
 	}
 
 	// Create the new policy
-	createdPolicy, err := intune.CreateDeviceComplianceScript(requestBody)
+	createdPolicy, err := client.CreateDeviceComplianceScript(requestBody)
 	if err != nil {
 		fmt.Printf("Error creating policy: %s\n", err)
 		return
