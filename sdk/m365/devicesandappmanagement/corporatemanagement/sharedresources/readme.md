@@ -1,0 +1,1 @@
+https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-conceptual?view=graph-rest-beta
