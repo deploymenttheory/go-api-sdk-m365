@@ -1,0 +1,1 @@
+https://learn.microsoft.com/en-us/graph/api/resources/cloudpc?view=graph-rest-1.0
