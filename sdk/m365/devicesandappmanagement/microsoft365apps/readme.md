@@ -1,0 +1,1 @@
+https://learn.microsoft.com/en-us/graph/api/resources/adminmicrosoft365apps?view=graph-rest-1.0
