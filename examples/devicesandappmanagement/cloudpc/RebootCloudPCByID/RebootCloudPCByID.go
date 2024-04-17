@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/client"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/msgraphclient"
 )
 
 func main() {
@@ -12,19 +12,19 @@ func main() {
 	configFilePath := "/Users/dafyddwatkins/localtesting/msgraph/clientconfig.json"
 
 	// Initialize the msgraph client with the HTTP client configuration from the config file
-	client, err := client.BuildClientWithConfigFile(configFilePath)
+	client, err := msgraphclient.BuildClientWithConfigFile(configFilePath)
 	if err != nil {
 		log.Fatalf("Failed to initialize msgraph client: %v", err)
 	}
 
-	// Cloud PC ID to troubleshoot
+	// Cloud PC ID to reboot
 	cloudPCID := "12345678-1234-1234-1234-123456789012"
 
-	// Call TroubleshootCloudPC function to troubleshoot the specified Cloud PC
-	err = client.CloudPC.TroubleshootCloudPC(cloudPCID)
+	// Call RebootCloudPC function to reboot the specified Cloud PC
+	err = client.CloudPC.RebootCloudPCByID(cloudPCID)
 	if err != nil {
-		log.Fatalf("Error troubleshooting Cloud PC: %v", err)
+		log.Fatalf("Error rebooting Cloud PC: %v", err)
 	}
 
-	fmt.Printf("Troubleshooting initiated successfully for Cloud PC ID: %s\n", cloudPCID)
+	fmt.Printf("Reboot command sent successfully to Cloud PC ID: %s\n", cloudPCID)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/client"
+	"github.com/deploymenttheory/go-api-sdk-m365/sdk/msgraphclient"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	configFilePath := "/Users/dafyddwatkins/localtesting/msgraph/clientconfig.json"
 
 	// Initialize the msgraph client with the HTTP client configuration from the config file
-	client, err := client.BuildClientWithConfigFile(configFilePath)
+	client, err := msgraphclient.BuildClientWithConfigFile(configFilePath)
 	if err != nil {
 		log.Fatalf("Failed to initialize msgraph client: %v", err)
 	}
@@ -23,7 +23,7 @@ func main() {
 	cloudPcSnapshotId := "12345678-1234-1234-1234-123456789012"
 
 	// Call RenameCloudPC function to reboot the specified Cloud PC
-	err = client.CloudPC.RestoreCloudPC(cloudPCID, cloudPcSnapshotId)
+	err = client.CloudPC.RestoreCloudPCByID(cloudPCID, cloudPcSnapshotId)
 	if err != nil {
 		log.Fatalf("Error rebooting Cloud PC: %v", err)
 	}

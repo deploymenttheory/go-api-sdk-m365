@@ -1,4 +1,4 @@
-package cloudpc
+package cloudpcauditevent
 
 import (
 	"github.com/deploymenttheory/go-api-http-client/httpclient"
