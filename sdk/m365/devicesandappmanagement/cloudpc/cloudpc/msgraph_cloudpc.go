@@ -17,16 +17,16 @@ import (
 	"github.com/deploymenttheory/go-api-sdk-m365/sdk/shared"
 )
 
+const (
+	uriCloudPC                = "/v1.0/deviceManagement/virtualEndpoint/cloudPCs"
+	ODataTypeCloudPC          = ""
+	ODataTypeCloudPCParameter = ""
+)
+
 // ResponseCloudPCList represents a list of Cloud PC entries
 type ResponseCloudPCList struct {
 	Value []ResourceCloudPC `json:"value"`
 }
-
-const (
-	uriCloudPC                = "/v1.0/deviceManagement/virtualEndpoint/cloudPCs"
-	ODataTypeCloudPC          = "#microsoft.graph.cloudPC"
-	ODataTypeCloudPCParameter = ""
-)
 
 // ResourceCloudPC represents a single Cloud PC entry
 type ResourceCloudPC struct {

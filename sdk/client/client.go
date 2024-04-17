@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/deploymenttheory/go-api-http-client/httpclient"
-	"github.com/deploymenttheory/go-api-sdk-m365/sdk/m365/devicesandappmanagement/cloudpc/cloudpc"
 )
 
 // ClientConfig combines authentication and environment settings for the client.
@@ -66,9 +65,6 @@ func BuildClientWithConfigFile(configFilePath string) (*Client, error) {
 		return nil, fmt.Errorf("failed to build HTTP client: %w", err)
 	}
 
-	// Initialize the CloudPC client here
-	cloudPCClient := cloudpc.NewClient(httpClient)
-
-	// Create and return the msgraph client with the HTTP client and CloudPC client
-	return &Client{HTTP: httpClient, CloudPC: cloudPCClient}, nil
+	// Create and return the msgraph client with the HTTP client
+	return &Client{HTTP: httpClient}, nil
 }
