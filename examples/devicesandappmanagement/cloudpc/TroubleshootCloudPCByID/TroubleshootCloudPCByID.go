@@ -17,16 +17,14 @@ func main() {
 		log.Fatalf("Failed to initialize msgraph client: %v", err)
 	}
 
-	// Cloud PC ID to rename
+	// Cloud PC ID to troubleshoot
 	cloudPCID := "12345678-1234-1234-1234-123456789012"
 
-	newName := "New Cloud PC Name"
-
-	// Call RenameCloudPC function to reboot the specified Cloud PC
-	err = client.CloudPC.RenameCloudPC(cloudPCID, newName)
+	// Call TroubleshootCloudPC function to troubleshoot the specified Cloud PC
+	err = client.CloudPC.TroubleshootCloudPCByID(cloudPCID)
 	if err != nil {
-		log.Fatalf("Error rebooting Cloud PC: %v", err)
+		log.Fatalf("Error troubleshooting Cloud PC: %v", err)
 	}
 
-	fmt.Printf("Reboot command sent successfully to Cloud PC ID: %s\n", cloudPCID)
+	fmt.Printf("Troubleshooting initiated successfully for Cloud PC ID: %s\n", cloudPCID)
 }

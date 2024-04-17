@@ -23,7 +23,7 @@ func main() {
 	cloudPcSnapshotId := "12345678-1234-1234-1234-123456789012"
 
 	// Call RenameCloudPC function to reboot the specified Cloud PC
-	err = client.CloudPC.RestoreCloudPC(cloudPCID, cloudPcSnapshotId)
+	err = client.CloudPC.RestoreCloudPCByID(cloudPCID, cloudPcSnapshotId)
 	if err != nil {
 		log.Fatalf("Error rebooting Cloud PC: %v", err)
 	}

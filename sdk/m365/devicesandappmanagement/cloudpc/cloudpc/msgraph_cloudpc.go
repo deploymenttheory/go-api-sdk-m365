@@ -48,7 +48,7 @@ type ResourceCloudPC struct {
 	ProvisioningType         string    `json:"provisioningType"`
 }
 
-// GetDeviceCategories retrieves a list of Intune Device Categories from Microsoft Graph API.
+// ListCloudPCs retrieves a list of Intune Device Categories from Microsoft Graph API.
 func (c *Client) ListCloudPCs() (*ResponseCloudPCList, error) {
 	endpoint := uriCloudPC
 
@@ -82,8 +82,8 @@ func (c *Client) GetCloudPCByID(cloudPCID string) (*ResourceCloudPC, error) {
 	return &response, nil
 }
 
-// EndGracePeriodForCloudPC ends the grace period for a specified Cloud PC by ID
-func (c *Client) EndGracePeriodForCloudPC(cloudPCID string) error {
+// EndGracePeriodForCloudPCByID ends the grace period for a specified Cloud PC by ID
+func (c *Client) EndGracePeriodForCloudPCByID(cloudPCID string) error {
 	endpoint := fmt.Sprintf("%s/%s/endGracePeriod", uriCloudPC, cloudPCID)
 
 	resp, err := c.HTTP.DoRequest("POST", endpoint, nil, nil)
@@ -98,8 +98,8 @@ func (c *Client) EndGracePeriodForCloudPC(cloudPCID string) error {
 	return nil
 }
 
-// RebootCloudPC sends a command to reboot a specified Cloud PC by ID
-func (c *Client) RebootCloudPC(cloudPCID string) error {
+// RebootCloudPCByID sends a command to reboot a specified Cloud PC by ID
+func (c *Client) RebootCloudPCByID(cloudPCID string) error {
 	endpoint := fmt.Sprintf("%s%s/reboot", uriCloudPC, cloudPCID)
 
 	resp, err := c.HTTP.DoRequest("POST", endpoint, nil, nil)
@@ -114,8 +114,8 @@ func (c *Client) RebootCloudPC(cloudPCID string) error {
 	return nil
 }
 
-// RenameCloudPC sends a command to rename a specified Cloud PC by ID
-func (c *Client) RenameCloudPC(cloudPCID string, newName string) error {
+// RenameCloudPCByID sends a command to rename a specified Cloud PC by ID
+func (c *Client) RenameCloudPCByID(cloudPCID string, newName string) error {
 	endpoint := fmt.Sprintf("%s/%s/rename", uriCloudPC, cloudPCID)
 
 	jsonBody, err := json.Marshal(map[string]string{"displayName": newName})
@@ -135,8 +135,8 @@ func (c *Client) RenameCloudPC(cloudPCID string, newName string) error {
 	return nil
 }
 
-// RestoreCloudPC sends a command to restore a specified Cloud PC by ID from a snapshot
-func (c *Client) RestoreCloudPC(cloudPCID string, cloudPcSnapshotID string) error {
+// RestoreCloudPCByID sends a command to restore a specified Cloud PC by ID from a snapshot
+func (c *Client) RestoreCloudPCByID(cloudPCID string, cloudPcSnapshotID string) error {
 	endpoint := fmt.Sprintf("%s/%s/restore", uriCloudPC, cloudPCID)
 
 	// Create the JSON body for the POST request
@@ -158,8 +158,8 @@ func (c *Client) RestoreCloudPC(cloudPCID string, cloudPcSnapshotID string) erro
 	return nil
 }
 
-// TroubleshootCloudPC sends a command to troubleshoot a specified Cloud PC by ID
-func (c *Client) TroubleshootCloudPC(cloudPCID string) error {
+// TroubleshootCloudPCByID sends a command to troubleshoot a specified Cloud PC by ID
+func (c *Client) TroubleshootCloudPCByID(cloudPCID string) error {
 	endpoint := fmt.Sprintf("%s/%s/troubleshoot", uriCloudPC, cloudPCID)
 
 	resp, err := c.HTTP.DoRequest("POST", endpoint, nil, nil)
