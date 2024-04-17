@@ -1,5 +1,5 @@
-// sdk/client/msgraph_clients.go
-package client
+// sdk/msgraphclient/msgraph_clients.go
+package msgraphclient
 
 import (
 	"github.com/deploymenttheory/go-api-http-client/httpclient"

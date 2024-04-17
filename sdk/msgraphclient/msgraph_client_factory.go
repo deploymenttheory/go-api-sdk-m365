@@ -1,5 +1,5 @@
-// client/client.go
-package client
+// sdk/msgraphclient/msgraph_client_factory.go
+package msgraphclient
 
 import (
 	"fmt"
