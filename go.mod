@@ -2,7 +2,7 @@ module github.com/deploymenttheory/go-api-sdk-m365
 
 go 1.22.2
 
-require github.com/deploymenttheory/go-api-http-client v0.1.37
+require github.com/deploymenttheory/go-api-http-client v0.1.38
 
 require (
 	github.com/antchfx/xmlquery v1.4.0 // indirect
