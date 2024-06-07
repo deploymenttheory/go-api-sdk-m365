@@ -313,16 +313,27 @@ func generateStruct(outputFile *os.File, structName string, properties []Propert
 
 func collectAnnotations(target string, localAnnotations, globalAnnotations []Annotation) []Annotation {
 	var result []Annotation
+	log.Printf("Collecting annotations for target: %s", target)
+	log.Printf("Local annotations: %+v", localAnnotations)
+	log.Printf("Global annotations: %+v", globalAnnotations)
+
 	for _, annotation := range localAnnotations {
 		if annotation.Target == target {
+			log.Printf("Matching local annotation found: %+v", annotation)
 			result = append(result, annotation)
+		} else {
+			log.Printf("Local annotation target mismatch: %s != %s", annotation.Target, target)
 		}
 	}
 	for _, annotation := range globalAnnotations {
 		if annotation.Target == target {
+			log.Printf("Matching global annotation found: %+v", annotation)
 			result = append(result, annotation)
+		} else {
+			log.Printf("Global annotation target mismatch: %s != %s", annotation.Target, target)
 		}
 	}
+	log.Printf("Collected annotations for target %s: %+v", target, result)
 	return result
 }
 
@@ -357,6 +368,7 @@ func prepareStructData(structName string, properties []Property, navigationPrope
 	for _, prop := range properties {
 		goType, _ := mapType(prop.Type)
 		propTarget := fmt.Sprintf("microsoft.graph.%s/%s", structName, prop.Name)
+		log.Printf("Collecting annotations for property target: %s", propTarget)
 		propAnnotations := collectAnnotations(propTarget, prop.Annotations, globalAnnotations)
 		log.Printf("Property: %s, Type: %s, Annotations: %v", prop.Name, goType, propAnnotations)
 		data.Properties = append(data.Properties, struct {
@@ -375,6 +387,7 @@ func prepareStructData(structName string, properties []Property, navigationPrope
 	for _, navProp := range navigationProperties {
 		goType, _ := mapType(navProp.Type)
 		navPropTarget := fmt.Sprintf("microsoft.graph.%s/%s", structName, navProp.Name)
+		log.Printf("Collecting annotations for navigation property target: %s", navPropTarget)
 		navPropAnnotations := collectAnnotations(navPropTarget, navProp.Annotations, globalAnnotations)
 		log.Printf("NavigationProperty: %s, Type: %s, Annotations: %v", navProp.Name, goType, navPropAnnotations)
 		data.NavigationProperties = append(data.NavigationProperties, struct {
