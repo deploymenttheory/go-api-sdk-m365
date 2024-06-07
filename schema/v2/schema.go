@@ -29,9 +29,25 @@ type Schema struct {
 
 // EntityType represents an entity type in the CSDL schema
 type EntityType struct {
-	Name        string       `xml:"Name,attr"`
-	Properties  []Property   `xml:"Property"`
-	Annotations []Annotation `xml:"Annotation"`
+	Name                 string               `xml:"Name,attr"`
+	BaseType             string               `xml:"BaseType,attr,omitempty"`
+	Abstract             bool                 `xml:"Abstract,attr,omitempty"`
+	OpenType             bool                 `xml:"OpenType,attr,omitempty"`
+	HasStream            bool                 `xml:"HasStream,attr,omitempty"`
+	Key                  *EntityKey           `xml:"Key,omitempty"`
+	Properties           []Property           `xml:"Property"`
+	NavigationProperties []NavigationProperty `xml:"NavigationProperty"`
+	Annotations          []Annotation         `xml:"Annotation"`
+}
+
+// EntityKey represents the key of an entity type in the CSDL schema
+type EntityKey struct {
+	PropertyRefs []PropertyRef `xml:"PropertyRef"`
+}
+
+// PropertyRef represents a property reference in an entity key
+type PropertyRef struct {
+	Name string `xml:"Name,attr"`
 }
 
 // ComplexType represents a complex type in the CSDL schema
@@ -45,7 +61,18 @@ type ComplexType struct {
 type Property struct {
 	Name        string       `xml:"Name,attr"`
 	Type        string       `xml:"Type,attr"`
+	Nullable    bool         `xml:"Nullable,attr,omitempty"`
 	Annotations []Annotation `xml:"Annotation"`
+}
+
+// NavigationProperty represents a navigation property in the CSDL schema
+type NavigationProperty struct {
+	Name           string       `xml:"Name,attr"`
+	Type           string       `xml:"Type,attr"`
+	Nullable       bool         `xml:"Nullable,attr,omitempty"`
+	Partner        string       `xml:"Partner,attr,omitempty"`
+	ContainsTarget bool         `xml:"ContainsTarget,attr,omitempty"`
+	Annotations    []Annotation `xml:"Annotation"`
 }
 
 // EnumType represents an enumeration type in the CSDL schema
@@ -92,6 +119,15 @@ const StructTemplate = `{{- if .Annotations }}
 {{- end}}{{end}}{{end}}{{end}}
 type {{.Name}} struct {
 {{- range .Properties}}
+    {{- if .Annotations}}{{range .Annotations}}
+// {{.Term}}: {{.StringValue}}
+    {{- range .Collection}}
+// {{range .PropertyValues}}
+// {{.Property}}: {{if .Value}}{{.Value}}{{else if .Date}}{{.Date}}{{else if .EnumMember}}{{.EnumMember}}{{end}}
+{{- end}}{{end}}{{end}}{{end}}
+    {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"`" + `
+{{- end}}
+{{- range .NavigationProperties}}
     {{- if .Annotations}}{{range .Annotations}}
 // {{.Term}}: {{.StringValue}}
     {{- range .Collection}}
@@ -171,8 +207,18 @@ func main() {
 	// Generate Go structs from the CSDL schemas
 	log.Println("Generating Go structs...")
 	for _, schema := range edmx.Schemas {
+		// Process EntityTypes
+		for _, entityType := range schema.EntityTypes {
+			err := GenerateStruct(outputFile, entityType.Name, entityType.Properties, entityType.NavigationProperties, entityType.Annotations, edmx.Annotations, generatedStructs)
+			if err != nil {
+				log.Fatalf("Error generating struct: %v", err)
+			}
+			log.Printf("Generated struct for %s\n", entityType.Name)
+		}
+
+		// Process ComplexTypes
 		for _, complexType := range schema.ComplexTypes {
-			err := GenerateStruct(outputFile, complexType.Name, complexType.Properties, complexType.Annotations, edmx.Annotations, generatedStructs)
+			err := GenerateStruct(outputFile, complexType.Name, complexType.Properties, nil, complexType.Annotations, edmx.Annotations, generatedStructs)
 			if err != nil {
 				log.Fatalf("Error generating struct: %v", err)
 			}
@@ -195,8 +241,8 @@ func main() {
 	log.Printf("Go structs and enums generated and saved to %s\n", *outputPath)
 }
 
-// GenerateStruct generates a Go struct from a complex type
-func GenerateStruct(outputFile *os.File, structName string, properties []Property, localAnnotations []Annotation, globalAnnotations []Annotation, generatedStructs map[string]bool) error {
+// GenerateStruct generates a Go struct from a complex type or entity type
+func GenerateStruct(outputFile *os.File, structName string, properties []Property, navigationProperties []NavigationProperty, localAnnotations []Annotation, globalAnnotations []Annotation, generatedStructs map[string]bool) error {
 	if generatedStructs[structName] {
 		return nil
 	}
@@ -214,6 +260,12 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 	data := struct {
 		Name       string
 		Properties []struct {
+			Name        string
+			Type        string
+			JSONName    string
+			Annotations []Annotation
+		}
+		NavigationProperties []struct {
 			Name        string
 			Type        string
 			JSONName    string
@@ -237,6 +289,21 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 			Type:        goType,
 			JSONName:    prop.Name,
 			Annotations: prop.Annotations,
+		})
+	}
+
+	for _, navProp := range navigationProperties {
+		goType, _ := mapType(navProp.Type)
+		data.NavigationProperties = append(data.NavigationProperties, struct {
+			Name        string
+			Type        string
+			JSONName    string
+			Annotations []Annotation
+		}{
+			Name:        capitalize(navProp.Name),
+			Type:        goType,
+			JSONName:    navProp.Name,
+			Annotations: navProp.Annotations,
 		})
 	}
 
