@@ -191,7 +191,6 @@ func unmarshalXML(data []byte) Edmx {
 		log.Fatalf("Error unmarshalling XML: %v", err)
 	}
 
-	// Adding detailed logs for the unmarshalling process
 	log.Println("Successfully unmarshalled the XML data.")
 	log.Printf("Edmx Version: %s", edmx.XMLName.Space)
 	log.Printf("Number of Schemas: %d", len(edmx.Schemas))
@@ -318,7 +317,7 @@ func collectAnnotations(target string, localAnnotations, globalAnnotations []Ann
 	log.Printf("Global annotations: %+v", globalAnnotations)
 
 	for _, annotation := range localAnnotations {
-		if annotation.Target == target {
+		if annotation.Target == target || annotation.Target == "" {
 			log.Printf("Matching local annotation found: %+v", annotation)
 			result = append(result, annotation)
 		} else {
@@ -326,7 +325,7 @@ func collectAnnotations(target string, localAnnotations, globalAnnotations []Ann
 		}
 	}
 	for _, annotation := range globalAnnotations {
-		if annotation.Target == target {
+		if annotation.Target == target || annotation.Target == "" {
 			log.Printf("Matching global annotation found: %+v", annotation)
 			result = append(result, annotation)
 		} else {
@@ -534,11 +533,12 @@ func capitalize(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
+// findGlobalAnnotations finds global annotations for a given target
 func findGlobalAnnotations(target string, annotations []Annotation) []Annotation {
 	var result []Annotation
 	log.Printf("Finding global annotations for target: %s", target)
 	for _, annotation := range annotations {
-		if annotation.Target == target || annotation.Target == fmt.Sprintf("microsoft.graph.%s", target) {
+		if annotation.Target == target {
 			log.Printf("Found annotation: %s - %s: %s", annotation.Target, annotation.Term, annotation.StringValue)
 			result = append(result, annotation)
 		}
