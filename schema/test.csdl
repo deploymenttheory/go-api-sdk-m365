@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph" Alias="graph" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="applePushNotificationCertificate" BaseType="graph.entity">
+        <Property Name="appleIdentifier" Type="Edm.String" />
+        <Property Name="certificate" Type="Edm.String" />
+        <Property Name="certificateSerialNumber" Type="Edm.String" />
+        <Property Name="certificateUploadFailureReason" Type="Edm.String" />
+        <Property Name="certificateUploadStatus" Type="Edm.String" />
+        <Property Name="expirationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="lastModifiedDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="topicIdentifier" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="deviceManagement" BaseType="graph.entity">
+        <Property Name="accountMoveCompletionDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="adminConsent" Type="graph.adminConsent" />
+        <Property Name="connectorStatus" Type="Collection(graph.connectorStatusDetails)" />
+        <Property Name="dataProcessorServiceForWindowsFeaturesOnboarding" Type="graph.dataProcessorServiceForWindowsFeaturesOnboarding" />
+        <Property Name="deviceComplianceReportSummarizationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="deviceProtectionOverview" Type="graph.deviceProtectionOverview" />
+        <Property Name="intuneAccountId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="intuneBrand" Type="graph.intuneBrand" />
+        <Property Name="lastReportAggregationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="legacyPcManangementEnabled" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="managedDeviceCleanupSettings" Type="graph.managedDeviceCleanupSettings" />
+        <Property Name="maximumDepTokens" Type="Edm.Int32" Nullable="false" />
+        <Property Name="settings" Type="graph.deviceManagementSettings" />
+        <Property Name="subscriptions" Type="graph.deviceManagementSubscriptions" Nullable="false" />
+        <Property Name="subscriptionState" Type="graph.deviceManagementSubscriptionState" Nullable="false" />
+        <Property Name="unlicensedAdminstratorsEnabled" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="userExperienceAnalyticsAnomalySeverityOverview" Type="graph.userExperienceAnalyticsAnomalySeverityOverview" />
+        <Property Name="userExperienceAnalyticsSettings" Type="graph.userExperienceAnalyticsSettings" />
+        <Property Name="windowsMalwareOverview" Type="graph.windowsMalwareOverview" />
+        <NavigationProperty Name="advancedThreatProtectionOnboardingStateSummary" Type="graph.advancedThreatProtectionOnboardingStateSummary" ContainsTarget="true" />
+        <NavigationProperty Name="androidDeviceOwnerEnrollmentProfiles" Type="Collection(graph.androidDeviceOwnerEnrollmentProfile)" ContainsTarget="true" />
+        <NavigationProperty Name="androidForWorkAppConfigurationSchemas" Type="Collection(graph.androidForWorkAppConfigurationSchema)" ContainsTarget="true" />
+        <NavigationProperty Name="androidForWorkEnrollmentProfiles" Type="Collection(graph.androidForWorkEnrollmentProfile)" ContainsTarget="true" />
+        <NavigationProperty Name="androidForWorkSettings" Type="graph.androidForWorkSettings" ContainsTarget="true" />
+        <NavigationProperty Name="androidManagedStoreAccountEnterpriseSettings" Type="graph.androidManagedStoreAccountEnterpriseSettings" ContainsTarget="true" />
+        <NavigationProperty Name="androidManagedStoreAppConfigurationSchemas" Type="Collection(graph.androidManagedStoreAppConfigurationSchema)" ContainsTarget="true" />
+        <NavigationProperty Name="applePushNotificationCertificate" Type="graph.applePushNotificationCertificate" ContainsTarget="true" />
+        <NavigationProperty Name="appleUserInitiatedEnrollmentProfiles" Type="Collection(graph.appleUserInitiatedEnrollmentProfile)" ContainsTarget="true" />
+      </EntityType>
+      <Action Name="generateApplePushNotificationCertificateSigningRequest" IsBound="true">
+        <Parameter Name="bindingParameter" Type="graph.applePushNotificationCertificate" />
+        <ReturnType Type="Edm.String" Unicode="false" />
+      </Action>
+      <Function Name="downloadApplePushNotificationCertificateSigningRequest" IsBound="true">
+        <Parameter Name="bindingParameter" Type="graph.applePushNotificationCertificate" />
+        <ReturnType Type="Edm.String" Unicode="false" />
+      </Function>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Apple push notification certificate." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/appleIdentifier">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Apple Id of the account used to create the MDM push certificate." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/certificateSerialNumber">
+        <Annotation Term="Org.OData.Core.V1.Computed" Bool="true" />
+        <Annotation Term="Org.OData.Core.V1.Description" String="Certificate serial number. This property is read-only." />
+        <Annotation Term="Org.OData.Core.V1.Permissions">
+          <EnumMember>Org.OData.Core.V1.Permission/Read</EnumMember>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/certificateUploadFailureReason">
+        <Annotation Term="Org.OData.Core.V1.Description" String="The reason the certificate upload failed." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/certificateUploadStatus">
+        <Annotation Term="Org.OData.Core.V1.Description" String="The certificate upload status." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/expirationDateTime">
+        <Annotation Term="Org.OData.Core.V1.Description" String="The expiration date and time for Apple push notification certificate." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/lastModifiedDateTime">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Last modified date and time for Apple push notification certificate." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.applePushNotificationCertificate/topicIdentifier">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Topic Id." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.deviceManagement/applePushNotificationCertificate">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Apple push notification certificate." />
+      </Annotations>
+      <Annotations Target="microsoft.graph.downloadApplePushNotificationCertificateSigningRequest(microsoft.graph.applePushNotificationCertificate)">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Download Apple push notification certificate signing request" />
+      </Annotations>
+      <Annotations Target="microsoft.graph.generateApplePushNotificationCertificateSigningRequest(microsoft.graph.applePushNotificationCertificate)">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Download Apple push notification certificate signing request" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

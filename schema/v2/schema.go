@@ -114,27 +114,15 @@ const StructTemplate = `{{- if .Annotations }}
 // {{.Name}} 
 {{- range .Annotations}}
 // {{.Term}}: {{.StringValue}}
-{{- range .Collection}}
-// {{range .PropertyValues}}
-// {{.Property}}: {{if .Value}}{{.Value}}{{else if .Date}}{{.Date}}{{else if .EnumMember}}{{.EnumMember}}{{end}}
-{{- end}}{{end}}{{end}}{{end}}
+{{- end}}
+{{- end}}
 type {{.Name}} struct {
 {{- range .Properties}}
-    {{- if .Annotations}}{{range .Annotations}}
-// {{.Term}}: {{.StringValue}}
-    {{- range .Collection}}
-// {{range .PropertyValues}}
-// {{.Property}}: {{if .Value}}{{.Value}}{{else if .Date}}{{.Date}}{{else if .EnumMember}}{{.EnumMember}}{{end}}
-{{- end}}{{end}}{{end}}{{end}}
+    // {{.Name}}: {{range .Annotations}}{{.Term}}: {{.StringValue}} {{end}}
     {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"`" + `
 {{- end}}
 {{- range .NavigationProperties}}
-    {{- if .Annotations}}{{range .Annotations}}
-// {{.Term}}: {{.StringValue}}
-    {{- range .Collection}}
-// {{range .PropertyValues}}
-// {{.Property}}: {{if .Value}}{{.Value}}{{else if .Date}}{{.Date}}{{else if .EnumMember}}{{.EnumMember}}{{end}}
-{{- end}}{{end}}{{end}}{{end}}
+    // {{.Name}}: {{range .Annotations}}{{.Term}}: {{.StringValue}} {{end}}
     {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"`" + `
 {{- end}}
 }
@@ -251,6 +239,7 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 
 	// Collect all relevant annotations
 	annotations := append(localAnnotations, findGlobalAnnotations(structName, globalAnnotations)...)
+	log.Printf("Collected %d annotations for struct %s", len(annotations), structName)
 
 	tmpl, err := template.New("struct").Parse(StructTemplate)
 	if err != nil {
@@ -280,6 +269,8 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 
 	for _, prop := range properties {
 		goType, _ := mapType(prop.Type)
+		propAnnotations := append(prop.Annotations, findGlobalAnnotations(structName+"/"+prop.Name, globalAnnotations)...)
+		log.Printf("Property: %s, Type: %s, Annotations: %v", prop.Name, goType, propAnnotations)
 		data.Properties = append(data.Properties, struct {
 			Name        string
 			Type        string
@@ -289,12 +280,14 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 			Name:        capitalize(prop.Name),
 			Type:        goType,
 			JSONName:    prop.Name,
-			Annotations: prop.Annotations,
+			Annotations: propAnnotations,
 		})
 	}
 
 	for _, navProp := range navigationProperties {
 		goType, _ := mapType(navProp.Type)
+		navPropAnnotations := append(navProp.Annotations, findGlobalAnnotations(structName+"/"+navProp.Name, globalAnnotations)...)
+		log.Printf("NavigationProperty: %s, Type: %s, Annotations: %v", navProp.Name, goType, navPropAnnotations)
 		data.NavigationProperties = append(data.NavigationProperties, struct {
 			Name        string
 			Type        string
@@ -304,7 +297,7 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 			Name:        capitalize(navProp.Name),
 			Type:        goType,
 			JSONName:    navProp.Name,
-			Annotations: navProp.Annotations,
+			Annotations: navPropAnnotations,
 		})
 	}
 
@@ -318,6 +311,7 @@ func GenerateStruct(outputFile *os.File, structName string, properties []Propert
 		return fmt.Errorf("error writing to output file: %w", err)
 	}
 
+	log.Printf("Successfully generated struct for %s", structName)
 	return nil
 }
 
@@ -342,10 +336,12 @@ func GenerateEnum(outputFile *os.File, enumType EnumType, globalAnnotations []An
 		Annotations: findGlobalAnnotations(enumType.Name, globalAnnotations),
 	}
 
+	log.Printf("Generating enum for %s with %d global annotations", enumType.Name, len(data.Annotations))
+
 	for _, member := range enumType.Members {
 		// Combine global and member-specific annotations
-		memberAnnotations := findGlobalAnnotations(fmt.Sprintf("%s/%s", enumType.Name, member.Name), globalAnnotations)
-		memberAnnotations = append(memberAnnotations, member.Annotations...)
+		memberAnnotations := append(member.Annotations, findGlobalAnnotations(fmt.Sprintf("%s/%s", enumType.Name, member.Name), globalAnnotations)...)
+		log.Printf("EnumMember: %s, Value: %s, Annotations: %v", member.Name, member.Value, memberAnnotations)
 
 		data.Members = append(data.Members, struct {
 			Name        string
@@ -368,6 +364,7 @@ func GenerateEnum(outputFile *os.File, enumType EnumType, globalAnnotations []An
 		return fmt.Errorf("error writing to output file: %w", err)
 	}
 
+	log.Printf("Successfully generated enum for %s", enumType.Name)
 	return nil
 }
 
@@ -429,11 +426,15 @@ func capitalize(s string) string {
 // findGlobalAnnotations finds global annotations for a given target
 func findGlobalAnnotations(target string, annotations []Annotation) []Annotation {
 	var result []Annotation
+	log.Printf("Finding global annotations for target: %s", target)
 	for _, annotation := range annotations {
-		if strings.HasSuffix(annotation.Target, target) {
-			log.Printf("Found annotation for target %s: %s - %s\n", target, annotation.Term, annotation.StringValue)
+		if annotation.Target == target {
+			log.Printf("Found annotation: %s - %s: %s", annotation.Target, annotation.Term, annotation.StringValue)
 			result = append(result, annotation)
+		} else {
+			log.Printf("Annotation target mismatch: annotation.Target=%s, target=%s", annotation.Target, target)
 		}
 	}
+	log.Printf("Total annotations found for target %s: %d", target, len(result))
 	return result
 }
