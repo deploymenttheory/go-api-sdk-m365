@@ -148,11 +148,11 @@ const EnumTemplate = `{{- if .Annotations }}
 // {{range .PropertyValues}}
 // {{.Property}}: {{if .Value}}{{.Value}}{{else if .Date}}{{.Date}}{{else if .EnumMember}}{{.EnumMember}}{{end}}
 {{- end}}{{end}}{{end}}{{end}}
-type {{.Name}} int
+type {{.Name}} string
 
 const (
 {{- range .Members}}
-    {{$.Name}}{{.Name}} {{$.Name}} = {{.Value}} // {{range .Annotations}} {{.Term}}: {{.StringValue}} {{end}}
+    {{.Name}} {{$.Name}} = "{{.Name}}" // {{range .Annotations}} {{.Term}}: {{.StringValue}} {{end}}
 {{- end}}
 )
 `
