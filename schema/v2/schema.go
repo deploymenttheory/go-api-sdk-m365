@@ -84,8 +84,9 @@ type EnumType struct {
 
 // EnumMember represents a member of an enumeration type
 type EnumMember struct {
-	Name  string `xml:"Name,attr"`
-	Value string `xml:"Value,attr"`
+	Name        string       `xml:"Name,attr"`
+	Value       string       `xml:"Value,attr"`
+	Annotations []Annotation `xml:"Annotation"`
 }
 
 // Annotation represents an annotation in the CSDL schema
@@ -151,7 +152,7 @@ type {{.Name}} int
 
 const (
 {{- range .Members}}
-    {{$.Name}}{{.Name}} {{$.Name}} = {{.Value}} // {{range .Annotations}}{{.StringValue}} {{end}}
+    {{$.Name}}{{.Name}} {{$.Name}} = {{.Value}} // {{range .Annotations}} {{.Term}}: {{.StringValue}} {{end}}
 {{- end}}
 )
 `
@@ -342,12 +343,10 @@ func GenerateEnum(outputFile *os.File, enumType EnumType, globalAnnotations []An
 	}
 
 	for _, member := range enumType.Members {
-		// Attach annotations specific to this member
+		// Combine global and member-specific annotations
 		memberAnnotations := findGlobalAnnotations(fmt.Sprintf("%s/%s", enumType.Name, member.Name), globalAnnotations)
-		log.Printf("Enum member: %s/%s has %d annotations\n", enumType.Name, member.Name, len(memberAnnotations))
-		for _, ann := range memberAnnotations {
-			log.Printf("Annotation for %s: %s - %s\n", member.Name, ann.Term, ann.StringValue)
-		}
+		memberAnnotations = append(memberAnnotations, member.Annotations...)
+
 		data.Members = append(data.Members, struct {
 			Name        string
 			Value       string
