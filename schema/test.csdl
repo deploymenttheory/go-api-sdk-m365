@@ -13,34 +13,7 @@
         <Property Name="topicIdentifier" Type="Edm.String" />
       </EntityType>
       <EntityType Name="deviceManagement" BaseType="graph.entity">
-        <Property Name="accountMoveCompletionDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="adminConsent" Type="graph.adminConsent" />
-        <Property Name="connectorStatus" Type="Collection(graph.connectorStatusDetails)" />
-        <Property Name="dataProcessorServiceForWindowsFeaturesOnboarding" Type="graph.dataProcessorServiceForWindowsFeaturesOnboarding" />
-        <Property Name="deviceComplianceReportSummarizationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="deviceProtectionOverview" Type="graph.deviceProtectionOverview" />
-        <Property Name="intuneAccountId" Type="Edm.Guid" Nullable="false" />
-        <Property Name="intuneBrand" Type="graph.intuneBrand" />
-        <Property Name="lastReportAggregationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="legacyPcManangementEnabled" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="managedDeviceCleanupSettings" Type="graph.managedDeviceCleanupSettings" />
-        <Property Name="maximumDepTokens" Type="Edm.Int32" Nullable="false" />
-        <Property Name="settings" Type="graph.deviceManagementSettings" />
-        <Property Name="subscriptions" Type="graph.deviceManagementSubscriptions" Nullable="false" />
-        <Property Name="subscriptionState" Type="graph.deviceManagementSubscriptionState" Nullable="false" />
-        <Property Name="unlicensedAdminstratorsEnabled" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="userExperienceAnalyticsAnomalySeverityOverview" Type="graph.userExperienceAnalyticsAnomalySeverityOverview" />
-        <Property Name="userExperienceAnalyticsSettings" Type="graph.userExperienceAnalyticsSettings" />
-        <Property Name="windowsMalwareOverview" Type="graph.windowsMalwareOverview" />
-        <NavigationProperty Name="advancedThreatProtectionOnboardingStateSummary" Type="graph.advancedThreatProtectionOnboardingStateSummary" ContainsTarget="true" />
-        <NavigationProperty Name="androidDeviceOwnerEnrollmentProfiles" Type="Collection(graph.androidDeviceOwnerEnrollmentProfile)" ContainsTarget="true" />
-        <NavigationProperty Name="androidForWorkAppConfigurationSchemas" Type="Collection(graph.androidForWorkAppConfigurationSchema)" ContainsTarget="true" />
-        <NavigationProperty Name="androidForWorkEnrollmentProfiles" Type="Collection(graph.androidForWorkEnrollmentProfile)" ContainsTarget="true" />
-        <NavigationProperty Name="androidForWorkSettings" Type="graph.androidForWorkSettings" ContainsTarget="true" />
-        <NavigationProperty Name="androidManagedStoreAccountEnterpriseSettings" Type="graph.androidManagedStoreAccountEnterpriseSettings" ContainsTarget="true" />
-        <NavigationProperty Name="androidManagedStoreAppConfigurationSchemas" Type="Collection(graph.androidManagedStoreAppConfigurationSchema)" ContainsTarget="true" />
         <NavigationProperty Name="applePushNotificationCertificate" Type="graph.applePushNotificationCertificate" ContainsTarget="true" />
-        <NavigationProperty Name="appleUserInitiatedEnrollmentProfiles" Type="Collection(graph.appleUserInitiatedEnrollmentProfile)" ContainsTarget="true" />
       </EntityType>
       <Action Name="generateApplePushNotificationCertificateSigningRequest" IsBound="true">
         <Parameter Name="bindingParameter" Type="graph.applePushNotificationCertificate" />
