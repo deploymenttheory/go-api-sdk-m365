@@ -1,5 +1,8 @@
 package main
 
+/* Go code reads an OData CSDL (Conceptual Schema Definition Language) XML file, parses it into a Go structure,
+and then generates Go structs and enums based on the parsed schema. */
+
 import (
 	"bytes"
 	"encoding/xml"
@@ -113,6 +116,7 @@ type PropertyValue struct {
 	EnumMember string `xml:"EnumMember"`
 }
 
+// StructTemplate is the template for generating Go structs from CSDL schema
 const StructTemplate = `{{- if .Annotations }}
 // {{.Name}} 
 {{- range .Annotations}}
@@ -121,16 +125,15 @@ const StructTemplate = `{{- if .Annotations }}
 {{- end}}
 type {{.Name}} struct {
 {{- range .Properties}}
-    // {{.Name}}: {{range .Annotations}}{{.Term}}: {{.StringValue}} {{end}}
-    {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"`" + `
+    {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"` // {{.Comment}}" + `
 {{- end}}
 {{- range .NavigationProperties}}
-    // {{.Name}}: {{range .Annotations}}{{.Term}}: {{.StringValue}} {{end}}
-    {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"`" + `
+    {{.Name}} {{.Type}} ` + "`json:\"{{.JSONName}},omitempty\"` // {{.Comment}}" + `
 {{- end}}
 }
 `
 
+// EnumTemplate is the template for generating Go enums from CSDL schema
 const EnumTemplate = `{{- if .Annotations }}
 // {{.Name}} 
 {{- range .Annotations}}
@@ -168,6 +171,7 @@ func main() {
 	log.Printf("Go structs and enums generated and saved to %s\n", *outputPath)
 }
 
+// parseFlags parses the command line flags
 func parseFlags() (*string, *string) {
 	inputPath := flag.String("input", "schema.csdl", "Path to the CSDL file")
 	outputPath := flag.String("output", "output/output.go", "Path to save the generated Go structs")
@@ -175,6 +179,7 @@ func parseFlags() (*string, *string) {
 	return inputPath, outputPath
 }
 
+// readFile reads the input file
 func readFile(path string) []byte {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -184,6 +189,7 @@ func readFile(path string) []byte {
 	return data
 }
 
+// unmarshalXML unmarshals the XML data into an Edmx struct
 func unmarshalXML(data []byte) Edmx {
 	var edmx Edmx
 	err := xml.Unmarshal(data, &edmx)
@@ -257,6 +263,7 @@ func unmarshalXML(data []byte) Edmx {
 	return edmx
 }
 
+// ensureOutputDir ensures that the output directory exists
 func ensureOutputDir(path string) {
 	outputDir := filepath.Dir(path)
 	err := os.MkdirAll(outputDir, os.ModePerm)
@@ -266,6 +273,7 @@ func ensureOutputDir(path string) {
 	log.Println("Output directory ensured.")
 }
 
+// createOutputFile creates the output file
 func createOutputFile(path string) *os.File {
 	outputFile, err := os.Create(path)
 	if err != nil {
@@ -274,6 +282,7 @@ func createOutputFile(path string) *os.File {
 	return outputFile
 }
 
+// writePackageHeader writes the package header to the output file
 func writePackageHeader(outputFile *os.File) {
 	fmt.Fprintln(outputFile, "package graphmodels")
 	fmt.Fprintln(outputFile)
@@ -281,6 +290,7 @@ func writePackageHeader(outputFile *os.File) {
 	fmt.Fprintln(outputFile)
 }
 
+// generateGoStructs generates Go structs for entity and complex types
 func generateGoStructs(edmx Edmx, outputFile *os.File, generatedStructs map[string]bool) {
 	log.Println("Generating Go structs...")
 	for _, schema := range edmx.Schemas {
@@ -293,6 +303,7 @@ func generateGoStructs(edmx Edmx, outputFile *os.File, generatedStructs map[stri
 	}
 }
 
+// generateStruct generates a Go struct for a given entity or complex type
 func generateStruct(outputFile *os.File, structName string, properties []Property, navigationProperties []NavigationProperty, localAnnotations []Annotation, globalAnnotations []Annotation, generatedStructs map[string]bool) {
 	if generatedStructs[structName] {
 		return
@@ -310,24 +321,33 @@ func generateStruct(outputFile *os.File, structName string, properties []Propert
 	log.Printf("Successfully generated struct for %s", structName)
 }
 
+// collectAnnotations collects annotations for a given target from local and global annotations
 func collectAnnotations(target string, localAnnotations, globalAnnotations []Annotation) []Annotation {
+	uniqueAnnotations := make(map[string]bool)
 	var result []Annotation
+
+	addAnnotation := func(annotation Annotation) {
+		key := fmt.Sprintf("%s:%s", annotation.Term, annotation.StringValue)
+		if !uniqueAnnotations[key] {
+			uniqueAnnotations[key] = true
+			result = append(result, annotation)
+		}
+	}
+
 	log.Printf("Collecting annotations for target: %s", target)
 	log.Printf("Local annotations: %+v", localAnnotations)
 	log.Printf("Global annotations: %+v", globalAnnotations)
 
 	for _, annotation := range localAnnotations {
 		if annotation.Target == target || annotation.Target == "" {
-			log.Printf("Matching local annotation found: %+v", annotation)
-			result = append(result, annotation)
+			addAnnotation(annotation)
 		} else {
 			log.Printf("Local annotation target mismatch: %s != %s", annotation.Target, target)
 		}
 	}
 	for _, annotation := range globalAnnotations {
 		if annotation.Target == target || annotation.Target == "" {
-			log.Printf("Matching global annotation found: %+v", annotation)
-			result = append(result, annotation)
+			addAnnotation(annotation)
 		} else {
 			log.Printf("Global annotation target mismatch: %s != %s", annotation.Target, target)
 		}
@@ -336,27 +356,28 @@ func collectAnnotations(target string, localAnnotations, globalAnnotations []Ann
 	return result
 }
 
+// prepareStructData prepares the data for generating a Go struct
 func prepareStructData(structName string, properties []Property, navigationProperties []NavigationProperty, annotations, globalAnnotations []Annotation) struct {
 	Name       string
 	Properties []struct {
-		Name, Type, JSONName string
-		Annotations          []Annotation
+		Name, Type, JSONName, Comment string
+		Annotations                   []Annotation
 	}
 	NavigationProperties []struct {
-		Name, Type, JSONName string
-		Annotations          []Annotation
+		Name, Type, JSONName, Comment string
+		Annotations                   []Annotation
 	}
 	Annotations []Annotation
 } {
 	data := struct {
 		Name       string
 		Properties []struct {
-			Name, Type, JSONName string
-			Annotations          []Annotation
+			Name, Type, JSONName, Comment string
+			Annotations                   []Annotation
 		}
 		NavigationProperties []struct {
-			Name, Type, JSONName string
-			Annotations          []Annotation
+			Name, Type, JSONName, Comment string
+			Annotations                   []Annotation
 		}
 		Annotations []Annotation
 	}{
@@ -367,18 +388,17 @@ func prepareStructData(structName string, properties []Property, navigationPrope
 	for _, prop := range properties {
 		goType, _ := mapType(prop.Type)
 		propTarget := fmt.Sprintf("microsoft.graph.%s/%s", structName, prop.Name)
-		log.Printf("Collecting annotations for property target: %s", propTarget)
 		propAnnotations := collectAnnotations(propTarget, prop.Annotations, globalAnnotations)
+		comment := generateComment(propAnnotations)
 		log.Printf("Property: %s, Type: %s, Annotations: %v", prop.Name, goType, propAnnotations)
 		data.Properties = append(data.Properties, struct {
-			Name        string
-			Type        string
-			JSONName    string
-			Annotations []Annotation
+			Name, Type, JSONName, Comment string
+			Annotations                   []Annotation
 		}{
 			Name:        capitalize(prop.Name),
 			Type:        goType,
 			JSONName:    prop.Name,
+			Comment:     comment,
 			Annotations: propAnnotations,
 		})
 	}
@@ -386,18 +406,17 @@ func prepareStructData(structName string, properties []Property, navigationPrope
 	for _, navProp := range navigationProperties {
 		goType, _ := mapType(navProp.Type)
 		navPropTarget := fmt.Sprintf("microsoft.graph.%s/%s", structName, navProp.Name)
-		log.Printf("Collecting annotations for navigation property target: %s", navPropTarget)
 		navPropAnnotations := collectAnnotations(navPropTarget, navProp.Annotations, globalAnnotations)
+		comment := generateComment(navPropAnnotations)
 		log.Printf("NavigationProperty: %s, Type: %s, Annotations: %v", navProp.Name, goType, navPropAnnotations)
 		data.NavigationProperties = append(data.NavigationProperties, struct {
-			Name        string
-			Type        string
-			JSONName    string
-			Annotations []Annotation
+			Name, Type, JSONName, Comment string
+			Annotations                   []Annotation
 		}{
 			Name:        capitalize(navProp.Name),
 			Type:        goType,
 			JSONName:    navProp.Name,
+			Comment:     comment,
 			Annotations: navPropAnnotations,
 		})
 	}
@@ -405,6 +424,17 @@ func prepareStructData(structName string, properties []Property, navigationPrope
 	return data
 }
 
+// generateComment generates a single comment string from annotations
+func generateComment(annotations []Annotation) string {
+	var comments []string
+	for _, annotation := range annotations {
+		comment := fmt.Sprintf("%s: %s", annotation.Term, annotation.StringValue)
+		comments = append(comments, comment)
+	}
+	return strings.Join(comments, " ")
+}
+
+// parseTemplate parses the template string
 func parseTemplate(templateString string) *template.Template {
 	tmpl, err := template.New("template").Parse(templateString)
 	if err != nil {
@@ -413,6 +443,7 @@ func parseTemplate(templateString string) *template.Template {
 	return tmpl
 }
 
+// executeTemplate executes the template with the given data and writes the output to the output file
 func executeTemplate(tmpl *template.Template, data interface{}, outputFile *os.File) {
 	var buf bytes.Buffer
 	err := tmpl.Execute(&buf, data)
@@ -425,6 +456,7 @@ func executeTemplate(tmpl *template.Template, data interface{}, outputFile *os.F
 	}
 }
 
+// generateGoEnums generates Go enums for enumeration types
 func generateGoEnums(edmx Edmx, outputFile *os.File) {
 	log.Println("Generating Go enums...")
 	for _, schema := range edmx.Schemas {
@@ -434,6 +466,7 @@ func generateGoEnums(edmx Edmx, outputFile *os.File) {
 	}
 }
 
+// generateEnum generates a Go enum for a given enumeration type
 func generateEnum(outputFile *os.File, enumType EnumType, globalAnnotations []Annotation) {
 	tmpl := parseTemplate(EnumTemplate)
 
@@ -446,6 +479,7 @@ func generateEnum(outputFile *os.File, enumType EnumType, globalAnnotations []An
 	log.Printf("Successfully generated enum for %s", enumType.Name)
 }
 
+// prepareEnumData prepares the data for generating a Go enum
 func prepareEnumData(enumType EnumType, annotations, globalAnnotations []Annotation) struct {
 	Name    string
 	Members []struct {
@@ -484,6 +518,7 @@ func prepareEnumData(enumType EnumType, annotations, globalAnnotations []Annotat
 	return data
 }
 
+// mapType maps a CSDL type to a Go type
 func mapType(csdlType string) (string, bool) {
 	switch csdlType {
 	case "Edm.String":
@@ -526,6 +561,7 @@ func mapType(csdlType string) (string, bool) {
 	}
 }
 
+// capitalize capitalizes the first letter of a string
 func capitalize(s string) string {
 	if len(s) == 0 {
 		return s
