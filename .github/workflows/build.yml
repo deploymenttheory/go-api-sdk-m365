@@ -1,0 +1,41 @@
+name: Generate Go SDK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-go-sdk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.1.6
+
+    - name: Set up Java
+      uses: actions/setup-java@v4.2.1
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Download Microsoft Graph OpenAPI file
+      run: |
+        git clone https://github.com/microsoftgraph/msgraph-metadata.git
+        find msgraph-metadata/openapi/beta -name '*.yaml' -exec cp {} openapi.yaml \;
+
+    - name: Install OpenAPI Generator
+      run: |
+        wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.6.0/openapi-generator-cli-7.6.0.jar -O openapi-generator-cli.jar
+
+    - name: Generate Go SDK
+      run: |
+        java -jar openapi-generator-cli.jar generate -i openapi.yaml -g go -o go-sdk-msgraph
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add go-sdk-msgraph
+        git commit -m 'Regenerate go-sdk-msgraph'
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
