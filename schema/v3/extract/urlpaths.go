@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 	"text/template"
 )
@@ -19,12 +20,24 @@ func ExtractURLPaths(data []byte) ([]string, error) {
 	sortFields := true
 	delimiter := "/"
 
+	// Extract fields using the ExtractField function
 	extractedData, err := ExtractField(data, fieldName, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to extract %s: %w", fieldName, err)
 	}
 
-	return extractedData, nil
+	// Extract only the keys from the extracted KeyValue pairs
+	var paths []string
+	for _, kv := range extractedData {
+		paths = append(paths, kv.Key)
+	}
+
+	// Optionally sort the paths if not already sorted
+	if sortFields {
+		sort.Strings(paths)
+	}
+
+	return paths, nil
 }
 
 // SaveURLPathsToFile saves the paths to a file using a template that groups paths by their first segment

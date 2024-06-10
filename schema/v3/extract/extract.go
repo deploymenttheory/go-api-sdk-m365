@@ -3,13 +3,17 @@ package extract
 import (
 	"fmt"
 	"log"
-	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
 	"gopkg.in/yaml.v3"
 )
+
+type KeyValue struct {
+	Key   string
+	Value interface{}
+}
 
 // ExtractField extracts specific fields from YAML data based on the provided parameters.
 // The function supports traversing nested paths within the YAML structure, extracting keys, values,
@@ -27,7 +31,9 @@ import (
 //
 // Returns:
 // - A slice of strings containing the extracted fields, or an error if extraction fails.
-func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool, delimiter string) ([]string, error) {
+// ExtractField extracts specific fields from YAML data based on the provided parameters.
+// Returns a slice of KeyValue structs containing the extracted fields, or an error if extraction fails.
+func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool, delimiter string) ([]KeyValue, error) {
 	var rawData map[string]interface{}
 	err := yaml.Unmarshal(data, &rawData)
 	if err != nil {
@@ -54,12 +60,17 @@ func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool
 		extractedFields = getUniqueFields(extractedFields)
 	}
 
-	// Convert the map to a slice for sorting
-	extractedSlice := mapKeysToSlice(extractedFields)
+	// Convert the map to a slice of KeyValue structs
+	var extractedSlice []KeyValue
+	for k, v := range extractedFields {
+		extractedSlice = append(extractedSlice, KeyValue{Key: k, Value: v})
+	}
 
 	// Sort the slice if required
 	if sortFields {
-		sort.Strings(extractedSlice)
+		sort.Slice(extractedSlice, func(i, j int) bool {
+			return extractedSlice[i].Key < extractedSlice[j].Key
+		})
 	}
 
 	return extractedSlice, nil
@@ -68,42 +79,55 @@ func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool
 // traversePath traverses the YAML structure to find the data at the specified path
 func traversePath(data map[string]interface{}, path string) (interface{}, error) {
 	current := data
-	regex := regexp.MustCompile(`^microsoft\.graph\.[^.]+`)
 
-	// Function to intelligently split path
-	splitPath := func(path string) []string {
-		var segments []string
-		for {
-			if match := regex.FindString(path); match != "" {
-				segments = append(segments, match)
-				path = strings.TrimPrefix(path, match)
-				if len(path) > 0 && path[0] == '.' {
-					path = path[1:] // Remove leading dot
-				}
-			} else {
-				segments = append(segments, strings.Split(path, ".")...)
-				break
-			}
-		}
-		return segments
-	}
+	// Split the path into segments by dot
+	segments := strings.Split(path, ".")
 
-	segments := splitPath(path)
-	for _, segment := range segments {
+	// Iterate over each segment
+	for i := 0; i < len(segments); i++ {
+		segment := segments[i]
 		log.Printf("Current path segment: %s", segment)
 
+		// Check if the current segment exists in the current map
 		if val, found := current[segment]; found {
 			log.Printf("Traversing to: %s", segment)
+
+			// If the value is a nested map, continue traversing
 			if nestedMap, isMap := val.(map[string]interface{}); isMap {
 				current = nestedMap
 			} else {
+				// If the value is not a map, return the value
 				return val, nil
 			}
 		} else {
-			log.Printf("Path not found: %s", segment)
-			return nil, fmt.Errorf("%s section not found in the YAML file", segment)
+			// If the segment is not found, try combining it with subsequent segments
+			combinedSegment := segment
+			for j := i + 1; j < len(segments); j++ {
+				combinedSegment += "." + segments[j]
+
+				// Check if the combined segment exists
+				if val, found := current[combinedSegment]; found {
+					log.Printf("Traversing to combined segment: %s", combinedSegment)
+
+					// If the value is a nested map, continue traversing
+					if nestedMap, isMap := val.(map[string]interface{}); isMap {
+						current = nestedMap
+						i = j // Skip ahead to the end of the combined segment
+						break
+					} else {
+						// If the value is not a map, return the value
+						return val, nil
+					}
+				}
+			}
+			// If no combined segment is found, log and return an error
+			if combinedSegment == segment {
+				log.Printf("Path not found: %s", segment)
+				return nil, fmt.Errorf("%s section not found in the YAML file", segment)
+			}
 		}
 	}
+	// Return the final nested map or value
 	return current, nil
 }
 

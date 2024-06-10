@@ -89,10 +89,9 @@ func extractAndPrintProperties(data []byte) error {
 	}
 
 	// Process and print the extracted fields
-	for _, field := range extractedData {
-		processedField := extract.StructTypeField(field)
-		fmt.Println(processedField)
-		err := extractAndPrintNestedProperties(data, field)
+	for _, kv := range extractedData {
+		fmt.Println(kv.Key)
+		err := extractAndPrintNestedProperties(data, kv.Key)
 		if err != nil {
 			log.Fatalf("Failed to extract nested properties: %v", err)
 		}
@@ -123,8 +122,10 @@ func extractAndPrintNestedProperties(data []byte, field string) error {
 		return nil
 	}
 
-	for _, nestedField := range extractedNestedData {
-		fmt.Println(nestedField)
+	// Print the key and its nested values
+	fmt.Printf("%s:\n", field)
+	for _, kv := range extractedNestedData {
+		fmt.Printf("  %s: %v\n", kv.Key, kv.Value)
 	}
 
 	return nil
