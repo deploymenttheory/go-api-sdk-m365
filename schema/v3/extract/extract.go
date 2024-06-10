@@ -2,24 +2,12 @@ package extract
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strings"
-	"text/template"
 
 	"github.com/mitchellh/mapstructure"
 	"gopkg.in/yaml.v3"
 )
-
-// pathsTemplate is the template for the generated Go file with paths
-const pathsTemplate = `package msgraphpaths
-
-var Paths = []string{
-{{- range . }}
-    "{{ . }}",
-{{- end }}
-}
-`
 
 // ExtractField extracts a specific field from the YAML data based on the provided parameters
 func ExtractField(data []byte, fieldName string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool) (map[string]interface{}, error) {
@@ -117,25 +105,4 @@ func sortMapKeys(data map[string]interface{}) map[string]interface{} {
 	}
 
 	return sortedMap
-}
-
-// SavePathsToFile saves the paths to a file using the template
-func SavePathsToFile(paths []string, path string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("failed to create file: %w", err)
-	}
-	defer file.Close()
-
-	tmpl, err := template.New("paths").Parse(pathsTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to parse template: %w", err)
-	}
-
-	err = tmpl.Execute(file, paths)
-	if err != nil {
-		return fmt.Errorf("failed to execute template: %w", err)
-	}
-
-	return nil
 }
