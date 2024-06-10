@@ -18,6 +18,7 @@ func SaveURLPathsToFile(paths []string, path string) error {
 
 {{- range $group, $paths := . }}
 
+// Number of URL Paths: {{ len $paths }}
 var {{ $group }} = []string{
 {{- range $paths }}
     "{{ . }}",

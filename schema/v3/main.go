@@ -32,7 +32,7 @@ func main() {
 	}
 
 	// Extract paths using the helper function
-	paths, err := extractPaths(data)
+	paths, err := extractURLPaths(data)
 	if err != nil {
 		log.Fatalf("Failed to extract paths: %v", err)
 	}
@@ -47,8 +47,8 @@ func main() {
 	fmt.Println("Export successful")
 }
 
-// extractPaths is a helper function to extract paths with the specified parameters
-func extractPaths(data []byte) ([]string, error) {
+// extractURLPaths is a helper function to extract URL paths with the specified parameters
+func extractURLPaths(data []byte) ([]string, error) {
 	// Define extraction parameters
 	fieldName := "paths"
 	fieldDepth := 1
