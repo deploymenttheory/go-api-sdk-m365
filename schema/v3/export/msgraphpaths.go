@@ -1,9 +1,12 @@
 package msgraphpaths
 
-var Paths = []string{
+var accessReviewDecisions = []string{
     "/accessReviewDecisions",
     "/accessReviewDecisions/$count",
     "/accessReviewDecisions/{accessReviewDecision-id}",
+}
+
+var accessReviews = []string{
     "/accessReviews",
     "/accessReviews/$count",
     "/accessReviews/{accessReview-id}",
@@ -36,9 +39,15 @@ var Paths = []string{
     "/accessReviews/{accessReview-id}/reviewers/{accessReviewReviewer-id}",
     "/accessReviews/{accessReview-id}/sendReminder",
     "/accessReviews/{accessReview-id}/stop",
+}
+
+var activitystatistics = []string{
     "/activitystatistics",
     "/activitystatistics/$count",
     "/activitystatistics/{activityStatistics-id}",
+}
+
+var admin = []string{
     "/admin",
     "/admin/appsAndServices",
     "/admin/dynamics",
@@ -194,6 +203,9 @@ var Paths = []string{
     "/admin/windows/updates/updatePolicies/{updatePolicy-id}/complianceChanges/$count",
     "/admin/windows/updates/updatePolicies/{updatePolicy-id}/complianceChanges/{complianceChange-id}",
     "/admin/windows/updates/updatePolicies/{updatePolicy-id}/complianceChanges/{complianceChange-id}/updatePolicy",
+}
+
+var administrativeUnits = []string{
     "/administrativeUnits",
     "/administrativeUnits/$count",
     "/administrativeUnits/delta()",
@@ -218,8 +230,14 @@ var Paths = []string{
     "/administrativeUnits/{administrativeUnit-id}/scopedRoleMembers",
     "/administrativeUnits/{administrativeUnit-id}/scopedRoleMembers/$count",
     "/administrativeUnits/{administrativeUnit-id}/scopedRoleMembers/{scopedRoleMembership-id}",
+}
+
+var agreementAcceptances = []string{
     "/agreementAcceptances",
     "/agreementAcceptances/{agreementAcceptance-id}",
+}
+
+var agreements = []string{
     "/agreements",
     "/agreements/{agreement-id}",
     "/agreements/{agreement-id}/acceptances",
@@ -238,9 +256,15 @@ var Paths = []string{
     "/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions",
     "/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/$count",
     "/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/{agreementFileVersion-id}",
+}
+
+var allowedDataLocations = []string{
     "/allowedDataLocations",
     "/allowedDataLocations/$count",
     "/allowedDataLocations/{allowedDataLocation-id}",
+}
+
+var app = []string{
     "/app",
     "/app/calls",
     "/app/calls/$count",
@@ -324,6 +348,9 @@ var Paths = []string{
     "/app/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}",
     "/app/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}/content",
     "/app/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}/metadataContent",
+}
+
+var appCatalogs = []string{
     "/appCatalogs",
     "/appCatalogs/teamsApps",
     "/appCatalogs/teamsApps/$count",
@@ -341,13 +368,22 @@ var Paths = []string{
     "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/outlineIcon",
     "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/outlineIcon/hostedContent",
     "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/outlineIcon/hostedContent/$value",
+}
+
+var appRoleAssignments = []string{
     "/appRoleAssignments",
     "/appRoleAssignments/$count",
     "/appRoleAssignments/{appRoleAssignment-id}",
+}
+
+var applicationTemplates = []string{
     "/applicationTemplates",
     "/applicationTemplates/$count",
     "/applicationTemplates/{applicationTemplate-id}",
     "/applicationTemplates/{applicationTemplate-id}/instantiate",
+}
+
+var applications = []string{
     "/applications",
     "/applications(appId='{appId}')",
     "/applications(uniqueName='{uniqueName}')",
@@ -435,6 +471,9 @@ var Paths = []string{
     "/applications/{application-id}/tokenLifetimePolicies/$ref",
     "/applications/{application-id}/tokenLifetimePolicies/{tokenLifetimePolicy-id}/$ref",
     "/applications/{application-id}/unsetVerifiedPublisher",
+}
+
+var approvalWorkflowProviders = []string{
     "/approvalWorkflowProviders",
     "/approvalWorkflowProviders/$count",
     "/approvalWorkflowProviders/{approvalWorkflowProvider-id}",
@@ -449,6 +488,9 @@ var Paths = []string{
     "/approvalWorkflowProviders/{approvalWorkflowProvider-id}/policyTemplates",
     "/approvalWorkflowProviders/{approvalWorkflowProvider-id}/policyTemplates/$count",
     "/approvalWorkflowProviders/{approvalWorkflowProvider-id}/policyTemplates/{governancePolicyTemplate-id}",
+}
+
+var auditLogs = []string{
     "/auditLogs",
     "/auditLogs/customSecurityAttributeAudits",
     "/auditLogs/customSecurityAttributeAudits/$count",
@@ -467,13 +509,22 @@ var Paths = []string{
     "/auditLogs/signIns/confirmCompromised",
     "/auditLogs/signIns/confirmSafe",
     "/auditLogs/signIns/{signIn-id}",
+}
+
+var authenticationMethodConfigurations = []string{
     "/authenticationMethodConfigurations",
     "/authenticationMethodConfigurations/$count",
     "/authenticationMethodConfigurations/{authenticationMethodConfiguration-id}",
+}
+
+var authenticationMethodsPolicy = []string{
     "/authenticationMethodsPolicy",
     "/authenticationMethodsPolicy/authenticationMethodConfigurations",
     "/authenticationMethodsPolicy/authenticationMethodConfigurations/$count",
     "/authenticationMethodsPolicy/authenticationMethodConfigurations/{authenticationMethodConfiguration-id}",
+}
+
+var bookingBusinesses = []string{
     "/bookingBusinesses",
     "/bookingBusinesses/$count",
     "/bookingBusinesses/{bookingBusiness-id}",
@@ -500,15 +551,27 @@ var Paths = []string{
     "/bookingBusinesses/{bookingBusiness-id}/staffMembers/$count",
     "/bookingBusinesses/{bookingBusiness-id}/staffMembers/{bookingStaffMember-id}",
     "/bookingBusinesses/{bookingBusiness-id}/unpublish",
+}
+
+var bookingCurrencies = []string{
     "/bookingCurrencies",
     "/bookingCurrencies/$count",
     "/bookingCurrencies/{bookingCurrency-id}",
+}
+
+var businessFlowTemplates = []string{
     "/businessFlowTemplates",
     "/businessFlowTemplates/$count",
     "/businessFlowTemplates/{businessFlowTemplate-id}",
+}
+
+var certificateBasedAuthConfiguration = []string{
     "/certificateBasedAuthConfiguration",
     "/certificateBasedAuthConfiguration/$count",
     "/certificateBasedAuthConfiguration/{certificateBasedAuthConfiguration-id}",
+}
+
+var chats = []string{
     "/chats",
     "/chats/$count",
     "/chats/allMessages()",
@@ -570,10 +633,16 @@ var Paths = []string{
     "/chats/{chat-id}/tabs/{teamsTab-id}",
     "/chats/{chat-id}/tabs/{teamsTab-id}/teamsApp",
     "/chats/{chat-id}/unhideForUser",
+}
+
+var commands = []string{
     "/commands",
     "/commands/$count",
     "/commands/{command-id}",
     "/commands/{command-id}/responsepayload",
+}
+
+var communications = []string{
     "/communications",
     "/communications/callRecords",
     "/communications/callRecords/$count",
@@ -680,6 +749,9 @@ var Paths = []string{
     "/communications/presences/{presence-id}/setPresence",
     "/communications/presences/{presence-id}/setStatusMessage",
     "/communications/presences/{presence-id}/setUserPreferredPresence",
+}
+
+var compliance = []string{
     "/compliance",
     "/compliance/ediscovery",
     "/compliance/ediscovery/cases",
@@ -766,6 +838,9 @@ var Paths = []string{
     "/compliance/ediscovery/cases/{case-id}/tags/{tag-id}/childTags/$count",
     "/compliance/ediscovery/cases/{case-id}/tags/{tag-id}/childTags/{tag-id1}",
     "/compliance/ediscovery/cases/{case-id}/tags/{tag-id}/parent",
+}
+
+var connections = []string{
     "/connections",
     "/connections/$count",
     "/connections/{externalConnection-id}",
@@ -788,6 +863,9 @@ var Paths = []string{
     "/connections/{externalConnection-id}/operations/{connectionOperation-id}",
     "/connections/{externalConnection-id}/quota",
     "/connections/{externalConnection-id}/schema",
+}
+
+var contacts = []string{
     "/contacts",
     "/contacts/$count",
     "/contacts/delta()",
@@ -822,6 +900,9 @@ var Paths = []string{
     "/contacts/{orgContact-id}/transitiveReports",
     "/contacts/{orgContact-id}/transitiveReports/$count",
     "/contacts/{orgContact-id}/transitiveReports/{directoryObject-id}",
+}
+
+var contracts = []string{
     "/contracts",
     "/contracts/$count",
     "/contracts/delta()",
@@ -834,6 +915,9 @@ var Paths = []string{
     "/contracts/{contract-id}/getMemberGroups",
     "/contracts/{contract-id}/getMemberObjects",
     "/contracts/{contract-id}/restore",
+}
+
+var dataClassification = []string{
     "/dataClassification",
     "/dataClassification/classifyExactMatches",
     "/dataClassification/classifyFile",
@@ -877,9 +961,15 @@ var Paths = []string{
     "/dataClassification/sensitivityLabels/{sensitivityLabel-id}/sublabels/$count",
     "/dataClassification/sensitivityLabels/{sensitivityLabel-id}/sublabels/evaluate",
     "/dataClassification/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}",
+}
+
+var dataPolicyOperations = []string{
     "/dataPolicyOperations",
     "/dataPolicyOperations/$count",
     "/dataPolicyOperations/{dataPolicyOperation-id}",
+}
+
+var deviceAppManagement = []string{
     "/deviceAppManagement",
     "/deviceAppManagement/androidManagedAppProtections",
     "/deviceAppManagement/androidManagedAppProtections/$count",
@@ -1119,9 +1209,15 @@ var Paths = []string{
     "/deviceAppManagement/windowsManagedAppProtections/{windowsManagedAppProtection-id}/deploymentSummary",
     "/deviceAppManagement/windowsManagedAppProtections/{windowsManagedAppProtection-id}/targetApps",
     "/deviceAppManagement/windowsManagementApp",
+}
+
+var deviceLocalCredentials = []string{
     "/deviceLocalCredentials",
     "/deviceLocalCredentials/$count",
     "/deviceLocalCredentials/{deviceLocalCredentialInfo-id}",
+}
+
+var deviceManagement = []string{
     "/deviceManagement",
     "/deviceManagement/advancedThreatProtectionOnboardingStateSummary",
     "/deviceManagement/advancedThreatProtectionOnboardingStateSummary/advancedThreatProtectionOnboardingDeviceSettingStates",
@@ -2568,6 +2664,9 @@ var Paths = []string{
     "/deviceManagement/zebraFotaDeployments/$count",
     "/deviceManagement/zebraFotaDeployments/{zebraFotaDeployment-id}",
     "/deviceManagement/zebraFotaDeployments/{zebraFotaDeployment-id}/cancel",
+}
+
+var devices = []string{
     "/devices",
     "/devices(deviceId='{deviceId}')",
     "/devices/$count",
@@ -2613,6 +2712,9 @@ var Paths = []string{
     "/devices/{device-id}/usageRights",
     "/devices/{device-id}/usageRights/$count",
     "/devices/{device-id}/usageRights/{usageRight-id}",
+}
+
+var directory = []string{
     "/directory",
     "/directory/administrativeUnits",
     "/directory/administrativeUnits/$count",
@@ -2722,6 +2824,9 @@ var Paths = []string{
     "/directory/subscriptions(ocpSubscriptionId='{ocpSubscriptionId}')",
     "/directory/subscriptions/$count",
     "/directory/subscriptions/{companySubscription-id}",
+}
+
+var directoryObjects = []string{
     "/directoryObjects",
     "/directoryObjects/$count",
     "/directoryObjects/delta()",
@@ -2734,6 +2839,9 @@ var Paths = []string{
     "/directoryObjects/{directoryObject-id}/getMemberGroups",
     "/directoryObjects/{directoryObject-id}/getMemberObjects",
     "/directoryObjects/{directoryObject-id}/restore",
+}
+
+var directoryRoleTemplates = []string{
     "/directoryRoleTemplates",
     "/directoryRoleTemplates/$count",
     "/directoryRoleTemplates/delta()",
@@ -2746,6 +2854,9 @@ var Paths = []string{
     "/directoryRoleTemplates/{directoryRoleTemplate-id}/getMemberGroups",
     "/directoryRoleTemplates/{directoryRoleTemplate-id}/getMemberObjects",
     "/directoryRoleTemplates/{directoryRoleTemplate-id}/restore",
+}
+
+var directoryRoles = []string{
     "/directoryRoles",
     "/directoryRoles(roleTemplateId='{roleTemplateId}')",
     "/directoryRoles/$count",
@@ -2768,6 +2879,9 @@ var Paths = []string{
     "/directoryRoles/{directoryRole-id}/scopedMembers",
     "/directoryRoles/{directoryRole-id}/scopedMembers/$count",
     "/directoryRoles/{directoryRole-id}/scopedMembers/{scopedRoleMembership-id}",
+}
+
+var directorySettingTemplates = []string{
     "/directorySettingTemplates",
     "/directorySettingTemplates/$count",
     "/directorySettingTemplates/delta()",
@@ -2780,9 +2894,15 @@ var Paths = []string{
     "/directorySettingTemplates/{directorySettingTemplate-id}/getMemberGroups",
     "/directorySettingTemplates/{directorySettingTemplate-id}/getMemberObjects",
     "/directorySettingTemplates/{directorySettingTemplate-id}/restore",
+}
+
+var domainDnsRecords = []string{
     "/domainDnsRecords",
     "/domainDnsRecords/$count",
     "/domainDnsRecords/{domainDnsRecord-id}",
+}
+
+var domains = []string{
     "/domains",
     "/domains/$count",
     "/domains/{domain-id}",
@@ -2806,6 +2926,9 @@ var Paths = []string{
     "/domains/{domain-id}/verificationDnsRecords/$count",
     "/domains/{domain-id}/verificationDnsRecords/{domainDnsRecord-id}",
     "/domains/{domain-id}/verify",
+}
+
+var drives = []string{
     "/drives",
     "/drives/{drive-id}",
     "/drives/{drive-id}/activities",
@@ -3729,6 +3852,9 @@ var Paths = []string{
     "/drives/{drive-id}/special/{driveItem-id}",
     "/drives/{drive-id}/special/{driveItem-id}/content",
     "/drives/{drive-id}/special/{driveItem-id}/contentStream",
+}
+
+var education = []string{
     "/education",
     "/education/classes",
     "/education/classes/$count",
@@ -3977,6 +4103,9 @@ var Paths = []string{
     "/education/users/{educationUser-id}/user/mailboxSettings",
     "/education/users/{educationUser-id}/user/serviceProvisioningErrors",
     "/education/users/{educationUser-id}/user/serviceProvisioningErrors/$count",
+}
+
+var employeeExperience = []string{
     "/employeeExperience",
     "/employeeExperience/communities",
     "/employeeExperience/communities/$count",
@@ -4013,6 +4142,9 @@ var Paths = []string{
     "/employeeExperience/learningProviders/{learningProvider-id}/learningCourseActivities(externalcourseActivityId='{externalcourseActivityId}')",
     "/employeeExperience/learningProviders/{learningProvider-id}/learningCourseActivities/$count",
     "/employeeExperience/learningProviders/{learningProvider-id}/learningCourseActivities/{learningCourseActivity-id}",
+}
+
+var external = []string{
     "/external",
     "/external/authorizationSystems",
     "/external/authorizationSystems/$count",
@@ -4082,15 +4214,24 @@ var Paths = []string{
     "/external/industryData/years",
     "/external/industryData/years/$count",
     "/external/industryData/years/{yearTimePeriodDefinition-id}",
+}
+
+var filterOperators = []string{
     "/filterOperators",
     "/filterOperators/$count",
     "/filterOperators/{filterOperatorSchema-id}",
+}
+
+var filteringPolicies = []string{
     "/filteringPolicies",
     "/filteringPolicies/$count",
     "/filteringPolicies/{filteringPolicy-id}",
     "/filteringPolicies/{filteringPolicy-id}/policyRules",
     "/filteringPolicies/{filteringPolicy-id}/policyRules/$count",
     "/filteringPolicies/{filteringPolicy-id}/policyRules/{policyRule-id}",
+}
+
+var financials = []string{
     "/financials",
     "/financials/companies",
     "/financials/companies/$count",
@@ -4407,9 +4548,15 @@ var Paths = []string{
     "/financials/companies/{company-id}/vendors/{vendor-id}/picture/$count",
     "/financials/companies/{company-id}/vendors/{vendor-id}/picture/{picture-id}",
     "/financials/companies/{company-id}/vendors/{vendor-id}/picture/{picture-id}/content",
+}
+
+var functions = []string{
     "/functions",
     "/functions/$count",
     "/functions/{attributeMappingFunctionSchema-id}",
+}
+
+var governanceResources = []string{
     "/governanceResources",
     "/governanceResources/$count",
     "/governanceResources/register",
@@ -4447,6 +4594,9 @@ var Paths = []string{
     "/governanceResources/{governanceResource-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition",
     "/governanceResources/{governanceResource-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/resource",
     "/governanceResources/{governanceResource-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
+}
+
+var governanceRoleAssignmentRequests = []string{
     "/governanceRoleAssignmentRequests",
     "/governanceRoleAssignmentRequests/$count",
     "/governanceRoleAssignmentRequests/{governanceRoleAssignmentRequest-id}",
@@ -4457,6 +4607,9 @@ var Paths = []string{
     "/governanceRoleAssignmentRequests/{governanceRoleAssignmentRequest-id}/roleDefinition/roleSetting",
     "/governanceRoleAssignmentRequests/{governanceRoleAssignmentRequest-id}/subject",
     "/governanceRoleAssignmentRequests/{governanceRoleAssignmentRequest-id}/updateRequest",
+}
+
+var governanceRoleAssignments = []string{
     "/governanceRoleAssignments",
     "/governanceRoleAssignments/$count",
     "/governanceRoleAssignments/export()",
@@ -4467,11 +4620,17 @@ var Paths = []string{
     "/governanceRoleAssignments/{governanceRoleAssignment-id}/roleDefinition/resource",
     "/governanceRoleAssignments/{governanceRoleAssignment-id}/roleDefinition/roleSetting",
     "/governanceRoleAssignments/{governanceRoleAssignment-id}/subject",
+}
+
+var governanceRoleDefinitions = []string{
     "/governanceRoleDefinitions",
     "/governanceRoleDefinitions/$count",
     "/governanceRoleDefinitions/{governanceRoleDefinition-id}",
     "/governanceRoleDefinitions/{governanceRoleDefinition-id}/resource",
     "/governanceRoleDefinitions/{governanceRoleDefinition-id}/roleSetting",
+}
+
+var governanceRoleSettings = []string{
     "/governanceRoleSettings",
     "/governanceRoleSettings/$count",
     "/governanceRoleSettings/{governanceRoleSetting-id}",
@@ -4479,15 +4638,24 @@ var Paths = []string{
     "/governanceRoleSettings/{governanceRoleSetting-id}/roleDefinition",
     "/governanceRoleSettings/{governanceRoleSetting-id}/roleDefinition/resource",
     "/governanceRoleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
+}
+
+var governanceSubjects = []string{
     "/governanceSubjects",
     "/governanceSubjects/$count",
     "/governanceSubjects/{governanceSubject-id}",
+}
+
+var groupLifecyclePolicies = []string{
     "/groupLifecyclePolicies",
     "/groupLifecyclePolicies/$count",
     "/groupLifecyclePolicies/renewGroup",
     "/groupLifecyclePolicies/{groupLifecyclePolicy-id}",
     "/groupLifecyclePolicies/{groupLifecyclePolicy-id}/addGroup",
     "/groupLifecyclePolicies/{groupLifecyclePolicy-id}/removeGroup",
+}
+
+var groups = []string{
     "/groups",
     "/groups(uniqueName='{uniqueName}')",
     "/groups/$count",
@@ -5905,6 +6073,9 @@ var Paths = []string{
     "/groups/{group-id}/transitiveMembers/{directoryObject-id}/graph",
     "/groups/{group-id}/unsubscribeByMail",
     "/groups/{group-id}/validateProperties",
+}
+
+var identity = []string{
     "/identity",
     "/identity/apiConnectors",
     "/identity/apiConnectors/$count",
@@ -6040,6 +6211,9 @@ var Paths = []string{
     "/identity/userFlows",
     "/identity/userFlows/$count",
     "/identity/userFlows/{identityUserFlow-id}",
+}
+
+var identityGovernance = []string{
     "/identityGovernance",
     "/identityGovernance/accessReviews",
     "/identityGovernance/accessReviews/decisions",
@@ -7056,6 +7230,9 @@ var Paths = []string{
     "/identityGovernance/termsOfUse/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions",
     "/identityGovernance/termsOfUse/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/$count",
     "/identityGovernance/termsOfUse/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/{agreementFileVersion-id}",
+}
+
+var identityProtection = []string{
     "/identityProtection",
     "/identityProtection/riskDetections",
     "/identityProtection/riskDetections/$count",
@@ -7079,10 +7256,16 @@ var Paths = []string{
     "/identityProtection/servicePrincipalRiskDetections",
     "/identityProtection/servicePrincipalRiskDetections/$count",
     "/identityProtection/servicePrincipalRiskDetections/{servicePrincipalRiskDetection-id}",
+}
+
+var identityProviders = []string{
     "/identityProviders",
     "/identityProviders/$count",
     "/identityProviders/availableProviderTypes()",
     "/identityProviders/{identityProvider-id}",
+}
+
+var informationProtection = []string{
     "/informationProtection",
     "/informationProtection/bitlocker",
     "/informationProtection/bitlocker/recoveryKeys",
@@ -7119,6 +7302,9 @@ var Paths = []string{
     "/informationProtection/threatAssessmentRequests/{threatAssessmentRequest-id}/results/$count",
     "/informationProtection/threatAssessmentRequests/{threatAssessmentRequest-id}/results/{threatAssessmentResult-id}",
     "/informationProtection/verifySignature",
+}
+
+var invitations = []string{
     "/invitations",
     "/invitations/$count",
     "/invitations/{invitation-id}",
@@ -7129,6 +7315,9 @@ var Paths = []string{
     "/invitations/{invitation-id}/invitedUserSponsors",
     "/invitations/{invitation-id}/invitedUserSponsors/$count",
     "/invitations/{invitation-id}/invitedUserSponsors/{directoryObject-id}",
+}
+
+var me = []string{
     "/me",
     "/me/activities",
     "/me/activities/$count",
@@ -9038,15 +9227,24 @@ var Paths = []string{
     "/me/wipeManagedAppRegistrationByDeviceTag",
     "/me/wipeManagedAppRegistrationsByAzureAdDeviceId",
     "/me/wipeManagedAppRegistrationsByDeviceTag",
+}
+
+var messageEvents = []string{
     "/messageEvents",
     "/messageEvents/$count",
     "/messageEvents/{messageEvent-id}",
+}
+
+var messageRecipients = []string{
     "/messageRecipients",
     "/messageRecipients/$count",
     "/messageRecipients/{messageRecipient-id}",
     "/messageRecipients/{messageRecipient-id}/events",
     "/messageRecipients/{messageRecipient-id}/events/$count",
     "/messageRecipients/{messageRecipient-id}/events/{messageEvent-id}",
+}
+
+var messageTraces = []string{
     "/messageTraces",
     "/messageTraces/$count",
     "/messageTraces/{messageTrace-id}",
@@ -9056,6 +9254,9 @@ var Paths = []string{
     "/messageTraces/{messageTrace-id}/recipients/{messageRecipient-id}/events",
     "/messageTraces/{messageTrace-id}/recipients/{messageRecipient-id}/events/$count",
     "/messageTraces/{messageTrace-id}/recipients/{messageRecipient-id}/events/{messageEvent-id}",
+}
+
+var mobilityManagementPolicies = []string{
     "/mobilityManagementPolicies",
     "/mobilityManagementPolicies/$count",
     "/mobilityManagementPolicies/{mobilityManagementPolicy-id}",
@@ -9065,6 +9266,9 @@ var Paths = []string{
     "/mobilityManagementPolicies/{mobilityManagementPolicy-id}/includedGroups/{group-id}/$ref",
     "/mobilityManagementPolicies/{mobilityManagementPolicy-id}/includedGroups/{group-id}/serviceProvisioningErrors",
     "/mobilityManagementPolicies/{mobilityManagementPolicy-id}/includedGroups/{group-id}/serviceProvisioningErrors/$count",
+}
+
+var monitoring = []string{
     "/monitoring",
     "/monitoring/alertRecords",
     "/monitoring/alertRecords/$count",
@@ -9074,6 +9278,9 @@ var Paths = []string{
     "/monitoring/alertRules",
     "/monitoring/alertRules/$count",
     "/monitoring/alertRules/{alertRule-id}",
+}
+
+var networkAccess = []string{
     "/networkAccess",
     "/networkAccess/alerts",
     "/networkAccess/alerts/$count",
@@ -9163,10 +9370,16 @@ var Paths = []string{
     "/networkAccess/settings/enrichedAuditLogs",
     "/networkAccess/settings/forwardingOptions",
     "/networkAccess/tenantStatus",
+}
+
+var oauth2PermissionGrants = []string{
     "/oauth2PermissionGrants",
     "/oauth2PermissionGrants/$count",
     "/oauth2PermissionGrants/delta()",
     "/oauth2PermissionGrants/{oAuth2PermissionGrant-id}",
+}
+
+var onPremisesPublishingProfiles = []string{
     "/onPremisesPublishingProfiles",
     "/onPremisesPublishingProfiles/$count",
     "/onPremisesPublishingProfiles/{onPremisesPublishingProfile-id}",
@@ -9224,6 +9437,9 @@ var Paths = []string{
     "/onPremisesPublishingProfiles/{onPremisesPublishingProfile-id}/publishedResources/{publishedResource-id}/agentGroups/$count",
     "/onPremisesPublishingProfiles/{onPremisesPublishingProfile-id}/publishedResources/{publishedResource-id}/agentGroups/$ref",
     "/onPremisesPublishingProfiles/{onPremisesPublishingProfile-id}/publishedResources/{publishedResource-id}/agentGroups/{onPremisesAgentGroup-id}/$ref",
+}
+
+var organization = []string{
     "/organization",
     "/organization/$count",
     "/organization/delta()",
@@ -9267,9 +9483,15 @@ var Paths = []string{
     "/organization/{organization-id}/settings/itemInsights",
     "/organization/{organization-id}/settings/microsoftApplicationDataAccess",
     "/organization/{organization-id}/settings/peopleInsights",
+}
+
+var payloadResponse = []string{
     "/payloadResponse",
     "/payloadResponse/$count",
     "/payloadResponse/{payloadResponse-id}",
+}
+
+var permissionGrants = []string{
     "/permissionGrants",
     "/permissionGrants/delta()",
     "/permissionGrants/getByIds",
@@ -9281,11 +9503,17 @@ var Paths = []string{
     "/permissionGrants/{resourceSpecificPermissionGrant-id}/getMemberGroups",
     "/permissionGrants/{resourceSpecificPermissionGrant-id}/getMemberObjects",
     "/permissionGrants/{resourceSpecificPermissionGrant-id}/restore",
+}
+
+var places = []string{
     "/places(placeId='{placeId}')",
     "/places/$count",
     "/places/graph",
     "/places/{place-id}",
     "/places/{place-id}/graph",
+}
+
+var planner = []string{
     "/planner",
     "/planner/buckets",
     "/planner/buckets/$count",
@@ -9345,6 +9573,9 @@ var Paths = []string{
     "/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
     "/planner/tasks/{plannerTask-id}/details",
     "/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+}
+
+var policies = []string{
     "/policies",
     "/policies/accessReviewPolicy",
     "/policies/activityBasedTimeoutPolicies",
@@ -9485,6 +9716,9 @@ var Paths = []string{
     "/policies/tokenLifetimePolicies/{tokenLifetimePolicy-id}/appliesTo",
     "/policies/tokenLifetimePolicies/{tokenLifetimePolicy-id}/appliesTo/$count",
     "/policies/tokenLifetimePolicies/{tokenLifetimePolicy-id}/appliesTo/{directoryObject-id}",
+}
+
+var print = []string{
     "/print",
     "/print/connectors",
     "/print/connectors/$count",
@@ -9615,6 +9849,9 @@ var Paths = []string{
     "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}",
     "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}/definition",
     "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}/trigger",
+}
+
+var privacy = []string{
     "/privacy",
     "/privacy/subjectRightsRequests",
     "/privacy/subjectRightsRequests/$count",
@@ -9637,6 +9874,9 @@ var Paths = []string{
     "/privacy/subjectRightsRequests/{subjectRightsRequest-id}/notes/$count",
     "/privacy/subjectRightsRequests/{subjectRightsRequest-id}/notes/{authoredNote-id}",
     "/privacy/subjectRightsRequests/{subjectRightsRequest-id}/team",
+}
+
+var privilegedAccess = []string{
     "/privilegedAccess",
     "/privilegedAccess/$count",
     "/privilegedAccess/{privilegedAccess-id}",
@@ -9709,6 +9949,9 @@ var Paths = []string{
     "/privilegedAccess/{privilegedAccess-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition",
     "/privilegedAccess/{privilegedAccess-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/resource",
     "/privilegedAccess/{privilegedAccess-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
+}
+
+var privilegedApproval = []string{
     "/privilegedApproval",
     "/privilegedApproval/$count",
     "/privilegedApproval/myRequests()",
@@ -9722,9 +9965,15 @@ var Paths = []string{
     "/privilegedApproval/{privilegedApproval-id}/roleInfo/selfDeactivate",
     "/privilegedApproval/{privilegedApproval-id}/roleInfo/settings",
     "/privilegedApproval/{privilegedApproval-id}/roleInfo/summary",
+}
+
+var privilegedOperationEvents = []string{
     "/privilegedOperationEvents",
     "/privilegedOperationEvents/$count",
     "/privilegedOperationEvents/{privilegedOperationEvent-id}",
+}
+
+var privilegedRoleAssignmentRequests = []string{
     "/privilegedRoleAssignmentRequests",
     "/privilegedRoleAssignmentRequests/$count",
     "/privilegedRoleAssignmentRequests/my()",
@@ -9738,6 +9987,9 @@ var Paths = []string{
     "/privilegedRoleAssignmentRequests/{privilegedRoleAssignmentRequest-id}/roleInfo/selfDeactivate",
     "/privilegedRoleAssignmentRequests/{privilegedRoleAssignmentRequest-id}/roleInfo/settings",
     "/privilegedRoleAssignmentRequests/{privilegedRoleAssignmentRequest-id}/roleInfo/summary",
+}
+
+var privilegedRoleAssignments = []string{
     "/privilegedRoleAssignments",
     "/privilegedRoleAssignments/$count",
     "/privilegedRoleAssignments/my()",
@@ -9752,6 +10004,9 @@ var Paths = []string{
     "/privilegedRoleAssignments/{privilegedRoleAssignment-id}/roleInfo/selfDeactivate",
     "/privilegedRoleAssignments/{privilegedRoleAssignment-id}/roleInfo/settings",
     "/privilegedRoleAssignments/{privilegedRoleAssignment-id}/roleInfo/summary",
+}
+
+var privilegedRoles = []string{
     "/privilegedRoles",
     "/privilegedRoles/$count",
     "/privilegedRoles/{privilegedRole-id}",
@@ -9762,6 +10017,9 @@ var Paths = []string{
     "/privilegedRoles/{privilegedRole-id}/selfDeactivate",
     "/privilegedRoles/{privilegedRole-id}/settings",
     "/privilegedRoles/{privilegedRole-id}/summary",
+}
+
+var privilegedSignupStatus = []string{
     "/privilegedSignupStatus",
     "/privilegedSignupStatus/$count",
     "/privilegedSignupStatus/canSignUp()",
@@ -9769,9 +10027,15 @@ var Paths = []string{
     "/privilegedSignupStatus/isSignedUp()",
     "/privilegedSignupStatus/signUp",
     "/privilegedSignupStatus/{privilegedSignupStatus-id}",
+}
+
+var programControlTypes = []string{
     "/programControlTypes",
     "/programControlTypes/$count",
     "/programControlTypes/{programControlType-id}",
+}
+
+var programControls = []string{
     "/programControls",
     "/programControls/$count",
     "/programControls/{programControl-id}",
@@ -9779,6 +10043,9 @@ var Paths = []string{
     "/programControls/{programControl-id}/program/controls",
     "/programControls/{programControl-id}/program/controls/$count",
     "/programControls/{programControl-id}/program/controls/{programControl-id1}",
+}
+
+var programs = []string{
     "/programs",
     "/programs/$count",
     "/programs/{program-id}",
@@ -9786,6 +10053,9 @@ var Paths = []string{
     "/programs/{program-id}/controls/$count",
     "/programs/{program-id}/controls/{programControl-id}",
     "/programs/{program-id}/controls/{programControl-id}/program",
+}
+
+var reports = []string{
     "/reports",
     "/reports/appCredentialSignInActivities",
     "/reports/appCredentialSignInActivities/$count",
@@ -10041,8 +10311,14 @@ var Paths = []string{
     "/reports/userInsights/monthly/summary",
     "/reports/userInsights/monthly/summary/$count",
     "/reports/userInsights/monthly/summary/{insightSummary-id}",
+}
+
+var riskDetections = []string{
     "/riskDetections",
     "/riskDetections/{riskDetection-id}",
+}
+
+var riskyUsers = []string{
     "/riskyUsers",
     "/riskyUsers/$count",
     "/riskyUsers/confirmCompromised",
@@ -10051,6 +10327,9 @@ var Paths = []string{
     "/riskyUsers/{riskyUser-id}/history",
     "/riskyUsers/{riskyUser-id}/history/$count",
     "/riskyUsers/{riskyUser-id}/history/{riskyUserHistoryItem-id}",
+}
+
+var roleManagement = []string{
     "/roleManagement",
     "/roleManagement/cloudPC",
     "/roleManagement/cloudPC/resourceNamespaces",
@@ -10439,12 +10718,21 @@ var Paths = []string{
     "/roleManagement/exchange/transitiveRoleAssignments/{unifiedRoleAssignment-id}/directoryScope",
     "/roleManagement/exchange/transitiveRoleAssignments/{unifiedRoleAssignment-id}/principal",
     "/roleManagement/exchange/transitiveRoleAssignments/{unifiedRoleAssignment-id}/roleDefinition",
+}
+
+var schemaExtensions = []string{
     "/schemaExtensions",
     "/schemaExtensions/$count",
     "/schemaExtensions/{schemaExtension-id}",
+}
+
+var scopedRoleMemberships = []string{
     "/scopedRoleMemberships",
     "/scopedRoleMemberships/$count",
     "/scopedRoleMemberships/{scopedRoleMembership-id}",
+}
+
+var search = []string{
     "/search",
     "/search/acronyms",
     "/search/acronyms/$count",
@@ -10456,6 +10744,9 @@ var Paths = []string{
     "/search/qnas/$count",
     "/search/qnas/{qna-id}",
     "/search/query",
+}
+
+var security = []string{
     "/security",
     "/security/alerts",
     "/security/alerts/$count",
@@ -10876,6 +11167,9 @@ var Paths = []string{
     "/security/userSecurityProfiles",
     "/security/userSecurityProfiles/$count",
     "/security/userSecurityProfiles/{userSecurityProfile-id}",
+}
+
+var servicePrincipals = []string{
     "/servicePrincipals",
     "/servicePrincipals(appId='{appId}')",
     "/servicePrincipals/$count",
@@ -11003,9 +11297,15 @@ var Paths = []string{
     "/servicePrincipals/{servicePrincipal-id}/transitiveMemberOf/{directoryObject-id}",
     "/servicePrincipals/{servicePrincipal-id}/transitiveMemberOf/{directoryObject-id}/graph",
     "/servicePrincipals/{servicePrincipal-id}/updatePasswordSingleSignOnCredentials",
+}
+
+var settings = []string{
     "/settings",
     "/settings/$count",
     "/settings/{directorySetting-id}",
+}
+
+var shares = []string{
     "/shares",
     "/shares/$count",
     "/shares/{sharedDriveItem-id}",
@@ -11126,6 +11426,9 @@ var Paths = []string{
     "/shares/{sharedDriveItem-id}/root/content",
     "/shares/{sharedDriveItem-id}/root/contentStream",
     "/shares/{sharedDriveItem-id}/site",
+}
+
+var sites = []string{
     "/sites",
     "/sites/$count",
     "/sites/add",
@@ -11665,6 +11968,9 @@ var Paths = []string{
     "/sites/{site-id}/termStore/sets/{set-id}/terms/{term-id}/relations/{relation-id}/set",
     "/sites/{site-id}/termStore/sets/{set-id}/terms/{term-id}/relations/{relation-id}/toTerm",
     "/sites/{site-id}/termStore/sets/{set-id}/terms/{term-id}/set",
+}
+
+var solutions = []string{
     "/solutions",
     "/solutions/backupRestore",
     "/solutions/backupRestore/driveInclusionRules",
@@ -11907,6 +12213,9 @@ var Paths = []string{
     "/solutions/virtualEvents/webinars/{virtualEventWebinar-id}/sessions/{virtualEventSession-id}/registrations(userId='{userId}')",
     "/solutions/virtualEvents/webinars/{virtualEventWebinar-id}/sessions/{virtualEventSession-id}/registrations/$count",
     "/solutions/virtualEvents/webinars/{virtualEventWebinar-id}/sessions/{virtualEventSession-id}/registrations/{virtualEventRegistration-id}",
+}
+
+var storage = []string{
     "/storage",
     "/storage/fileStorage",
     "/storage/fileStorage/containers",
@@ -13824,11 +14133,20 @@ var Paths = []string{
     "/storage/settings/quota/services",
     "/storage/settings/quota/services/$count",
     "/storage/settings/quota/services/{serviceStorageQuotaBreakdown-id}",
+}
+
+var subscribedSkus = []string{
     "/subscribedSkus",
     "/subscribedSkus/{subscribedSku-id}",
+}
+
+var subscriptions = []string{
     "/subscriptions",
     "/subscriptions/{subscription-id}",
     "/subscriptions/{subscription-id}/reauthorize",
+}
+
+var teamTemplateDefinition = []string{
     "/teamTemplateDefinition",
     "/teamTemplateDefinition/$count",
     "/teamTemplateDefinition/{teamTemplateDefinition-id}",
@@ -14025,6 +14343,9 @@ var Paths = []string{
     "/teamTemplateDefinition/{teamTemplateDefinition-id}/teamDefinition/template",
     "/teamTemplateDefinition/{teamTemplateDefinition-id}/teamDefinition/templateDefinition",
     "/teamTemplateDefinition/{teamTemplateDefinition-id}/teamDefinition/unarchive",
+}
+
+var teams = []string{
     "/teams",
     "/teams/$count",
     "/teams/allMessages()",
@@ -14225,9 +14546,15 @@ var Paths = []string{
     "/teams/{team-id}/template",
     "/teams/{team-id}/templateDefinition",
     "/teams/{team-id}/unarchive",
+}
+
+var teamsTemplates = []string{
     "/teamsTemplates",
     "/teamsTemplates/$count",
     "/teamsTemplates/{teamsTemplate-id}",
+}
+
+var teamwork = []string{
     "/teamwork",
     "/teamwork/deletedChats",
     "/teamwork/deletedChats/$count",
@@ -14507,6 +14834,9 @@ var Paths = []string{
     "/teamwork/workforceIntegrations",
     "/teamwork/workforceIntegrations/$count",
     "/teamwork/workforceIntegrations/{workforceIntegration-id}",
+}
+
+var tenantRelationships = []string{
     "/tenantRelationships",
     "/tenantRelationships/delegatedAdminCustomers",
     "/tenantRelationships/delegatedAdminCustomers/$count",
@@ -14692,6 +15022,9 @@ var Paths = []string{
     "/tenantRelationships/multiTenantOrganization/tenants",
     "/tenantRelationships/multiTenantOrganization/tenants/$count",
     "/tenantRelationships/multiTenantOrganization/tenants/{multiTenantOrganizationMember-id}",
+}
+
+var termStore = []string{
     "/termStore",
     "/termStore/groups",
     "/termStore/groups/$count",
@@ -14845,6 +15178,9 @@ var Paths = []string{
     "/termStore/sets/{set-id}/terms/{term-id}/relations/{relation-id}/set",
     "/termStore/sets/{set-id}/terms/{term-id}/relations/{relation-id}/toTerm",
     "/termStore/sets/{set-id}/terms/{term-id}/set",
+}
+
+var threatSubmission = []string{
     "/threatSubmission",
     "/threatSubmission/emailThreatSubmissionPolicies",
     "/threatSubmission/emailThreatSubmissionPolicies/$count",
@@ -14858,6 +15194,9 @@ var Paths = []string{
     "/threatSubmission/urlThreats",
     "/threatSubmission/urlThreats/$count",
     "/threatSubmission/urlThreats/{urlThreatSubmission-id}",
+}
+
+var trustFramework = []string{
     "/trustFramework",
     "/trustFramework/keySets",
     "/trustFramework/keySets/$count",
@@ -14874,6 +15213,9 @@ var Paths = []string{
     "/trustFramework/policies/$count",
     "/trustFramework/policies/{trustFrameworkPolicy-id}",
     "/trustFramework/policies/{trustFrameworkPolicy-id}/$value",
+}
+
+var users = []string{
     "/users",
     "/users/$count",
     "/users/delta()",
@@ -16791,6 +17133,9 @@ var Paths = []string{
     "/users/{user-id}/wipeManagedAppRegistrationByDeviceTag",
     "/users/{user-id}/wipeManagedAppRegistrationsByAzureAdDeviceId",
     "/users/{user-id}/wipeManagedAppRegistrationsByDeviceTag",
+}
+
+var workplace = []string{
     "/workplace",
     "/workplace/sensorDevices",
     "/workplace/sensorDevices(deviceId='{deviceId}')",

@@ -39,7 +39,7 @@ func main() {
 
 	// Save the paths to a new file called msgraphpaths.go
 	pathsFilePath := filepath.Join(*exportPath, "msgraphpaths.go")
-	err = extract.SavePathsToFile(paths, pathsFilePath)
+	err = extract.SaveURLPathsToFile(paths, pathsFilePath)
 	if err != nil {
 		log.Fatalf("Failed to save paths to file: %v", err)
 	}
