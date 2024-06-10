@@ -31,6 +31,24 @@ func main() {
 		log.Fatalf("Failed to create export folder: %v", err)
 	}
 
+	// Print out the fields at various depths
+	// err = helpers.PrintFieldsAtDepth(data, 0)
+	// if err != nil {
+	// 	log.Fatalf("Failed to print fields: %v", err)
+	// }
+	// err = helpers.PrintFieldsAtDepth(data, 1)
+	// if err != nil {
+	// 	log.Fatalf("Failed to print fields: %v", err)
+	// }
+	// // err = printFieldsAtDepth(data, 2)
+	// // if err != nil {
+	// // 	log.Fatalf("Failed to print fields: %v", err)
+	// // }
+	// // err = printFieldsAtDepth(data, 3)
+	// // if err != nil {
+	// // 	log.Fatalf("Failed to print fields: %v", err)
+	// // }
+
 	// Extract paths using the helper function
 	paths, err := extractURLPaths(data)
 	if err != nil {
@@ -42,6 +60,12 @@ func main() {
 	err = extract.SaveURLPathsToFile(paths, pathsFilePath)
 	if err != nil {
 		log.Fatalf("Failed to save paths to file: %v", err)
+	}
+
+	// Extract and print data models
+	err = extractAndPrintProperties(data)
+	if err != nil {
+		log.Fatalf("Failed to extract and print data models: %v", err)
 	}
 
 	fmt.Println("Export successful")
@@ -64,4 +88,30 @@ func extractURLPaths(data []byte) ([]string, error) {
 	}
 
 	return extractedData, nil
+}
+
+// extractAndPrintProperties extracts and prints key-value pairs under values within properties
+func extractAndPrintProperties(data []byte) error {
+	// Define extraction parameters for properties
+	fieldPath := "components.examples"
+	fieldDepth := 1 // Assuming examples are nested under a level
+	extractKey := true
+	extractValue := false // Only keys are needed
+	extractUniqueFieldsOnly := true
+	sortFields := false
+	delimiter := ""
+
+	// Extract fields using ExtractField function
+	extractedData, err := extract.ExtractField(data, fieldPath, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
+	if err != nil {
+		return fmt.Errorf("failed to extract %s: %w", fieldPath, err)
+	}
+
+	// Process and print the extracted keys
+	for _, field := range extractedData {
+		processedField := extract.ProcessField(field)
+		fmt.Println(processedField)
+	}
+
+	return nil
 }

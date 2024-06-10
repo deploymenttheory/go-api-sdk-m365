@@ -1,11 +1,13 @@
 package msgraphpaths
 
+// Number of URL Paths: 3
 var accessReviewDecisions = []string{
     "/accessReviewDecisions",
     "/accessReviewDecisions/$count",
     "/accessReviewDecisions/{accessReviewDecision-id}",
 }
 
+// Number of URL Paths: 32
 var accessReviews = []string{
     "/accessReviews",
     "/accessReviews/$count",
@@ -41,12 +43,14 @@ var accessReviews = []string{
     "/accessReviews/{accessReview-id}/stop",
 }
 
+// Number of URL Paths: 3
 var activitystatistics = []string{
     "/activitystatistics",
     "/activitystatistics/$count",
     "/activitystatistics/{activityStatistics-id}",
 }
 
+// Number of URL Paths: 155
 var admin = []string{
     "/admin",
     "/admin/appsAndServices",
@@ -205,6 +209,7 @@ var admin = []string{
     "/admin/windows/updates/updatePolicies/{updatePolicy-id}/complianceChanges/{complianceChange-id}/updatePolicy",
 }
 
+// Number of URL Paths: 24
 var administrativeUnits = []string{
     "/administrativeUnits",
     "/administrativeUnits/$count",
@@ -232,11 +237,13 @@ var administrativeUnits = []string{
     "/administrativeUnits/{administrativeUnit-id}/scopedRoleMembers/{scopedRoleMembership-id}",
 }
 
+// Number of URL Paths: 2
 var agreementAcceptances = []string{
     "/agreementAcceptances",
     "/agreementAcceptances/{agreementAcceptance-id}",
 }
 
+// Number of URL Paths: 18
 var agreements = []string{
     "/agreements",
     "/agreements/{agreement-id}",
@@ -258,12 +265,14 @@ var agreements = []string{
     "/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/{agreementFileVersion-id}",
 }
 
+// Number of URL Paths: 3
 var allowedDataLocations = []string{
     "/allowedDataLocations",
     "/allowedDataLocations/$count",
     "/allowedDataLocations/{allowedDataLocation-id}",
 }
 
+// Number of URL Paths: 83
 var app = []string{
     "/app",
     "/app/calls",
@@ -350,6 +359,7 @@ var app = []string{
     "/app/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}/metadataContent",
 }
 
+// Number of URL Paths: 17
 var appCatalogs = []string{
     "/appCatalogs",
     "/appCatalogs/teamsApps",
@@ -370,12 +380,14 @@ var appCatalogs = []string{
     "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/outlineIcon/hostedContent/$value",
 }
 
+// Number of URL Paths: 3
 var appRoleAssignments = []string{
     "/appRoleAssignments",
     "/appRoleAssignments/$count",
     "/appRoleAssignments/{appRoleAssignment-id}",
 }
 
+// Number of URL Paths: 4
 var applicationTemplates = []string{
     "/applicationTemplates",
     "/applicationTemplates/$count",
@@ -383,6 +395,7 @@ var applicationTemplates = []string{
     "/applicationTemplates/{applicationTemplate-id}/instantiate",
 }
 
+// Number of URL Paths: 87
 var applications = []string{
     "/applications",
     "/applications(appId='{appId}')",
@@ -473,6 +486,7 @@ var applications = []string{
     "/applications/{application-id}/unsetVerifiedPublisher",
 }
 
+// Number of URL Paths: 14
 var approvalWorkflowProviders = []string{
     "/approvalWorkflowProviders",
     "/approvalWorkflowProviders/$count",
@@ -490,6 +504,7 @@ var approvalWorkflowProviders = []string{
     "/approvalWorkflowProviders/{approvalWorkflowProvider-id}/policyTemplates/{governancePolicyTemplate-id}",
 }
 
+// Number of URL Paths: 18
 var auditLogs = []string{
     "/auditLogs",
     "/auditLogs/customSecurityAttributeAudits",
@@ -511,12 +526,14 @@ var auditLogs = []string{
     "/auditLogs/signIns/{signIn-id}",
 }
 
+// Number of URL Paths: 3
 var authenticationMethodConfigurations = []string{
     "/authenticationMethodConfigurations",
     "/authenticationMethodConfigurations/$count",
     "/authenticationMethodConfigurations/{authenticationMethodConfiguration-id}",
 }
 
+// Number of URL Paths: 4
 var authenticationMethodsPolicy = []string{
     "/authenticationMethodsPolicy",
     "/authenticationMethodsPolicy/authenticationMethodConfigurations",
@@ -524,6 +541,7 @@ var authenticationMethodsPolicy = []string{
     "/authenticationMethodsPolicy/authenticationMethodConfigurations/{authenticationMethodConfiguration-id}",
 }
 
+// Number of URL Paths: 26
 var bookingBusinesses = []string{
     "/bookingBusinesses",
     "/bookingBusinesses/$count",
@@ -553,24 +571,28 @@ var bookingBusinesses = []string{
     "/bookingBusinesses/{bookingBusiness-id}/unpublish",
 }
 
+// Number of URL Paths: 3
 var bookingCurrencies = []string{
     "/bookingCurrencies",
     "/bookingCurrencies/$count",
     "/bookingCurrencies/{bookingCurrency-id}",
 }
 
+// Number of URL Paths: 3
 var businessFlowTemplates = []string{
     "/businessFlowTemplates",
     "/businessFlowTemplates/$count",
     "/businessFlowTemplates/{businessFlowTemplate-id}",
 }
 
+// Number of URL Paths: 3
 var certificateBasedAuthConfiguration = []string{
     "/certificateBasedAuthConfiguration",
     "/certificateBasedAuthConfiguration/$count",
     "/certificateBasedAuthConfiguration/{certificateBasedAuthConfiguration-id}",
 }
 
+// Number of URL Paths: 61
 var chats = []string{
     "/chats",
     "/chats/$count",
@@ -635,6 +657,7 @@ var chats = []string{
     "/chats/{chat-id}/unhideForUser",
 }
 
+// Number of URL Paths: 4
 var commands = []string{
     "/commands",
     "/commands/$count",
@@ -642,6 +665,7 @@ var commands = []string{
     "/commands/{command-id}/responsepayload",
 }
 
+// Number of URL Paths: 106
 var communications = []string{
     "/communications",
     "/communications/callRecords",
@@ -751,6 +775,7 @@ var communications = []string{
     "/communications/presences/{presence-id}/setUserPreferredPresence",
 }
 
+// Number of URL Paths: 86
 var compliance = []string{
     "/compliance",
     "/compliance/ediscovery",
@@ -840,6 +865,7 @@ var compliance = []string{
     "/compliance/ediscovery/cases/{case-id}/tags/{tag-id}/parent",
 }
 
+// Number of URL Paths: 22
 var connections = []string{
     "/connections",
     "/connections/$count",
@@ -865,6 +891,7 @@ var connections = []string{
     "/connections/{externalConnection-id}/schema",
 }
 
+// Number of URL Paths: 34
 var contacts = []string{
     "/contacts",
     "/contacts/$count",
@@ -902,6 +929,7 @@ var contacts = []string{
     "/contacts/{orgContact-id}/transitiveReports/{directoryObject-id}",
 }
 
+// Number of URL Paths: 12
 var contracts = []string{
     "/contracts",
     "/contracts/$count",
@@ -917,6 +945,7 @@ var contracts = []string{
     "/contracts/{contract-id}/restore",
 }
 
+// Number of URL Paths: 43
 var dataClassification = []string{
     "/dataClassification",
     "/dataClassification/classifyExactMatches",
@@ -963,12 +992,14 @@ var dataClassification = []string{
     "/dataClassification/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}",
 }
 
+// Number of URL Paths: 3
 var dataPolicyOperations = []string{
     "/dataPolicyOperations",
     "/dataPolicyOperations/$count",
     "/dataPolicyOperations/{dataPolicyOperation-id}",
 }
 
+// Number of URL Paths: 239
 var deviceAppManagement = []string{
     "/deviceAppManagement",
     "/deviceAppManagement/androidManagedAppProtections",
@@ -1211,12 +1242,14 @@ var deviceAppManagement = []string{
     "/deviceAppManagement/windowsManagementApp",
 }
 
+// Number of URL Paths: 3
 var deviceLocalCredentials = []string{
     "/deviceLocalCredentials",
     "/deviceLocalCredentials/$count",
     "/deviceLocalCredentials/{deviceLocalCredentialInfo-id}",
 }
 
+// Number of URL Paths: 1446
 var deviceManagement = []string{
     "/deviceManagement",
     "/deviceManagement/advancedThreatProtectionOnboardingStateSummary",
@@ -2666,6 +2699,7 @@ var deviceManagement = []string{
     "/deviceManagement/zebraFotaDeployments/{zebraFotaDeployment-id}/cancel",
 }
 
+// Number of URL Paths: 45
 var devices = []string{
     "/devices",
     "/devices(deviceId='{deviceId}')",
@@ -2714,6 +2748,7 @@ var devices = []string{
     "/devices/{device-id}/usageRights/{usageRight-id}",
 }
 
+// Number of URL Paths: 109
 var directory = []string{
     "/directory",
     "/directory/administrativeUnits",
@@ -2826,6 +2861,7 @@ var directory = []string{
     "/directory/subscriptions/{companySubscription-id}",
 }
 
+// Number of URL Paths: 12
 var directoryObjects = []string{
     "/directoryObjects",
     "/directoryObjects/$count",
@@ -2841,6 +2877,7 @@ var directoryObjects = []string{
     "/directoryObjects/{directoryObject-id}/restore",
 }
 
+// Number of URL Paths: 12
 var directoryRoleTemplates = []string{
     "/directoryRoleTemplates",
     "/directoryRoleTemplates/$count",
@@ -2856,6 +2893,7 @@ var directoryRoleTemplates = []string{
     "/directoryRoleTemplates/{directoryRoleTemplate-id}/restore",
 }
 
+// Number of URL Paths: 22
 var directoryRoles = []string{
     "/directoryRoles",
     "/directoryRoles(roleTemplateId='{roleTemplateId}')",
@@ -2881,6 +2919,7 @@ var directoryRoles = []string{
     "/directoryRoles/{directoryRole-id}/scopedMembers/{scopedRoleMembership-id}",
 }
 
+// Number of URL Paths: 12
 var directorySettingTemplates = []string{
     "/directorySettingTemplates",
     "/directorySettingTemplates/$count",
@@ -2896,12 +2935,14 @@ var directorySettingTemplates = []string{
     "/directorySettingTemplates/{directorySettingTemplate-id}/restore",
 }
 
+// Number of URL Paths: 3
 var domainDnsRecords = []string{
     "/domainDnsRecords",
     "/domainDnsRecords/$count",
     "/domainDnsRecords/{domainDnsRecord-id}",
 }
 
+// Number of URL Paths: 23
 var domains = []string{
     "/domains",
     "/domains/$count",
@@ -2928,6 +2969,7 @@ var domains = []string{
     "/domains/{domain-id}/verify",
 }
 
+// Number of URL Paths: 923
 var drives = []string{
     "/drives",
     "/drives/{drive-id}",
@@ -3854,6 +3896,7 @@ var drives = []string{
     "/drives/{drive-id}/special/{driveItem-id}/contentStream",
 }
 
+// Number of URL Paths: 248
 var education = []string{
     "/education",
     "/education/classes",
@@ -4105,6 +4148,7 @@ var education = []string{
     "/education/users/{educationUser-id}/user/serviceProvisioningErrors/$count",
 }
 
+// Number of URL Paths: 36
 var employeeExperience = []string{
     "/employeeExperience",
     "/employeeExperience/communities",
@@ -4144,6 +4188,7 @@ var employeeExperience = []string{
     "/employeeExperience/learningProviders/{learningProvider-id}/learningCourseActivities/{learningCourseActivity-id}",
 }
 
+// Number of URL Paths: 69
 var external = []string{
     "/external",
     "/external/authorizationSystems",
@@ -4216,12 +4261,14 @@ var external = []string{
     "/external/industryData/years/{yearTimePeriodDefinition-id}",
 }
 
+// Number of URL Paths: 3
 var filterOperators = []string{
     "/filterOperators",
     "/filterOperators/$count",
     "/filterOperators/{filterOperatorSchema-id}",
 }
 
+// Number of URL Paths: 6
 var filteringPolicies = []string{
     "/filteringPolicies",
     "/filteringPolicies/$count",
@@ -4231,6 +4278,7 @@ var filteringPolicies = []string{
     "/filteringPolicies/{filteringPolicy-id}/policyRules/{policyRule-id}",
 }
 
+// Number of URL Paths: 316
 var financials = []string{
     "/financials",
     "/financials/companies",
@@ -4550,12 +4598,14 @@ var financials = []string{
     "/financials/companies/{company-id}/vendors/{vendor-id}/picture/{picture-id}/content",
 }
 
+// Number of URL Paths: 3
 var functions = []string{
     "/functions",
     "/functions/$count",
     "/functions/{attributeMappingFunctionSchema-id}",
 }
 
+// Number of URL Paths: 37
 var governanceResources = []string{
     "/governanceResources",
     "/governanceResources/$count",
@@ -4596,6 +4646,7 @@ var governanceResources = []string{
     "/governanceResources/{governanceResource-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
 }
 
+// Number of URL Paths: 10
 var governanceRoleAssignmentRequests = []string{
     "/governanceRoleAssignmentRequests",
     "/governanceRoleAssignmentRequests/$count",
@@ -4609,6 +4660,7 @@ var governanceRoleAssignmentRequests = []string{
     "/governanceRoleAssignmentRequests/{governanceRoleAssignmentRequest-id}/updateRequest",
 }
 
+// Number of URL Paths: 10
 var governanceRoleAssignments = []string{
     "/governanceRoleAssignments",
     "/governanceRoleAssignments/$count",
@@ -4622,6 +4674,7 @@ var governanceRoleAssignments = []string{
     "/governanceRoleAssignments/{governanceRoleAssignment-id}/subject",
 }
 
+// Number of URL Paths: 5
 var governanceRoleDefinitions = []string{
     "/governanceRoleDefinitions",
     "/governanceRoleDefinitions/$count",
@@ -4630,6 +4683,7 @@ var governanceRoleDefinitions = []string{
     "/governanceRoleDefinitions/{governanceRoleDefinition-id}/roleSetting",
 }
 
+// Number of URL Paths: 7
 var governanceRoleSettings = []string{
     "/governanceRoleSettings",
     "/governanceRoleSettings/$count",
@@ -4640,12 +4694,14 @@ var governanceRoleSettings = []string{
     "/governanceRoleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
 }
 
+// Number of URL Paths: 3
 var governanceSubjects = []string{
     "/governanceSubjects",
     "/governanceSubjects/$count",
     "/governanceSubjects/{governanceSubject-id}",
 }
 
+// Number of URL Paths: 6
 var groupLifecyclePolicies = []string{
     "/groupLifecyclePolicies",
     "/groupLifecyclePolicies/$count",
@@ -4655,6 +4711,7 @@ var groupLifecyclePolicies = []string{
     "/groupLifecyclePolicies/{groupLifecyclePolicy-id}/removeGroup",
 }
 
+// Number of URL Paths: 1417
 var groups = []string{
     "/groups",
     "/groups(uniqueName='{uniqueName}')",
@@ -6075,6 +6132,7 @@ var groups = []string{
     "/groups/{group-id}/validateProperties",
 }
 
+// Number of URL Paths: 135
 var identity = []string{
     "/identity",
     "/identity/apiConnectors",
@@ -6213,6 +6271,7 @@ var identity = []string{
     "/identity/userFlows/{identityUserFlow-id}",
 }
 
+// Number of URL Paths: 1016
 var identityGovernance = []string{
     "/identityGovernance",
     "/identityGovernance/accessReviews",
@@ -7232,6 +7291,7 @@ var identityGovernance = []string{
     "/identityGovernance/termsOfUse/agreements/{agreement-id}/files/{agreementFileLocalization-id}/versions/{agreementFileVersion-id}",
 }
 
+// Number of URL Paths: 23
 var identityProtection = []string{
     "/identityProtection",
     "/identityProtection/riskDetections",
@@ -7258,6 +7318,7 @@ var identityProtection = []string{
     "/identityProtection/servicePrincipalRiskDetections/{servicePrincipalRiskDetection-id}",
 }
 
+// Number of URL Paths: 4
 var identityProviders = []string{
     "/identityProviders",
     "/identityProviders/$count",
@@ -7265,6 +7326,7 @@ var identityProviders = []string{
     "/identityProviders/{identityProvider-id}",
 }
 
+// Number of URL Paths: 36
 var informationProtection = []string{
     "/informationProtection",
     "/informationProtection/bitlocker",
@@ -7304,6 +7366,7 @@ var informationProtection = []string{
     "/informationProtection/verifySignature",
 }
 
+// Number of URL Paths: 10
 var invitations = []string{
     "/invitations",
     "/invitations/$count",
@@ -7317,6 +7380,7 @@ var invitations = []string{
     "/invitations/{invitation-id}/invitedUserSponsors/{directoryObject-id}",
 }
 
+// Number of URL Paths: 1909
 var me = []string{
     "/me",
     "/me/activities",
@@ -9229,12 +9293,14 @@ var me = []string{
     "/me/wipeManagedAppRegistrationsByDeviceTag",
 }
 
+// Number of URL Paths: 3
 var messageEvents = []string{
     "/messageEvents",
     "/messageEvents/$count",
     "/messageEvents/{messageEvent-id}",
 }
 
+// Number of URL Paths: 6
 var messageRecipients = []string{
     "/messageRecipients",
     "/messageRecipients/$count",
@@ -9244,6 +9310,7 @@ var messageRecipients = []string{
     "/messageRecipients/{messageRecipient-id}/events/{messageEvent-id}",
 }
 
+// Number of URL Paths: 9
 var messageTraces = []string{
     "/messageTraces",
     "/messageTraces/$count",
@@ -9256,6 +9323,7 @@ var messageTraces = []string{
     "/messageTraces/{messageTrace-id}/recipients/{messageRecipient-id}/events/{messageEvent-id}",
 }
 
+// Number of URL Paths: 9
 var mobilityManagementPolicies = []string{
     "/mobilityManagementPolicies",
     "/mobilityManagementPolicies/$count",
@@ -9268,6 +9336,7 @@ var mobilityManagementPolicies = []string{
     "/mobilityManagementPolicies/{mobilityManagementPolicy-id}/includedGroups/{group-id}/serviceProvisioningErrors/$count",
 }
 
+// Number of URL Paths: 9
 var monitoring = []string{
     "/monitoring",
     "/monitoring/alertRecords",
@@ -9280,6 +9349,7 @@ var monitoring = []string{
     "/monitoring/alertRules/{alertRule-id}",
 }
 
+// Number of URL Paths: 89
 var networkAccess = []string{
     "/networkAccess",
     "/networkAccess/alerts",
@@ -9372,6 +9442,7 @@ var networkAccess = []string{
     "/networkAccess/tenantStatus",
 }
 
+// Number of URL Paths: 4
 var oauth2PermissionGrants = []string{
     "/oauth2PermissionGrants",
     "/oauth2PermissionGrants/$count",
@@ -9379,6 +9450,7 @@ var oauth2PermissionGrants = []string{
     "/oauth2PermissionGrants/{oAuth2PermissionGrant-id}",
 }
 
+// Number of URL Paths: 57
 var onPremisesPublishingProfiles = []string{
     "/onPremisesPublishingProfiles",
     "/onPremisesPublishingProfiles/$count",
@@ -9439,6 +9511,7 @@ var onPremisesPublishingProfiles = []string{
     "/onPremisesPublishingProfiles/{onPremisesPublishingProfile-id}/publishedResources/{publishedResource-id}/agentGroups/{onPremisesAgentGroup-id}/$ref",
 }
 
+// Number of URL Paths: 43
 var organization = []string{
     "/organization",
     "/organization/$count",
@@ -9485,12 +9558,14 @@ var organization = []string{
     "/organization/{organization-id}/settings/peopleInsights",
 }
 
+// Number of URL Paths: 3
 var payloadResponse = []string{
     "/payloadResponse",
     "/payloadResponse/$count",
     "/payloadResponse/{payloadResponse-id}",
 }
 
+// Number of URL Paths: 11
 var permissionGrants = []string{
     "/permissionGrants",
     "/permissionGrants/delta()",
@@ -9505,6 +9580,7 @@ var permissionGrants = []string{
     "/permissionGrants/{resourceSpecificPermissionGrant-id}/restore",
 }
 
+// Number of URL Paths: 5
 var places = []string{
     "/places(placeId='{placeId}')",
     "/places/$count",
@@ -9513,6 +9589,7 @@ var places = []string{
     "/places/{place-id}/graph",
 }
 
+// Number of URL Paths: 59
 var planner = []string{
     "/planner",
     "/planner/buckets",
@@ -9575,6 +9652,7 @@ var planner = []string{
     "/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
 }
 
+// Number of URL Paths: 140
 var policies = []string{
     "/policies",
     "/policies/accessReviewPolicy",
@@ -9718,6 +9796,7 @@ var policies = []string{
     "/policies/tokenLifetimePolicies/{tokenLifetimePolicy-id}/appliesTo/{directoryObject-id}",
 }
 
+// Number of URL Paths: 130
 var print = []string{
     "/print",
     "/print/connectors",
@@ -9851,6 +9930,7 @@ var print = []string{
     "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}/trigger",
 }
 
+// Number of URL Paths: 22
 var privacy = []string{
     "/privacy",
     "/privacy/subjectRightsRequests",
@@ -9876,6 +9956,7 @@ var privacy = []string{
     "/privacy/subjectRightsRequests/{subjectRightsRequest-id}/team",
 }
 
+// Number of URL Paths: 72
 var privilegedAccess = []string{
     "/privilegedAccess",
     "/privilegedAccess/$count",
@@ -9951,6 +10032,7 @@ var privilegedAccess = []string{
     "/privilegedAccess/{privilegedAccess-id}/roleSettings/{governanceRoleSetting-id}/roleDefinition/roleSetting",
 }
 
+// Number of URL Paths: 13
 var privilegedApproval = []string{
     "/privilegedApproval",
     "/privilegedApproval/$count",
@@ -9967,12 +10049,14 @@ var privilegedApproval = []string{
     "/privilegedApproval/{privilegedApproval-id}/roleInfo/summary",
 }
 
+// Number of URL Paths: 3
 var privilegedOperationEvents = []string{
     "/privilegedOperationEvents",
     "/privilegedOperationEvents/$count",
     "/privilegedOperationEvents/{privilegedOperationEvent-id}",
 }
 
+// Number of URL Paths: 13
 var privilegedRoleAssignmentRequests = []string{
     "/privilegedRoleAssignmentRequests",
     "/privilegedRoleAssignmentRequests/$count",
@@ -9989,6 +10073,7 @@ var privilegedRoleAssignmentRequests = []string{
     "/privilegedRoleAssignmentRequests/{privilegedRoleAssignmentRequest-id}/roleInfo/summary",
 }
 
+// Number of URL Paths: 14
 var privilegedRoleAssignments = []string{
     "/privilegedRoleAssignments",
     "/privilegedRoleAssignments/$count",
@@ -10006,6 +10091,7 @@ var privilegedRoleAssignments = []string{
     "/privilegedRoleAssignments/{privilegedRoleAssignment-id}/roleInfo/summary",
 }
 
+// Number of URL Paths: 10
 var privilegedRoles = []string{
     "/privilegedRoles",
     "/privilegedRoles/$count",
@@ -10019,6 +10105,7 @@ var privilegedRoles = []string{
     "/privilegedRoles/{privilegedRole-id}/summary",
 }
 
+// Number of URL Paths: 7
 var privilegedSignupStatus = []string{
     "/privilegedSignupStatus",
     "/privilegedSignupStatus/$count",
@@ -10029,12 +10116,14 @@ var privilegedSignupStatus = []string{
     "/privilegedSignupStatus/{privilegedSignupStatus-id}",
 }
 
+// Number of URL Paths: 3
 var programControlTypes = []string{
     "/programControlTypes",
     "/programControlTypes/$count",
     "/programControlTypes/{programControlType-id}",
 }
 
+// Number of URL Paths: 7
 var programControls = []string{
     "/programControls",
     "/programControls/$count",
@@ -10045,6 +10134,7 @@ var programControls = []string{
     "/programControls/{programControl-id}/program/controls/{programControl-id1}",
 }
 
+// Number of URL Paths: 7
 var programs = []string{
     "/programs",
     "/programs/$count",
@@ -10055,6 +10145,7 @@ var programs = []string{
     "/programs/{program-id}/controls/{programControl-id}/program",
 }
 
+// Number of URL Paths: 255
 var reports = []string{
     "/reports",
     "/reports/appCredentialSignInActivities",
@@ -10313,11 +10404,13 @@ var reports = []string{
     "/reports/userInsights/monthly/summary/{insightSummary-id}",
 }
 
+// Number of URL Paths: 2
 var riskDetections = []string{
     "/riskDetections",
     "/riskDetections/{riskDetection-id}",
 }
 
+// Number of URL Paths: 8
 var riskyUsers = []string{
     "/riskyUsers",
     "/riskyUsers/$count",
@@ -10329,6 +10422,7 @@ var riskyUsers = []string{
     "/riskyUsers/{riskyUser-id}/history/{riskyUserHistoryItem-id}",
 }
 
+// Number of URL Paths: 388
 var roleManagement = []string{
     "/roleManagement",
     "/roleManagement/cloudPC",
@@ -10720,18 +10814,21 @@ var roleManagement = []string{
     "/roleManagement/exchange/transitiveRoleAssignments/{unifiedRoleAssignment-id}/roleDefinition",
 }
 
+// Number of URL Paths: 3
 var schemaExtensions = []string{
     "/schemaExtensions",
     "/schemaExtensions/$count",
     "/schemaExtensions/{schemaExtension-id}",
 }
 
+// Number of URL Paths: 3
 var scopedRoleMemberships = []string{
     "/scopedRoleMemberships",
     "/scopedRoleMemberships/$count",
     "/scopedRoleMemberships/{scopedRoleMembership-id}",
 }
 
+// Number of URL Paths: 11
 var search = []string{
     "/search",
     "/search/acronyms",
@@ -10746,6 +10843,7 @@ var search = []string{
     "/search/query",
 }
 
+// Number of URL Paths: 420
 var security = []string{
     "/security",
     "/security/alerts",
@@ -11169,6 +11267,7 @@ var security = []string{
     "/security/userSecurityProfiles/{userSecurityProfile-id}",
 }
 
+// Number of URL Paths: 127
 var servicePrincipals = []string{
     "/servicePrincipals",
     "/servicePrincipals(appId='{appId}')",
@@ -11299,12 +11398,14 @@ var servicePrincipals = []string{
     "/servicePrincipals/{servicePrincipal-id}/updatePasswordSingleSignOnCredentials",
 }
 
+// Number of URL Paths: 3
 var settings = []string{
     "/settings",
     "/settings/$count",
     "/settings/{directorySetting-id}",
 }
 
+// Number of URL Paths: 120
 var shares = []string{
     "/shares",
     "/shares/$count",
@@ -11428,6 +11529,7 @@ var shares = []string{
     "/shares/{sharedDriveItem-id}/site",
 }
 
+// Number of URL Paths: 539
 var sites = []string{
     "/sites",
     "/sites/$count",
@@ -11970,6 +12072,7 @@ var sites = []string{
     "/sites/{site-id}/termStore/sets/{set-id}/terms/{term-id}/set",
 }
 
+// Number of URL Paths: 242
 var solutions = []string{
     "/solutions",
     "/solutions/backupRestore",
@@ -12215,6 +12318,7 @@ var solutions = []string{
     "/solutions/virtualEvents/webinars/{virtualEventWebinar-id}/sessions/{virtualEventSession-id}/registrations/{virtualEventRegistration-id}",
 }
 
+// Number of URL Paths: 1917
 var storage = []string{
     "/storage",
     "/storage/fileStorage",
@@ -14135,17 +14239,20 @@ var storage = []string{
     "/storage/settings/quota/services/{serviceStorageQuotaBreakdown-id}",
 }
 
+// Number of URL Paths: 2
 var subscribedSkus = []string{
     "/subscribedSkus",
     "/subscribedSkus/{subscribedSku-id}",
 }
 
+// Number of URL Paths: 3
 var subscriptions = []string{
     "/subscriptions",
     "/subscriptions/{subscription-id}",
     "/subscriptions/{subscription-id}/reauthorize",
 }
 
+// Number of URL Paths: 196
 var teamTemplateDefinition = []string{
     "/teamTemplateDefinition",
     "/teamTemplateDefinition/$count",
@@ -14345,6 +14452,7 @@ var teamTemplateDefinition = []string{
     "/teamTemplateDefinition/{teamTemplateDefinition-id}/teamDefinition/unarchive",
 }
 
+// Number of URL Paths: 200
 var teams = []string{
     "/teams",
     "/teams/$count",
@@ -14548,12 +14656,14 @@ var teams = []string{
     "/teams/{team-id}/unarchive",
 }
 
+// Number of URL Paths: 3
 var teamsTemplates = []string{
     "/teamsTemplates",
     "/teamsTemplates/$count",
     "/teamsTemplates/{teamsTemplate-id}",
 }
 
+// Number of URL Paths: 279
 var teamwork = []string{
     "/teamwork",
     "/teamwork/deletedChats",
@@ -14836,6 +14946,7 @@ var teamwork = []string{
     "/teamwork/workforceIntegrations/{workforceIntegration-id}",
 }
 
+// Number of URL Paths: 185
 var tenantRelationships = []string{
     "/tenantRelationships",
     "/tenantRelationships/delegatedAdminCustomers",
@@ -15024,6 +15135,7 @@ var tenantRelationships = []string{
     "/tenantRelationships/multiTenantOrganization/tenants/{multiTenantOrganizationMember-id}",
 }
 
+// Number of URL Paths: 153
 var termStore = []string{
     "/termStore",
     "/termStore/groups",
@@ -15180,6 +15292,7 @@ var termStore = []string{
     "/termStore/sets/{set-id}/terms/{term-id}/set",
 }
 
+// Number of URL Paths: 13
 var threatSubmission = []string{
     "/threatSubmission",
     "/threatSubmission/emailThreatSubmissionPolicies",
@@ -15196,6 +15309,7 @@ var threatSubmission = []string{
     "/threatSubmission/urlThreats/{urlThreatSubmission-id}",
 }
 
+// Number of URL Paths: 16
 var trustFramework = []string{
     "/trustFramework",
     "/trustFramework/keySets",
@@ -15215,6 +15329,7 @@ var trustFramework = []string{
     "/trustFramework/policies/{trustFrameworkPolicy-id}/$value",
 }
 
+// Number of URL Paths: 1917
 var users = []string{
     "/users",
     "/users/$count",
@@ -17135,6 +17250,7 @@ var users = []string{
     "/users/{user-id}/wipeManagedAppRegistrationsByDeviceTag",
 }
 
+// Number of URL Paths: 6
 var workplace = []string{
     "/workplace",
     "/workplace/sensorDevices",

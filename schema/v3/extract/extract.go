@@ -9,24 +9,38 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// ExtractField extracts a specific field from the YAML data based on the provided parameters
-// The function uses a map to ensure uniqueness and then converts the map keys to a slice for sorting
-func ExtractField(data []byte, fieldName string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool, delimiter string) ([]string, error) {
+// ExtractField extracts specific fields from YAML data based on the provided parameters.
+// The function supports traversing nested paths within the YAML structure, extracting keys, values,
+// or both, and can ensure uniqueness and sorting of the extracted fields.
+//
+// Parameters:
+// - data: The raw YAML data as a byte slice.
+// - fieldPath: A dot-separated string representing the path to the nested field (e.g., "components.schemas").
+// - fieldDepth: The depth to which fields should be extracted within the nested structure. A depth of 0 means only direct fields are extracted.
+// - extractKey: A boolean indicating whether to extract the keys of the fields.
+// - extractValue: A boolean indicating whether to extract the values of the fields.
+// - extractUniqueFieldsOnly: A boolean indicating whether to ensure the extracted fields are unique.
+// - sortFields: A boolean indicating whether to sort the extracted fields alphabetically.
+// - delimiter: A string used to join nested field keys (not used in the current implementation).
+//
+// Returns:
+// - A slice of strings containing the extracted fields, or an error if extraction fails.
+func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool, delimiter string) ([]string, error) {
 	var rawData map[string]interface{}
 	err := yaml.Unmarshal(data, &rawData)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode YAML: %w", err)
 	}
 
-	fieldData, ok := rawData[fieldName]
-	if !ok {
-		return nil, fmt.Errorf("%s section not found in the YAML file", fieldName)
+	fieldData, err := traversePath(rawData, strings.Split(fieldPath, "."))
+	if err != nil {
+		return nil, err
 	}
 
 	fieldMap := make(map[string]interface{})
 	err = mapstructure.Decode(fieldData, &fieldMap)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode %s: %w", fieldName, err)
+		return nil, fmt.Errorf("failed to decode %s: %w", fieldPath, err)
 	}
 
 	// Extract the fields into a map to ensure uniqueness
@@ -46,6 +60,23 @@ func ExtractField(data []byte, fieldName string, fieldDepth int, extractKey bool
 	}
 
 	return extractedSlice, nil
+}
+
+// traversePath traverses the YAML structure to find the data at the specified path
+func traversePath(data map[string]interface{}, path []string) (interface{}, error) {
+	current := data
+	for _, p := range path {
+		if val, ok := current[p]; ok {
+			if nestedMap, ok := val.(map[string]interface{}); ok {
+				current = nestedMap
+			} else {
+				return val, nil
+			}
+		} else {
+			return nil, fmt.Errorf("%s section not found in the YAML file", strings.Join(path, "."))
+		}
+	}
+	return current, nil
 }
 
 // extractFromMap recursively extracts fields from the map based on depth and extraction parameters

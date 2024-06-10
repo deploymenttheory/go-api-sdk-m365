@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/schema/v3/models/openapi3"
 	"github.com/mitchellh/mapstructure"
@@ -42,4 +43,12 @@ func CreateFolderIfNotExist(path string) error {
 		}
 	}
 	return nil
+}
+
+// Capitalize capitalizes the first character of a string and makes the rest lowercase
+func Capitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 }
