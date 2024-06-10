@@ -6,24 +6,17 @@ import (
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
-	"gopkg.in/yaml.v3"
 )
 
 // ExtractField extracts a specific field from the YAML data based on the provided parameters
-func ExtractField(data []byte, fieldName string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool) (map[string]interface{}, error) {
-	var rawData map[string]interface{}
-	err := yaml.Unmarshal(data, &rawData)
-	if err != nil {
-		return nil, fmt.Errorf("failed to decode YAML: %w", err)
-	}
-
+func ExtractField(rawData map[string]interface{}, fieldName string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool) (map[string]interface{}, error) {
 	fieldData, ok := rawData[fieldName]
 	if !ok {
 		return nil, fmt.Errorf("%s section not found in the YAML file", fieldName)
 	}
 
 	fieldMap := make(map[string]interface{})
-	err = mapstructure.Decode(fieldData, &fieldMap)
+	err := mapstructure.Decode(fieldData, &fieldMap)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode %s: %w", fieldName, err)
 	}

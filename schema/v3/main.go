@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// Extract paths using the helper function
-	paths, err := extractPaths(data)
+	paths, err := extractPaths(rawData)
 	if err != nil {
 		log.Fatalf("Failed to extract paths: %v", err)
 	}
@@ -64,7 +64,7 @@ func main() {
 }
 
 // extractPaths is a helper function to extract paths with the specified parameters
-func extractPaths(data []byte) ([]string, error) {
+func extractPaths(rawData map[string]interface{}) ([]string, error) {
 	// Define extraction parameters
 	fieldName := "paths"
 	fieldDepth := 1
@@ -73,7 +73,7 @@ func extractPaths(data []byte) ([]string, error) {
 	extractUniqueFieldsOnly := true
 	sortFields := true
 
-	extractedData, err := extract.ExtractField(data, fieldName, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields)
+	extractedData, err := extract.ExtractField(rawData, fieldName, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields)
 	if err != nil {
 		return nil, fmt.Errorf("failed to extract %s: %w", fieldName, err)
 	}

@@ -1,5 +1,6 @@
 package openapi3
 
+// OpenAPISpec represents the top level data structure of an OpenAPI 3.0 specification
 type OpenAPISpec struct {
 	OpenAPI      string                   `yaml:"openapi" mapstructure:"openapi"`
 	Info         map[string]interface{}   `yaml:"info" mapstructure:"info"`
