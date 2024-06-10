@@ -167,16 +167,6 @@ func extractFromMap(data map[string]interface{}, depth int, extractKey bool, ext
 	return result
 }
 
-// mapKeysToSlice converts the keys of a map to a slice
-// This step is necessary for sorting the extracted fields
-func mapKeysToSlice(data map[string]interface{}) []string {
-	keys := make([]string, 0, len(data))
-	for k := range data {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
 // getUniqueFields filters out duplicate fields from the map
 // This function ensures that we only keep unique fields
 func getUniqueFields(data map[string]interface{}) map[string]interface{} {
