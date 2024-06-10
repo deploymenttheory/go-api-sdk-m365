@@ -2,6 +2,8 @@ package extract
 
 import (
 	"fmt"
+	"log"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -32,7 +34,8 @@ func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool
 		return nil, fmt.Errorf("failed to decode YAML: %w", err)
 	}
 
-	fieldData, err := traversePath(rawData, strings.Split(fieldPath, "."))
+	fieldData, err := traversePath(rawData, fieldPath)
+
 	if err != nil {
 		return nil, err
 	}
@@ -63,17 +66,42 @@ func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool
 }
 
 // traversePath traverses the YAML structure to find the data at the specified path
-func traversePath(data map[string]interface{}, path []string) (interface{}, error) {
+func traversePath(data map[string]interface{}, path string) (interface{}, error) {
 	current := data
-	for _, p := range path {
-		if val, ok := current[p]; ok {
-			if nestedMap, ok := val.(map[string]interface{}); ok {
+	regex := regexp.MustCompile(`^microsoft\.graph\.[^.]+`)
+
+	// Function to intelligently split path
+	splitPath := func(path string) []string {
+		var segments []string
+		for {
+			if match := regex.FindString(path); match != "" {
+				segments = append(segments, match)
+				path = strings.TrimPrefix(path, match)
+				if len(path) > 0 && path[0] == '.' {
+					path = path[1:] // Remove leading dot
+				}
+			} else {
+				segments = append(segments, strings.Split(path, ".")...)
+				break
+			}
+		}
+		return segments
+	}
+
+	segments := splitPath(path)
+	for _, segment := range segments {
+		log.Printf("Current path segment: %s", segment)
+
+		if val, found := current[segment]; found {
+			log.Printf("Traversing to: %s", segment)
+			if nestedMap, isMap := val.(map[string]interface{}); isMap {
 				current = nestedMap
 			} else {
 				return val, nil
 			}
 		} else {
-			return nil, fmt.Errorf("%s section not found in the YAML file", strings.Join(path, "."))
+			log.Printf("Path not found: %s", segment)
+			return nil, fmt.Errorf("%s section not found in the YAML file", segment)
 		}
 	}
 	return current, nil
@@ -97,6 +125,7 @@ func extractFromMap(data map[string]interface{}, depth int, extractKey bool, ext
 	}
 
 	for k, v := range data {
+		log.Printf("Processing key: %s", k)
 		if nestedMap, ok := v.(map[string]interface{}); ok {
 			nestedResult := extractFromMap(nestedMap, depth-1, extractKey, extractValue)
 			for nk, nv := range nestedResult {

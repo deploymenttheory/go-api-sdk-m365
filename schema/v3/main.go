@@ -50,7 +50,7 @@ func main() {
 	// // }
 
 	// Extract paths using the helper function
-	paths, err := extractURLPaths(data)
+	paths, err := extract.ExtractURLPaths(data)
 	if err != nil {
 		log.Fatalf("Failed to extract paths: %v", err)
 	}
@@ -71,33 +71,14 @@ func main() {
 	fmt.Println("Export successful")
 }
 
-// extractURLPaths is a helper function to extract URL paths with the specified parameters
-func extractURLPaths(data []byte) ([]string, error) {
-	// Define extraction parameters
-	fieldName := "paths"
-	fieldDepth := 1
-	extractKey := true
-	extractValue := false
-	extractUniqueFieldsOnly := true
-	sortFields := true
-	delimiter := "/"
-
-	extractedData, err := extract.ExtractField(data, fieldName, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
-	if err != nil {
-		return nil, fmt.Errorf("failed to extract %s: %w", fieldName, err)
-	}
-
-	return extractedData, nil
-}
-
 // extractAndPrintProperties extracts and prints key-value pairs under values within properties
 func extractAndPrintProperties(data []byte) error {
 	// Define extraction parameters for properties
 	fieldPath := "components.examples"
-	fieldDepth := 1 // Assuming examples are nested under a level
+	fieldDepth := 0
 	extractKey := true
-	extractValue := false // Only keys are needed
-	extractUniqueFieldsOnly := true
+	extractValue := true
+	extractUniqueFieldsOnly := false
 	sortFields := false
 	delimiter := ""
 
@@ -107,10 +88,43 @@ func extractAndPrintProperties(data []byte) error {
 		return fmt.Errorf("failed to extract %s: %w", fieldPath, err)
 	}
 
-	// Process and print the extracted keys
+	// Process and print the extracted fields
 	for _, field := range extractedData {
-		processedField := extract.ProcessField(field)
+		processedField := extract.StructTypeField(field)
 		fmt.Println(processedField)
+		err := extractAndPrintNestedProperties(data, field)
+		if err != nil {
+			log.Fatalf("Failed to extract nested properties: %v", err)
+		}
+	}
+
+	return nil
+}
+
+// extractAndPrintNestedProperties extracts and prints key-value pairs under 'value'
+func extractAndPrintNestedProperties(data []byte, field string) error {
+	fieldPath := fmt.Sprintf("components.examples.%s.value", field)
+	fieldDepth := 0
+	extractKey := true
+	extractValue := true
+	extractUniqueFieldsOnly := false
+	sortFields := false
+	delimiter := ""
+
+	extractedNestedData, err := extract.ExtractField(data, fieldPath, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
+	if err != nil {
+		// Log the error and continue instead of returning an error
+		log.Printf("No value field found for %s: %v", field, err)
+		return nil
+	}
+
+	if len(extractedNestedData) == 0 {
+		log.Printf("No value field found for %s", field)
+		return nil
+	}
+
+	for _, nestedField := range extractedNestedData {
+		fmt.Println(nestedField)
 	}
 
 	return nil

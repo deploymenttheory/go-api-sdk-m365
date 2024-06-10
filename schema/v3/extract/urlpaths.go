@@ -8,6 +8,25 @@ import (
 	"text/template"
 )
 
+// ExtractURLPaths is a helper function to extract URL paths with the specified parameters
+func ExtractURLPaths(data []byte) ([]string, error) {
+	// Define extraction parameters
+	fieldName := "paths"
+	fieldDepth := 1
+	extractKey := true
+	extractValue := false
+	extractUniqueFieldsOnly := true
+	sortFields := true
+	delimiter := "/"
+
+	extractedData, err := ExtractField(data, fieldName, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
+	if err != nil {
+		return nil, fmt.Errorf("failed to extract %s: %w", fieldName, err)
+	}
+
+	return extractedData, nil
+}
+
 // SaveURLPathsToFile saves the paths to a file using a template that groups paths by their first segment
 func SaveURLPathsToFile(paths []string, path string) error {
 	// Group paths by their first segment, treating parameterized segments uniformly
