@@ -29,6 +29,7 @@ func main() {
 
 	// Unmarshal the YAML data into a map
 	var rawData map[string]interface{}
+
 	err = yaml.Unmarshal(data, &rawData)
 	if err != nil {
 		log.Fatalf("Failed to unmarshal YAML: %v", err)
