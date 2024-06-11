@@ -7,16 +7,20 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/schema/v3/extract"
 	"github.com/deploymenttheory/go-api-sdk-m365/schema/v3/helpers"
 )
 
+// StructField represents a field in a Go struct
 type StructField struct {
-	Name string
-	Type string
+	Name     string
+	Type     string
+	JSONName string
 }
 
+// GoStruct represents a Go struct
 type GoStruct struct {
 	Name   string
 	Fields []StructField
@@ -96,7 +100,6 @@ func main() {
 	fmt.Println("Export successful")
 }
 
-// extractAndSaveStructs extracts and saves key-value pairs as Go structs
 func extractAndSaveStructs(data []byte, filePath string) error {
 	// Define extraction parameters for properties
 	fieldPath := "components.examples"
@@ -127,7 +130,7 @@ func extractAndSaveStructs(data []byte, filePath string) error {
 	const structTemplate = `
 type {{ .Name }} struct {
 {{- range .Fields }}
-	{{ .Name }} {{ .Type }}
+	{{ .Name }} {{ .Type }} ` + "`json:\"{{ .JSONName }},omitempty\"`" + `
 {{- end }}
 }
 `
@@ -144,7 +147,8 @@ type {{ .Name }} struct {
 			log.Fatalf("Failed to extract nested properties: %v", err)
 		}
 
-		goStruct := GoStruct{Name: kv.Key, Fields: fields}
+		structName := helpers.PrepareNameSafeStructName(kv.Key)
+		goStruct := GoStruct{Name: structName, Fields: fields}
 
 		// Execute the template with the current struct and write to the file
 		err = tmpl.Execute(file, goStruct)
@@ -180,9 +184,17 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 
 	var fields []StructField
 	for _, kv := range extractedNestedData {
-		// Determine the type of the value
-		fieldType := fmt.Sprintf("%T", kv.Value)
-		fields = append(fields, StructField{Name: kv.Key, Type: fieldType})
+		fieldType := ""
+		if strings.HasPrefix(kv.Key, "@odata.type") {
+			fieldType = helpers.ConvertOpenAPITypeToGoType(kv.Value.(string))
+			fieldName := helpers.PrepareNameSafeStructName(kv.Value.(string))
+			fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
+		} else {
+			// Determine the type of the value using the helper function
+			fieldType = helpers.ConvertOpenAPITypeToGoType(fmt.Sprintf("%v", kv.Value))
+			fieldName := helpers.PrepareNameSafeStructName(kv.Key)
+			fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
+		}
 	}
 
 	return fields, nil

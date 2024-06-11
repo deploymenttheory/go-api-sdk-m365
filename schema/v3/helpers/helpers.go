@@ -17,10 +17,39 @@ func CreateFolderIfNotExist(path string) error {
 	return nil
 }
 
-// Capitalize capitalizes the first character of a string and makes the rest lowercase
+// PrepareNameSafeStructName splits the input name by ".", capitalizes each segment, and concatenates them.
+// This is useful for creating struct names from field names in a schema.
+func PrepareNameSafeStructName(name string) string {
+	segments := strings.Split(name, ".")
+	for i, segment := range segments {
+		segments[i] = Capitalize(segment)
+	}
+	return strings.Join(segments, "")
+}
+
+// Capitalize capitalizes the first character of a string and keeps the rest as is
 func Capitalize(s string) string {
 	if len(s) == 0 {
 		return s
 	}
-	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
+	return strings.ToUpper(s[:1]) + s[1:]
+}
+
+// ConvertOpenAPITypeToGoType converts OpenAPI types to Go struct field types.
+func ConvertOpenAPITypeToGoType(openAPIType string) string {
+	switch openAPIType {
+	case "true", "false":
+		return "bool"
+	case "0":
+		return "int"
+	case "String":
+		return "string"
+	case "0001-01-01T00:00:00.0000000+00:00", "0001-01-01":
+		return "time.Time"
+	default:
+		if strings.HasPrefix(openAPIType, "microsoft.graph.") {
+			return PrepareNameSafeStructName(openAPIType)
+		}
+		return "interface{}"
+	}
 }
