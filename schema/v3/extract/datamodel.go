@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/schema/v3/helpers"
@@ -107,17 +106,16 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 
 	var fields []StructField
 	for _, kv := range extractedNestedData {
-		fieldType := ""
-		if strings.HasPrefix(kv.Key, "@odata.type") {
-			fieldType = helpers.ConvertOpenAPITypeToGoType(kv.Value.(string))
-			fieldName := helpers.PrepareNameSafeStructName(kv.Value.(string))
-			fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
+		var fieldType string
+		if nestedType, ok := kv.Value.(map[string]interface{}); ok && nestedType["@odata.type"] != nil {
+			odataType := nestedType["@odata.type"].(string)
+			fieldType = helpers.PrepareNameSafeStructName(odataType)
 		} else {
 			// Determine the type of the value using the helper function
 			fieldType = helpers.ConvertOpenAPITypeToGoType(fmt.Sprintf("%v", kv.Value))
-			fieldName := helpers.PrepareNameSafeStructName(kv.Key)
-			fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
 		}
+		fieldName := helpers.PrepareNameSafeStructName(kv.Key)
+		fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
 	}
 
 	return fields, nil
