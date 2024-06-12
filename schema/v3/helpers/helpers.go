@@ -46,6 +46,8 @@ func ConvertOpenAPITypeToGoType(openAPIType string) string {
 		return "string"
 	case "0001-01-01T00:00:00.0000000+00:00", "0001-01-01":
 		return "time.Time"
+	case "00000000-0000-0000-0000-000000000000":
+		return "string" // UUIDs are typically represented as strings in Go
 	default:
 		if strings.HasPrefix(openAPIType, "microsoft.graph.") {
 			return PrepareNameSafeStructName(openAPIType)
