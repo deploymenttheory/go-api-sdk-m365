@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/deploymenttheory/go-api-sdk-m365/schema/v3/helpers"
 )
@@ -23,7 +24,9 @@ type GoStruct struct {
 }
 
 func ExtractAndSaveStructs(data []byte, filePath string) error {
-	// Define extraction parameters for properties
+	startTime := time.Now()
+
+	// Extraction parameters for properties
 	fieldPath := "components.examples"
 	fieldDepth := 0
 	extractKey := true
@@ -79,6 +82,9 @@ type {{ .Name }} struct {
 		}
 	}
 
+	elapsedTime := time.Since(startTime)
+	log.Printf("Struct generation completed in %s", elapsedTime)
+
 	return nil
 }
 
@@ -107,14 +113,35 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 	var fields []StructField
 	for _, kv := range extractedNestedData {
 		var fieldType string
-		if nestedType, ok := kv.Value.(map[string]interface{}); ok && nestedType["@odata.type"] != nil {
-			odataType := nestedType["@odata.type"].(string)
-			fieldType = helpers.PrepareNameSafeStructName(odataType)
-		} else {
-			// Determine the type of the value using the helper function
-			fieldType = helpers.ConvertOpenAPITypeToGoType(fmt.Sprintf("%v", kv.Value))
-		}
 		fieldName := helpers.PrepareNameSafeStructName(kv.Key)
+
+		switch v := kv.Value.(type) {
+		case map[string]interface{}:
+			// Handle single object
+			if odataType, ok := v["@odata.type"]; ok {
+				fieldType = helpers.PrepareNameSafeStructName(odataType.(string))
+			} else {
+				fieldType = "map[string]interface{}"
+			}
+		case []interface{}:
+			// Handle array of objects
+			if len(v) > 0 {
+				if arrayMap, ok := v[0].(map[string]interface{}); ok && arrayMap["@odata.type"] != nil {
+					odataType := arrayMap["@odata.type"].(string)
+					fieldType = "[]" + helpers.PrepareNameSafeStructName(odataType)
+				} else {
+					// Assuming all elements in the array are of the same type
+					arrayElementType := helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", v[0]))
+					fieldType = "[]" + arrayElementType
+				}
+			} else {
+				fieldType = "[]interface{}"
+			}
+		default:
+			// Determine the type of the value using the helper function
+			fieldType = helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", kv.Value))
+		}
+
 		fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
 	}
 

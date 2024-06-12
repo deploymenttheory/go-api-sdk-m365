@@ -35,8 +35,9 @@ func Capitalize(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
-// ConvertOpenAPITypeToGoType converts OpenAPI types to Go struct field types.
-func ConvertOpenAPITypeToGoType(openAPIType string) string {
+// ConvertMSGraphOpenAPITypeToGoType converts OpenAPI types from the MSGraph
+// api spec and translates them to go struct types.
+func ConvertMSGraphOpenAPITypeToGoType(openAPIType string) string {
 	switch openAPIType {
 	case "true", "false":
 		return "bool"
@@ -46,8 +47,10 @@ func ConvertOpenAPITypeToGoType(openAPIType string) string {
 		return "string"
 	case "0001-01-01T00:00:00.0000000+00:00", "0001-01-01":
 		return "time.Time"
-	case "00000000-0000-0000-0000-000000000000":
-		return "string" // UUIDs are typically represented as strings in Go
+	case "00000000-0000-0000-0000-000000000000", "00000000-0000-0000-0000-000000000000 (identifier)":
+		return "uuid.UUID" // UUIDs are typically represented as uuid.UUID in Go
+	case "Stream":
+		return "io.Reader" // this interface is more flexible and idiomatic for handling streams of data than "[]byte".
 	default:
 		if strings.HasPrefix(openAPIType, "microsoft.graph.") {
 			return PrepareNameSafeStructName(openAPIType)
