@@ -2,8 +2,11 @@ package helpers
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"regexp"
 	"strings"
+	"unicode"
 )
 
 // createFolderIfNotExist creates a folder if it doesn't exist
@@ -17,14 +20,59 @@ func CreateFolderIfNotExist(path string) error {
 	return nil
 }
 
-// PrepareNameSafeStructName splits the input name by ".", capitalizes each segment, and concatenates them.
-// This is useful for creating struct names from field names in a schema.
+// PrepareNameSafeStructName performs
+// Illegal Characters Removal: It uses a regular expression to replace all non-alphanumeric characters with spaces.
+// Segment Handling: It splits the sanitized string into segments, capitalizes each segment, and concatenates them.
+// Leading Numbers Handling: It prefixes the resulting string with N if it starts with a number.
 func PrepareNameSafeStructName(name string) string {
-	segments := strings.Split(name, ".")
+	// Remove illegal characters using a regular expression
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		log.Fatalf("Failed to compile regex: %v", err)
+	}
+	safeName := reg.ReplaceAllString(name, " ")
+
+	// Split by space (previously illegal characters)
+	segments := strings.Split(safeName, " ")
 	for i, segment := range segments {
 		segments[i] = Capitalize(segment)
 	}
-	return strings.Join(segments, "")
+
+	// Join the segments
+	result := strings.Join(segments, "")
+
+	// Ensure the name does not start with a number
+	if len(result) > 0 && result[0] >= '0' && result[0] <= '9' {
+		result = "N" + result
+	}
+
+	return result
+}
+
+// PrepareNameSafeStructFieldName creates a Go-safe field name by capitalizing each segment and preserving underscores.
+func PrepareNameSafeStructFieldName(name string) string {
+	// Remove illegal characters using a regular expression, except underscores
+	reg, err := regexp.Compile("[^a-zA-Z0-9_]+")
+	if err != nil {
+		log.Fatalf("Failed to compile regex: %v", err)
+	}
+	safeName := reg.ReplaceAllString(name, " ")
+
+	// Split by space (previously illegal characters)
+	segments := strings.Split(safeName, " ")
+	for i, segment := range segments {
+		segments[i] = Capitalize(segment)
+	}
+
+	// Join the segments
+	result := strings.Join(segments, "")
+
+	// Ensure the name does not start with a number
+	if len(result) > 0 && unicode.IsDigit(rune(result[0])) {
+		result = "N" + result
+	}
+
+	return result
 }
 
 // Capitalize capitalizes the first character of a string and keeps the rest as is
@@ -37,6 +85,8 @@ func Capitalize(s string) string {
 
 // ConvertMSGraphOpenAPITypeToGoType converts OpenAPI types from the MSGraph
 // api spec and translates them to go struct types.
+// ConvertMSGraphOpenAPITypeToGoType converts OpenAPI types from the MSGraph
+// API spec and translates them to Go struct types.
 func ConvertMSGraphOpenAPITypeToGoType(openAPIType string) string {
 	switch openAPIType {
 	case "true", "false":
@@ -51,6 +101,10 @@ func ConvertMSGraphOpenAPITypeToGoType(openAPIType string) string {
 		return "uuid.UUID" // UUIDs are typically represented as uuid.UUID in Go
 	case "Stream":
 		return "io.Reader" // this interface is more flexible and idiomatic for handling streams of data than "[]byte".
+	case "Duration":
+		return "time.Duration"
+		// Intervals duration pattern: '^-?P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+([.][0-9]+)?S)?)?$'
+		// DateTime duration pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
 	default:
 		if strings.HasPrefix(openAPIType, "microsoft.graph.") {
 			return PrepareNameSafeStructName(openAPIType)

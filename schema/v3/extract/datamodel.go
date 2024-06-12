@@ -48,8 +48,16 @@ func ExtractAndSaveStructs(data []byte, filePath string) error {
 	}
 	defer file.Close()
 
-	// Write the package declaration at the top of the file
-	fmt.Fprintln(file, "package extractedmodels")
+	// Write the package declaration and constants at the top of the file
+	header := `package extractedmodels
+
+import (
+	"time"
+	"io"
+)
+
+`
+	fmt.Fprintln(file, header)
 
 	// Define the template for the Go structs
 	const structTemplate = `
@@ -113,13 +121,13 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 	var fields []StructField
 	for _, kv := range extractedNestedData {
 		var fieldType string
-		fieldName := helpers.PrepareNameSafeStructName(kv.Key)
+		fieldName := helpers.PrepareNameSafeStructFieldName(kv.Key)
 
 		switch v := kv.Value.(type) {
 		case map[string]interface{}:
 			// Handle single object
 			if odataType, ok := v["@odata.type"]; ok {
-				fieldType = helpers.PrepareNameSafeStructName(odataType.(string))
+				fieldType = helpers.PrepareNameSafeStructFieldName(odataType.(string))
 			} else {
 				fieldType = "map[string]interface{}"
 			}
@@ -128,7 +136,7 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 			if len(v) > 0 {
 				if arrayMap, ok := v[0].(map[string]interface{}); ok && arrayMap["@odata.type"] != nil {
 					odataType := arrayMap["@odata.type"].(string)
-					fieldType = "[]" + helpers.PrepareNameSafeStructName(odataType)
+					fieldType = "[]" + helpers.PrepareNameSafeStructFieldName(odataType)
 				} else {
 					// Assuming all elements in the array are of the same type
 					arrayElementType := helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", v[0]))
