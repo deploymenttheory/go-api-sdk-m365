@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"text/template"
 	"time"
 
@@ -15,6 +16,7 @@ type StructField struct {
 	Name     string
 	Type     string
 	JSONName string
+	Comment  string
 }
 
 // GoStruct represents a Go struct
@@ -27,8 +29,8 @@ func ExtractAndSaveStructs(data []byte, filePath string) error {
 	startTime := time.Now()
 
 	// Extraction parameters for properties
-	fieldPath := "components.examples"
-	fieldDepth := 0
+	fieldPath := "components.schemas"
+	fieldDepth := 1
 	extractKey := true
 	extractValue := true
 	extractUniqueFieldsOnly := false
@@ -54,6 +56,7 @@ func ExtractAndSaveStructs(data []byte, filePath string) error {
 import (
 	"time"
 	"io"
+	"github.com/google/uuid"
 )
 
 `
@@ -63,7 +66,7 @@ import (
 	const structTemplate = `
 type {{ .Name }} struct {
 {{- range .Fields }}
-	{{ .Name }} {{ .Type }} ` + "`json:\"{{ .JSONName }},omitempty\"`" + `
+	{{ .Name }} {{ .Type }} ` + "`json:\"{{ .JSONName }},omitempty\"`" + ` // {{ .Comment }}
 {{- end }}
 }
 `
@@ -98,8 +101,8 @@ type {{ .Name }} struct {
 
 // extractAndGetStructFields extracts and returns key-value pairs as struct fields
 func extractAndGetStructFields(data []byte, field string) ([]StructField, error) {
-	fieldPath := fmt.Sprintf("components.examples.%s.value", field)
-	fieldDepth := 0
+	fieldPath := fmt.Sprintf("components.schemas.%s.properties", field)
+	fieldDepth := 1
 	extractKey := true
 	extractValue := true
 	extractUniqueFieldsOnly := false
@@ -109,12 +112,12 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 	extractedNestedData, err := ExtractField(data, fieldPath, fieldDepth, extractKey, extractValue, extractUniqueFieldsOnly, sortFields, delimiter)
 	if err != nil {
 		// Log the error and continue instead of returning an error
-		log.Printf("No value field found for %s: %v", field, err)
+		log.Printf("No properties field found for %s: %v", field, err)
 		return nil, nil
 	}
 
 	if len(extractedNestedData) == 0 {
-		log.Printf("No value field found for %s", field)
+		log.Printf("No properties field found for %s", field)
 		return nil, nil
 	}
 
@@ -122,35 +125,27 @@ func extractAndGetStructFields(data []byte, field string) ([]StructField, error)
 	for _, kv := range extractedNestedData {
 		var fieldType string
 		fieldName := helpers.PrepareNameSafeStructFieldName(kv.Key)
+		fieldComment := ""
 
-		switch v := kv.Value.(type) {
-		case map[string]interface{}:
-			// Handle single object
-			if odataType, ok := v["@odata.type"]; ok {
-				fieldType = helpers.PrepareNameSafeStructFieldName(odataType.(string))
-			} else {
-				fieldType = "map[string]interface{}"
-			}
-		case []interface{}:
-			// Handle array of objects
-			if len(v) > 0 {
-				if arrayMap, ok := v[0].(map[string]interface{}); ok && arrayMap["@odata.type"] != nil {
-					odataType := arrayMap["@odata.type"].(string)
-					fieldType = "[]" + helpers.PrepareNameSafeStructFieldName(odataType)
-				} else {
-					// Assuming all elements in the array are of the same type
-					arrayElementType := helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", v[0]))
-					fieldType = "[]" + arrayElementType
-				}
-			} else {
-				fieldType = "[]interface{}"
-			}
-		default:
-			// Determine the type of the value using the helper function
-			fieldType = helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", kv.Value))
+		propertiesMap, ok := kv.Value.(map[string]interface{})
+		if !ok {
+			log.Printf("Expected a map for properties, got: %v", kv.Value)
+			continue
 		}
 
-		fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key})
+		fieldType = helpers.ConvertMSGraphOpenAPITypeToGoType(fmt.Sprintf("%v", propertiesMap["type"]))
+		if desc, found := propertiesMap["description"]; found {
+			fieldComment = fmt.Sprintf("%v", desc)
+		}
+
+		// Handle $ref to handle nested types
+		if ref, found := propertiesMap["$ref"]; found {
+			refType := ref.(string)
+			refParts := strings.Split(refType, "/")
+			fieldType = helpers.PrepareNameSafeStructName(refParts[len(refParts)-1])
+		}
+
+		fields = append(fields, StructField{Name: fieldName, Type: fieldType, JSONName: kv.Key, Comment: fieldComment})
 	}
 
 	return fields, nil

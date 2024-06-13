@@ -16,23 +16,6 @@ type KeyValue struct {
 }
 
 // ExtractField extracts specific fields from YAML data based on the provided parameters.
-// The function supports traversing nested paths within the YAML structure, extracting keys, values,
-// or both, and can ensure uniqueness and sorting of the extracted fields.
-//
-// Parameters:
-// - data: The raw YAML data as a byte slice.
-// - fieldPath: A dot-separated string representing the path to the nested field (e.g., "components.schemas").
-// - fieldDepth: The depth to which fields should be extracted within the nested structure. A depth of 0 means only direct fields are extracted.
-// - extractKey: A boolean indicating whether to extract the keys of the fields.
-// - extractValue: A boolean indicating whether to extract the values of the fields.
-// - extractUniqueFieldsOnly: A boolean indicating whether to ensure the extracted fields are unique.
-// - sortFields: A boolean indicating whether to sort the extracted fields alphabetically.
-// - delimiter: A string used to join nested field keys (not used in the current implementation).
-//
-// Returns:
-// - A slice of strings containing the extracted fields, or an error if extraction fails.
-// ExtractField extracts specific fields from YAML data based on the provided parameters.
-// Returns a slice of KeyValue structs containing the extracted fields, or an error if extraction fails.
 func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool, extractValue bool, extractUniqueFieldsOnly bool, sortFields bool, delimiter string) ([]KeyValue, error) {
 	var rawData map[string]interface{}
 	err := yaml.Unmarshal(data, &rawData)
@@ -53,7 +36,7 @@ func ExtractField(data []byte, fieldPath string, fieldDepth int, extractKey bool
 	}
 
 	// Extract the fields into a map to ensure uniqueness
-	extractedFields := extractFromMap(fieldMap, fieldDepth, extractKey, extractValue)
+	extractedFields := extractFromMap(fieldMap, fieldDepth, extractKey, extractValue, data)
 
 	// Ensure uniqueness if required
 	if extractUniqueFieldsOnly {
@@ -132,8 +115,7 @@ func traversePath(data map[string]interface{}, path string) (interface{}, error)
 }
 
 // extractFromMap recursively extracts fields from the map based on depth and extraction parameters
-// Using a map here helps in ensuring that the keys (paths) are unique
-func extractFromMap(data map[string]interface{}, depth int, extractKey bool, extractValue bool) map[string]interface{} {
+func extractFromMap(data map[string]interface{}, depth int, extractKey bool, extractValue bool, fullData []byte) map[string]interface{} {
 	result := make(map[string]interface{})
 	if depth == 0 {
 		for k, v := range data {
@@ -150,17 +132,28 @@ func extractFromMap(data map[string]interface{}, depth int, extractKey bool, ext
 
 	for k, v := range data {
 		log.Printf("Processing key: %s", k)
-		if nestedMap, ok := v.(map[string]interface{}); ok {
-			nestedResult := extractFromMap(nestedMap, depth-1, extractKey, extractValue)
-			for nk, nv := range nestedResult {
-				if extractKey && extractValue {
-					result[fmt.Sprintf("%s.%s", k, nk)] = nv
-				} else if extractKey {
-					result[fmt.Sprintf("%s.%s", k, nk)] = nil
-				} else if extractValue {
-					result[fmt.Sprintf("%v", nv)] = nil
+		switch nestedData := v.(type) {
+		case map[string]interface{}:
+			if properties, ok := nestedData["properties"]; ok {
+				nestedResult := extractFromMap(properties.(map[string]interface{}), depth-1, extractKey, extractValue, fullData)
+				for nk, nv := range nestedResult {
+					if extractKey && extractValue {
+						result[fmt.Sprintf("%s.%s", k, nk)] = nv
+					} else if extractKey {
+						result[fmt.Sprintf("%s.%s", k, nk)] = nil
+					} else if extractValue {
+						result[fmt.Sprintf("%v", nv)] = nil
+					}
 				}
+			} else if allOf, ok := nestedData["allOf"]; ok {
+				handleAllOfField(result, k, allOf.([]interface{}), fullData)
+			} else {
+				handlePrimitiveField(result, k, nestedData)
 			}
+		case []interface{}:
+			handleArrayField(result, k, nestedData)
+		case string, int, bool, float64:
+			handlePrimitiveField(result, k, nestedData)
 		}
 	}
 
@@ -168,7 +161,6 @@ func extractFromMap(data map[string]interface{}, depth int, extractKey bool, ext
 }
 
 // getUniqueFields filters out duplicate fields from the map
-// This function ensures that we only keep unique fields
 func getUniqueFields(data map[string]interface{}) map[string]interface{} {
 	uniqueFields := make(map[string]interface{})
 	seen := make(map[string]struct{})
@@ -182,4 +174,101 @@ func getUniqueFields(data map[string]interface{}) map[string]interface{} {
 	}
 
 	return uniqueFields
+}
+
+// handleAllOfField processes allOf fields
+func handleAllOfField(result map[string]interface{}, key string, allOfData []interface{}, fullData []byte) {
+	log.Printf("Processing allOf field: %s", key)
+	for _, item := range allOfData {
+		if ref, ok := item.(map[string]interface{})["$ref"]; ok {
+			refType := parseRef(ref.(string))
+			refPath := fmt.Sprintf("components.schemas.%s", refType)
+			refData, err := ExtractField(fullData, refPath, 1, true, true, false, false, "")
+			if err != nil {
+				log.Printf("Failed to extract $ref field: %v", err)
+			}
+			for _, refKv := range refData {
+				result[fmt.Sprintf("%s.%s", key, refKv.Key)] = refKv.Value
+			}
+		}
+		if props, ok := item.(map[string]interface{})["properties"]; ok {
+			nestedResult := extractFromMap(props.(map[string]interface{}), 1, true, true, fullData)
+			for nk, nv := range nestedResult {
+				result[fmt.Sprintf("%s.%s", key, nk)] = nv
+			}
+		}
+	}
+}
+
+// handleArrayField processes array fields
+func handleArrayField(result map[string]interface{}, key string, arrayData []interface{}) {
+	log.Printf("Processing array field: %s", key)
+	for i, item := range arrayData {
+		itemKey := fmt.Sprintf("%s[%d]", key, i)
+		if nestedMap, ok := item.(map[string]interface{}); ok {
+			nestedResult := extractFromMap(nestedMap, 1, true, true, nil)
+			for nk, nv := range nestedResult {
+				result[fmt.Sprintf("%s.%s", itemKey, nk)] = nv
+			}
+		} else {
+			result[itemKey] = item
+		}
+	}
+}
+
+// handlePrimitiveField processes primitive fields
+func handlePrimitiveField(result map[string]interface{}, key string, value interface{}) {
+	log.Printf("Processing primitive field: %s", key)
+	result[key] = value
+}
+
+// mapValues maps OpenAPI types and properties to Go types and struct fields
+func mapValues(fieldMap map[string]interface{}) map[string]interface{} {
+	mapped := make(map[string]interface{})
+
+	for k, v := range fieldMap {
+		switch v := v.(type) {
+		case map[string]interface{}:
+			if t, ok := v["type"]; ok {
+				switch t {
+				case "string":
+					mapped[k] = "string"
+				case "integer":
+					mapped[k] = "int"
+				case "boolean":
+					mapped[k] = "bool"
+				case "array":
+					if items, ok := v["items"]; ok {
+						if ref, ok := items.(map[string]interface{})["$ref"]; ok {
+							refType := parseRef(ref.(string))
+							mapped[k] = fmt.Sprintf("[]%s", refType)
+						} else if itemType, ok := items.(map[string]interface{})["type"]; ok {
+							mapped[k] = fmt.Sprintf("[]%s", itemType)
+						}
+					}
+				case "object":
+					mapped[k] = "map[string]interface{}"
+				}
+			} else if ref, ok := v["$ref"]; ok {
+				mapped[k] = parseRef(ref.(string))
+			} else {
+				mapped[k] = "interface{}"
+			}
+		case string:
+			mapped[k] = v
+		case int:
+			mapped[k] = v
+		case bool:
+			mapped[k] = v
+		default:
+			mapped[k] = "interface{}"
+		}
+	}
+
+	return mapped
+}
+
+func parseRef(ref string) string {
+	parts := strings.Split(ref, "/")
+	return parts[len(parts)-1]
 }
